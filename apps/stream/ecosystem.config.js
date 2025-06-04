@@ -1,12 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'rtmp',
-      script: './scripts/start-rtmp.sh',
-      watch: false,
-    },
-    {
-      name: 'stream',
+      name: 'radio.stream',
       script: 'src/index.ts',
       interpreter: 'bun',
       exec_interpreter: 'bun',

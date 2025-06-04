@@ -1,0 +1,22 @@
+{
+  "name": "core",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/node-media-server": "^2.3.7",
+    "@types/ws": "^8.18.1",
+    "dotenv": "^16.4.7",
+    "hono": "^4.7.6",
+    "node-media-server": "^4.0.18",
+    "ws": "^8.18.2",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.4",
+    "@types/bun": "^1.2.9",
+    "axios": "^1.8.4",
+    "dotenv-cli": "^8.0.0"
+  }
+}

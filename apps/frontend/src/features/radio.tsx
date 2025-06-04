@@ -2,10 +2,13 @@ import type React from 'react';
 import { useSocket } from '@/hooks/useSocket';
 import { useStream } from '@/hooks/useStream';
 import { Chat } from './chat';
+import { Library } from './library';
+import { useState } from 'react';
 
 export const Radio: React.FC = () => {
   const { videoRef, streamAvailable } = useStream();
   const listeners = useSocket();
+  const [tab, setTab] = useState<'chat' | 'library'>('chat');
 
   return (
     <div className="min-h-screen w-full bg-neutral-900/50 flex flex-col items-center justify-center text-neutral-100 p-4">
@@ -36,7 +39,21 @@ export const Radio: React.FC = () => {
           </div>
         </div>
         <div className="w-full md:w-80">
-          <Chat />
+          <div className="mb-2 flex justify-center gap-2">
+            <button
+              onClick={() => setTab('chat')}
+              className={`px-3 py-1 rounded-md text-sm font-semibold ${tab === 'chat' ? 'bg-moss text-white' : 'bg-neutral-700 text-white/70'}`}
+            >
+              Chat
+            </button>
+            <button
+              onClick={() => setTab('library')}
+              className={`px-3 py-1 rounded-md text-sm font-semibold ${tab === 'library' ? 'bg-moss text-white' : 'bg-neutral-700 text-white/70'}`}
+            >
+              Library
+            </button>
+          </div>
+          {tab === 'chat' ? <Chat /> : <Library />}
         </div>
       </div>
     </div>

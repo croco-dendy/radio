@@ -15,15 +15,15 @@ export const Message = (props: MessageProps) => {
     message.text
   ) : (
     <>
-      <span className={styles.nickname}>{message.nickname}</span>
+      <span className={clsx(styles.nickname)}>{message.nickname}</span>
       {message.text}
     </>
   );
 
   return (
-    <div className={styles.messageWrapper}>
+    <div className={clsx(styles.messageWrapper)}>
       <div
-        className={messageStyles}
+        className={clsx(messageStyles)}
         key={`${message.nickname}-${message.text}-${message.timestamp ?? ''}`}
       >
         {messageContent}
@@ -33,10 +33,12 @@ export const Message = (props: MessageProps) => {
 };
 
 const styles = {
-  messageWrapper: 'flex w-full',
-  otherMessage:
+  messageWrapper: ['flex w-full'],
+  otherMessage: [
     'text-sm flex flex-col p-2 bg-coal-relic/40 rounded-lg backdrop-blur-xl w-fit max-w-[80%]',
-  selfMessage:
+  ],
+  selfMessage: [
     'text-sm flex flex-col p-2 text-right text-moss-fog break-words whitespace-pre-wrap overflow-wrap-anywhere bg-sun/20 rounded-lg backdrop-blur-xl w-fit max-w-[80%] ml-auto',
-  nickname: 'font-display font-semibold text-moss/80 mr-2 uppercase',
+  ],
+  nickname: ['font-display font-semibold text-moss/80 mr-2 uppercase'],
 };

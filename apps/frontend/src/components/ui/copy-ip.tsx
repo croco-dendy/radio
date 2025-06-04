@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import clsx from 'clsx';
 
 const ip = 'io.adoo.one';
 
@@ -16,13 +17,20 @@ export const CopyIp = () => {
       <button
         type="button"
         onClick={handleCopy}
-        className="group relative font-display px-3 py-1 rounded bg-black/20 hover:bg-black/30 text-white/80 transition text-lg"
+        className={clsx(styles.button)}
       >
         {ip}
       </button>
-      <span className="pl-2 pointer-events-none">
+      <span className={clsx(styles.hint)}>
         {copied ? ' Скопійовано!' : 'Натисни щоб зкопіювати'}
       </span>
     </>
   );
+};
+
+const styles = {
+  button: [
+    'group relative font-display px-3 py-1 rounded bg-black/20 hover:bg-black/30 text-white/80 transition text-lg',
+  ],
+  hint: ['pl-2 pointer-events-none'],
 };

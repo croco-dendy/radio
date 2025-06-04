@@ -1,17 +1,18 @@
 import type { PropsWithChildren } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import clsx from 'clsx';
 import Footer from './footer';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
     <ErrorBoundary fallbackRender={() => null}>
-      <div className="flex flex-col h-screen overflow-hidden text-white bg-neutral-950 bg-cover bg-center">
+      <div className={clsx(styles.wrapper)}>
         <img
           src="/placeholder.png"
           alt="Очікуємо трансляцію"
-          className="absolute w-full h-full object-cover mb-4 z-0"
+          className={clsx(styles.background)}
         />
-        <main className="flex-grow flex overflow-hidden z-10">{children}</main>
+        <main className={clsx(styles.main)}>{children}</main>
         <Footer />
       </div>
     </ErrorBoundary>
@@ -19,3 +20,11 @@ const Layout = ({ children }: PropsWithChildren) => {
 };
 
 export default Layout;
+
+const styles = {
+  wrapper: [
+    'flex flex-col h-screen overflow-hidden text-white bg-neutral-950 bg-cover bg-center',
+  ],
+  background: ['absolute w-full h-full object-cover mb-4 z-0'],
+  main: ['flex-grow flex overflow-hidden z-10'],
+};

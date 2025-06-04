@@ -48,15 +48,15 @@ export const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-[500px]">
-      <div className="p-2 font-display uppercase w-full flex items-center justify-between gap-2">
-        <span className="text-white/40">{getMelomanLabel(listeners - 1)}</span>
-        <span className="text-sun">
-          <span className="lowercase mr-2 text-white/60">+</span>
+    <div className={clsx(styles.container)}>
+      <div className={clsx(styles.header)}>
+        <span className={clsx(styles.listeners)}>{getMelomanLabel(listeners - 1)}</span>
+        <span className={clsx(styles.nickname)}>
+          <span className={clsx(styles.plus)}>+</span>
           {nickname}
         </span>
       </div>
-      <div className="flex-1 h-full overflow-hidden flex border-y border-moss/40">
+      <div className={clsx(styles.chatArea)}>
         <div ref={containerRef} className={clsx(styles.messages)}>
           {messages.map((message) => (
             <Message
@@ -68,32 +68,32 @@ export const Chat = () => {
         </div>
       </div>
       {nickname ? (
-        <form onSubmit={handleSend} className="flex items-center gap-2">
+        <form onSubmit={handleSend} className={clsx(styles.form)}>
           <input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-grow p-2 rounded font-sans text-white bg-neutral-800/0 focus:bg-neutral-800/0 focus:outline-none"
+            className={clsx(styles.input)}
             placeholder="Шо кажеш?"
           />
           <button
             type="submit"
-            className="bg-sun-calm shadow-md font-display font-bold text-l uppercase text-black px-4 py-1 rounded-full"
+            className={clsx(styles.sendButton)}
           >
             Пук
           </button>
         </form>
       ) : (
-        <div className="flex gap-2">
+        <div className={clsx(styles.join)}>
           <input
             value={nickInput}
             onChange={(e) => setNickInput(e.target.value)}
             placeholder="Введи нік"
-            className="flex-grow p-2 rounded font-sans text-white bg-neutral-800/0 focus:bg-neutral-800/0 focus:outline-none"
+            className={clsx(styles.input)}
           />
           <button
             type="button"
             onClick={handleSetNickname}
-            className="bg-sun-calm shadow-md font-display font-bold text-l uppercase whitespace-nowrap text-black px-4 py-1 rounded-full"
+            className={clsx(styles.joinButton)}
           >
             Я тут
           </button>
@@ -104,8 +104,26 @@ export const Chat = () => {
 };
 
 const styles = {
+  container: ['flex flex-col h-full max-h-[500px]'],
+  header: ['p-2 font-display uppercase w-full flex items-center justify-between gap-2'],
+  listeners: ['text-white/40'],
+  nickname: ['text-sun'],
+  plus: ['lowercase mr-2 text-white/60'],
+  chatArea: ['flex-1 h-full overflow-hidden flex border-y border-moss/40'],
   messages: [
     'w-full overflow-y-auto overflow-x-hidden space-y-1 p-2 flex flex-col flex-start',
     'scrollbar-thin scrollbar-thumb-moss/30 scrollbar-track-transparent',
+  ],
+  form: ['flex items-center gap-2'],
+  input: [
+    'flex-grow p-2 rounded font-sans text-white bg-neutral-800/0',
+    'focus:bg-neutral-800/0 focus:outline-none',
+  ],
+  sendButton: [
+    'bg-sun-calm shadow-md font-display font-bold text-l uppercase text-black px-4 py-1 rounded-full',
+  ],
+  join: ['flex gap-2'],
+  joinButton: [
+    'bg-sun-calm shadow-md font-display font-bold text-l uppercase whitespace-nowrap text-black px-4 py-1 rounded-full',
   ],
 };

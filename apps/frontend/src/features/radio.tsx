@@ -1,22 +1,23 @@
 import type React from 'react';
 import { useStream } from '@/hooks/useStream';
+import clsx from 'clsx';
 import { Chat } from './chat';
 
 export const Radio: React.FC = () => {
   const { videoRef, streamAvailable } = useStream();
 
   return (
-    <div className="min-h-screen w-full bg-neutral-900/50 flex flex-col items-center justify-center text-neutral-100 p-4">
-      <h1 className="font-bold text-3xl mb-6 drop-shadow-xl">Вінілове Радіо</h1>
+    <div className={clsx(styles.container)}>
+      <h1 className={clsx(styles.title)}>Вінілове Радіо</h1>
 
-      <div className="flex flex-col md:flex-row gap-4 w-full max-w-[1200px]">
-        <div className="flex-1 flex flex-col items-center">
+      <div className={clsx(styles.layout)}>
+        <div className={clsx(styles.left)}>
           {streamAvailable ? (
             <video
               ref={videoRef}
               controls
               autoPlay
-              className="w-full rounded-2xl shadow-2xl border border-neutral-800 bg-black"
+              className={clsx(styles.video)}
               style={{ aspectRatio: '16/9' }}
             >
               <track
@@ -28,17 +29,32 @@ export const Radio: React.FC = () => {
               />
             </video>
           ) : (
-            <div className="relative w-full aspect-video flex flex-col items-center justify-center rounded-2xl shadow-2xl border border-neutral-800 bg-neutral-900/60 overflow-hidden">
-              <div className="text-xl font-bold opacity-20">
+            <div className={clsx(styles.fallback)}>
+              <div className={clsx(styles.fallbackText)}>
                 Відпочиваємо...
               </div>
             </div>
           )}
         </div>
-        <div className="w-full md:w-80">
+        <div className={clsx(styles.chat)}>
           <Chat />
         </div>
       </div>
     </div>
   );
+};
+
+const styles = {
+  container: [
+    'min-h-screen w-full bg-neutral-900/50 flex flex-col items-center justify-center text-neutral-100 p-4',
+  ],
+  title: ['font-bold text-3xl mb-6 drop-shadow-xl'],
+  layout: ['flex flex-col md:flex-row gap-4 w-full max-w-[1200px]'],
+  left: ['flex-1 flex flex-col items-center'],
+  video: ['w-full rounded-2xl shadow-2xl border border-neutral-800 bg-black'],
+  fallback: [
+    'relative w-full aspect-video flex flex-col items-center justify-center rounded-2xl shadow-2xl border border-neutral-800 bg-neutral-900/60 overflow-hidden',
+  ],
+  fallbackText: ['text-xl font-bold opacity-20'],
+  chat: ['w-full md:w-80'],
 };

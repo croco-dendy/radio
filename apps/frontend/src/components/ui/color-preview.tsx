@@ -1,18 +1,20 @@
+import clsx from 'clsx';
+
 export const ColorPreview = () => (
-  <div className="space-y-4 font-display text-left">
-    <h1 className="text-4xl font-bold capitalize text-bark-warm">
+  <div className={clsx(styles.container)}>
+    <h1 className={clsx(styles.title)}>
       Color Scheme
     </h1>
     {Object.entries(palette).map(([groupName, colors]) => (
       <div key={groupName}>
-        <h2 className="text-2xl font-bold mb-4 capitalize">{groupName}</h2>
-        <div className="max-w-md grid grid-cols-2 md:grid-cols-5 gap-4">
+        <h2 className={clsx(styles.groupTitle)}>{groupName}</h2>
+        <div className={clsx(styles.grid)}>
           {colors.map((color) => (
-            <div key={color.name} className="space-y-1">
+            <div key={color.name} className={clsx(styles.colorItem)}>
               <div
-                className={`h-[80px] w-[100px] shadow-inner ${color.className}`}
+                className={clsx(styles.colorBox, color.className)}
               />
-              <p className="text-md text-glow-ghost">
+              <p className={clsx(styles.colorLabel)}>
                 {groupName}.{color.name !== 'DEFAULT' ? color.name : ''}
               </p>
             </div>
@@ -22,6 +24,16 @@ export const ColorPreview = () => (
     ))}
   </div>
 );
+
+const styles = {
+  container: ['space-y-4 font-display text-left'],
+  title: ['text-4xl font-bold capitalize text-bark-warm'],
+  groupTitle: ['text-2xl font-bold mb-4 capitalize'],
+  grid: ['max-w-md grid grid-cols-2 md:grid-cols-5 gap-4'],
+  colorItem: ['space-y-1'],
+  colorBox: ['h-[80px] w-[100px] shadow-inner'],
+  colorLabel: ['text-md text-glow-ghost'],
+};
 
 const palette = {
   moss: [

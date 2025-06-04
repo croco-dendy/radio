@@ -17,7 +17,7 @@ export const Container = ({
   const isDefault = !fog && !full;
 
   return (
-    <div className={classes.container}>
+    <div className={clsx(classes.container)}>
       <div
         className={clsx(
           fog && classes.fogPanel,

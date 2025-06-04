@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { getSocket } from '@/services/socket';
+import { subscribe } from '@/services/socket';
 
 export const useSocket = () => {
   const [listeners, setListeners] = useState<number>(0);
 
   useEffect(() => {
-    const ws = getSocket();
+    let ws: WebSocket | null = null;
 
     const handleMessage = (msg: MessageEvent) => {
       try {
@@ -16,12 +16,20 @@ export const useSocket = () => {
 
     const handleClose = () => setListeners(0);
 
-    ws.addEventListener('message', handleMessage);
-    ws.addEventListener('close', handleClose);
+    const attach = (socket: WebSocket) => {
+      ws?.removeEventListener('message', handleMessage);
+      ws?.removeEventListener('close', handleClose);
+      ws = socket;
+      ws.addEventListener('message', handleMessage);
+      ws.addEventListener('close', handleClose);
+    };
+
+    const unsubscribe = subscribe(attach);
 
     return () => {
-      ws.removeEventListener('message', handleMessage);
-      ws.removeEventListener('close', handleClose);
+      ws?.removeEventListener('message', handleMessage);
+      ws?.removeEventListener('close', handleClose);
+      unsubscribe();
     };
   }, []);
 

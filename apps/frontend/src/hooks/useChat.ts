@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getSocket } from '@/services/socket';
+import { subscribe, getSocket } from '@/services/socket';
 
 export interface ChatMessage {
   nickname: string;
@@ -11,7 +11,7 @@ export const useChat = (nickname: string | null) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    const ws = getSocket();
+    let ws: WebSocket | null = null;
     const onMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
@@ -31,8 +31,18 @@ export const useChat = (nickname: string | null) => {
         }
       } catch {}
     };
-    ws.addEventListener('message', onMessage);
-    return () => ws.removeEventListener('message', onMessage);
+    const attach = (socket: WebSocket) => {
+      ws?.removeEventListener('message', onMessage);
+      ws = socket;
+      ws.addEventListener('message', onMessage);
+    };
+
+    const unsubscribe = subscribe(attach);
+
+    return () => {
+      ws?.removeEventListener('message', onMessage);
+      unsubscribe();
+    };
   }, []);
 
   const sendMessage = (text: string) => {

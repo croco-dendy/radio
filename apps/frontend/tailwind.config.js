@@ -90,5 +90,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-textshadow')],
+  plugins: [require('tailwindcss-textshadow'), require('tailwind-scrollbar')],
 };

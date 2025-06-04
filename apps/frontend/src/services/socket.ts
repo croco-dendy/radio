@@ -10,7 +10,9 @@ function notify(ws: WebSocket) {
 
 function connect() {
   socket = new WebSocket(socketUrl);
-  socket.addEventListener('open', () => notify(socket!));
+  socket.addEventListener('open', () => {
+    if (socket) notify(socket);
+  });
   socket.addEventListener('close', scheduleReconnect);
   socket.addEventListener('error', scheduleReconnect);
 }
@@ -36,7 +38,10 @@ export const subscribe = (cb: (ws: WebSocket) => void) => {
 
 export const getSocket = () => {
   ensureSocket();
-  return socket!;
+  if (!socket) {
+    throw new Error('WebSocket is not connected.');
+  }
+  return socket;
 };
 
 export const closeSocket = () => {

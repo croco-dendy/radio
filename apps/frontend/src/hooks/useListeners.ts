@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { subscribe } from '@/services/socket';
 
-export const useSocket = () => {
+export const useListeners = () => {
   const [listeners, setListeners] = useState<number>(0);
 
   useEffect(() => {

@@ -1,11 +1,13 @@
 console.log('Socket server starting...');
 import { serve } from 'bun';
 import type { ServerWebSocket } from 'bun';
+import { addMessage, getHistory } from './utils/chatStore';
 
 interface ChatPayload {
   type: 'chat';
   nickname: string;
   text: string;
+  timestamp: string;
 }
 
 const clients = new Set<ServerWebSocket<unknown>>();
@@ -23,6 +25,9 @@ export function startWsServer(port = 3001) {
         clients.add(ws);
         lastPong.set(ws, Date.now());
         broadcastListeners();
+        for (const msg of getHistory()) {
+          ws.send(JSON.stringify({ type: 'chat', ...msg }));
+        }
       },
       close(ws: ServerWebSocket<unknown>) {
         clients.delete(ws);
@@ -33,7 +38,14 @@ export function startWsServer(port = 3001) {
         try {
           const data = JSON.parse(message.toString()) as ChatPayload;
           if (data?.type === 'chat') {
-            broadcastChat(data);
+            const payload: ChatPayload = {
+              type: 'chat',
+              nickname: data.nickname,
+              text: data.text,
+              timestamp: new Date().toISOString(),
+            };
+            addMessage(payload);
+            broadcastChat(payload);
           }
         } catch {}
       },

@@ -64,7 +64,7 @@ export const Chat = () => {
           className="flex-grow px-3 py-2 rounded text-black"
           placeholder="Type a message..."
         />
-        <button type="submit" className="bg-moss text-white px-4 rounded">
+        <button type="submit" className="bg-ember text-white px-4 rounded">
           Send
         </button>
       </form>

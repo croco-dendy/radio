@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useChat } from '@/hooks/useChat';
 
 export const Chat = () => {
-  const [nickname, setNickname] = useState<string>(() => localStorage.getItem('nickname') || '');
+  const [nickname, setNickname] = useState<string>(
+    () => localStorage.getItem('nickname') || '',
+  );
   const [nickInput, setNickInput] = useState(nickname);
   const [message, setMessage] = useState('');
 
@@ -32,7 +34,11 @@ export const Chat = () => {
           placeholder="Nickname"
           className="px-3 py-2 rounded text-black"
         />
-        <button onClick={handleSetNickname} className="bg-moss text-white rounded px-4 py-2">
+        <button
+          type="button"
+          onClick={handleSetNickname}
+          className="bg-moss text-white rounded px-4 py-2"
+        >
           Join chat
         </button>
       </div>
@@ -42,9 +48,12 @@ export const Chat = () => {
   return (
     <div className="flex flex-col h-full max-h-[500px]">
       <div className="flex-1 overflow-y-auto space-y-1 mb-2 p-2 rounded bg-neutral-800/60">
-        {messages.map((m, i) => (
-          <div key={i}>
-            <span className="font-semibold text-moss">{m.nickname}:</span> {m.text}
+        {messages.map((message) => (
+          <div
+            key={`${message.nickname}-${message.text}-${message.timestamp ?? ''}`}
+          >
+            <span className="font-semibold text-moss">{message.nickname}:</span>{' '}
+            {message.text}
           </div>
         ))}
       </div>

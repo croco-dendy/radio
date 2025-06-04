@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { Hono } from 'hono';
 import { env } from '@/utils/env';
 import { startWsServer } from './ws';
@@ -10,6 +9,7 @@ Bun.serve({
   port: env.port,
 });
 
-startWsServer();
+startWsServer(env.socketPort);
 
 console.log(`✅ Hono API on: http://localhost:${env.port}`);
+console.log(`✅ Socket on: ws://localhost:${env.socketPort}`);

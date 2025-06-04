@@ -11,10 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@polissya/types": ["packages/types/src"]
-    }
+    "baseUrl": "."
   },
   "exclude": ["node_modules", "dist"]
 }

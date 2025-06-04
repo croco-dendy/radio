@@ -4,6 +4,7 @@ import { getSocket } from '@/services/socket';
 export interface ChatMessage {
   nickname: string;
   text: string;
+  timestamp: string;
 }
 
 export const useChat = (nickname: string | null) => {
@@ -11,11 +12,22 @@ export const useChat = (nickname: string | null) => {
 
   useEffect(() => {
     const ws = getSocket();
-    const onMessage = (ev: MessageEvent) => {
+    const onMessage = (event: MessageEvent) => {
       try {
-        const data = JSON.parse(ev.data);
-        if (data?.type === 'chat' && typeof data.text === 'string' && typeof data.nickname === 'string') {
-          setMessages((prev) => [...prev, { nickname: data.nickname, text: data.text }]);
+        const data = JSON.parse(event.data);
+        if (
+          data?.type === 'chat' &&
+          typeof data.text === 'string' &&
+          typeof data.nickname === 'string'
+        ) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              nickname: data.nickname,
+              text: data.text,
+              timestamp: data.timestamp ?? new Date().toISOString(),
+            },
+          ]);
         }
       } catch {}
     };

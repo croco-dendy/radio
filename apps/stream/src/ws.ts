@@ -1,6 +1,5 @@
-// ws-server.js
+console.log('Socket server starting...');
 import { serve } from 'bun';
-
 import type { ServerWebSocket } from 'bun';
 
 interface ChatPayload {
@@ -19,6 +18,7 @@ export function startWsServer(port = 3001) {
     },
     websocket: {
       open(ws: ServerWebSocket<unknown>) {
+        console.log('🚀 New client:', ws.remoteAddress);
         clients.add(ws);
         broadcastListeners();
       },

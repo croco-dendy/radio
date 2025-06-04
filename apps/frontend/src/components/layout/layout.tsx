@@ -7,7 +7,7 @@ const Layout = ({ children }: PropsWithChildren) => {
     <ErrorBoundary fallbackRender={() => null}>
       <div className="flex flex-col h-screen overflow-hidden text-white bg-neutral-950 bg-cover bg-center">
         <img
-          src="/public/placeholder.png"
+          src="/placeholder.png"
           alt="Очікуємо трансляцію"
           className="absolute w-full h-full object-cover mb-4 z-0"
         />

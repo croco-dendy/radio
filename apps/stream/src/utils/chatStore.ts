@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 export interface ChatMessage {
   nickname: string;
@@ -49,4 +49,3 @@ function prune() {
   const cutoff = Date.now() - 60 * 60 * 1000;
   history = history.filter((m) => Date.parse(m.timestamp) >= cutoff);
 }
-

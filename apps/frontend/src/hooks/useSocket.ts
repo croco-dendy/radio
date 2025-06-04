@@ -1,21 +1,28 @@
 import { useEffect, useState } from 'react';
-import { socketUrl } from '@/services/env';
+import { getSocket } from '@/services/socket';
 
 export const useSocket = () => {
   const [listeners, setListeners] = useState<number>(0);
 
   useEffect(() => {
-    const ws = new window.WebSocket(socketUrl);
+    const ws = getSocket();
 
-    ws.onmessage = (msg) => {
+    const handleMessage = (msg: MessageEvent) => {
       try {
         const data = JSON.parse(msg.data);
         if (typeof data.listeners === 'number') setListeners(data.listeners);
       } catch {}
     };
 
-    ws.onclose = () => setListeners(0);
-    return () => ws.close();
+    const handleClose = () => setListeners(0);
+
+    ws.addEventListener('message', handleMessage);
+    ws.addEventListener('close', handleClose);
+
+    return () => {
+      ws.removeEventListener('message', handleMessage);
+      ws.removeEventListener('close', handleClose);
+    };
   }, []);
 
   return listeners;

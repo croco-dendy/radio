@@ -28,9 +28,7 @@ export const Radio: React.FC = () => {
         </video>
       ) : (
         <div className="relative w-full max-w-2xl aspect-video flex flex-col items-center justify-center rounded-2xl shadow-2xl border border-neutral-800 bg-neutral-900/60 overflow-hidden">
-          <div className="text-xl font-bold opacity-20">
-            Трансляція скоро почнеться...
-          </div>
+          <div className="text-xl font-bold opacity-20">Відпочиваємо...</div>
         </div>
       )}
       <div className="mt-8 px-8 py-3 rounded-xl bg-neutral-800 text-xl font-semibold shadow-lg flex items-center gap-2">

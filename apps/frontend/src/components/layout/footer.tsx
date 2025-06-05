@@ -1,14 +1,24 @@
+import clsx from 'clsx';
+
 const Footer = () => {
   return (
-    <footer className="text-xs text-white/40 font-sans bg-coal-relic/80 backdrop-blur-md p-4">
-      <div className="flex flex-row items-center justify-center gap-4">
-        <p className="text-sm font-display font-thin text-center">
+    <footer className={clsx(styles.footer)}>
+      <div className={clsx(styles.inner)}>
+        <p className={clsx(styles.text)}>
           © {new Date().getFullYear()} Вінілове Радіо — Музична скарбниця
           Нептуна
         </p>
       </div>
     </footer>
   );
+};
+
+const styles = {
+  footer: [
+    'text-xs text-white/40 font-sans bg-coal-relic/80 backdrop-blur-md p-4',
+  ],
+  inner: ['flex flex-row items-center justify-center gap-4'],
+  text: ['text-sm font-display font-thin text-center'],
 };
 
 export default Footer;

@@ -2,6 +2,7 @@
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import { VitePWA } from 'vite-plugin-pwa';
 // import mkcert from 'vite-plugin-mkcert';
 import tsPaths from 'vite-tsconfig-paths';
 
@@ -16,6 +17,30 @@ export default defineConfig({
     //   source: 'coding',
     // }),
     tsPaths(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.png', 'logo.png'],
+      manifest: {
+        name: 'Вінілове Радіо',
+        short_name: 'Radio',
+        start_url: '.',
+        display: 'standalone',
+        background_color: '#ffffff',
+        theme_color: '#000000',
+        icons: [
+          {
+            src: '/logo.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/logo.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      },
+    }),
   ],
   build: {
     cssMinify: 'lightningcss',

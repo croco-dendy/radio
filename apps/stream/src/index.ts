@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { env } from '@/utils/env';
-import { startWsServer } from './ws';
+import { startWsServer } from './ws/server';
 
 const app = new Hono();
 

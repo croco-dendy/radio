@@ -11,7 +11,14 @@ function notify(ws: WebSocket) {
 function connect() {
   socket = new WebSocket(socketUrl);
   socket.addEventListener('open', () => {
-    if (socket) notify(socket);
+    if (socket) {
+      // Send nickname if available in localStorage
+      const nickname = localStorage.getItem('nickname');
+      if (nickname) {
+        socket.send(JSON.stringify({ type: 'join', nickname }));
+      }
+      notify(socket);
+    }
   });
   socket.addEventListener('close', scheduleReconnect);
   socket.addEventListener('error', scheduleReconnect);

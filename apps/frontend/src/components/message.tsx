@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ChatMessage } from '@/hooks/useChat';
+import type { ChatMessage } from '@/features/radio/hooks/useChat';
 
 type MessageProps = {
   message: ChatMessage;
@@ -9,13 +9,14 @@ type MessageProps = {
 export const Message = (props: MessageProps) => {
   const { message, nickname } = props;
   const isSelf = message.nickname === nickname;
+  const displayNickname = message.nickname || 'Анонім';
 
   const messageStyles = isSelf ? styles.selfMessage : styles.otherMessage;
   const messageContent = isSelf ? (
     message.text
   ) : (
     <>
-      <span className={clsx(styles.nickname)}>{message.nickname}</span>
+      <span className={clsx(styles.nickname)}>{displayNickname}</span>
       {message.text}
     </>
   );
@@ -23,7 +24,7 @@ export const Message = (props: MessageProps) => {
   return (
     <div className={clsx(styles.messageWrapper)}>
       <div
-        className={clsx(messageStyles)}
+        className={clsx(styles.message, messageStyles)}
         key={`${message.nickname}-${message.text}-${message.timestamp ?? ''}`}
       >
         {messageContent}
@@ -34,12 +35,12 @@ export const Message = (props: MessageProps) => {
 
 const styles = {
   messageWrapper: ['flex w-full'],
-  otherMessage: [
-    'text-sm flex flex-col p-2 bg-coal-relic/40 rounded-lg backdrop-blur-xl w-fit max-w-[80%]',
+  message: [
+    'flex flex-col text-sm p-2 break-words',
+    'whitespace-pre-wrap overflow-wrap-anywhere bg-coal-relic/40 rounded-lg',
+    'backdrop-blur-xl w-fit max-w-[90%] md:max-w-[80%]',
   ],
-  selfMessage: [
-    'text-sm flex flex-col p-2 text-right text-moss-fog break-words',
-    'whitespace-pre-wrap overflow-wrap-anywhere bg-river/30 rounded-lg backdrop-blur-xl w-fit max-w-[80%] ml-auto',
-  ],
+  otherMessage: ['bg-coal-relic/40 text-moss-fog text-left'],
+  selfMessage: ['bg-river/30 text-moss-fog ml-auto text-right'],
   nickname: ['font-display font-semibold text-moss/80 mr-2 uppercase'],
 };

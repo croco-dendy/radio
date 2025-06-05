@@ -1,0 +1,94 @@
+import type React from 'react';
+import { useStream } from './hooks/useStream';
+import clsx from 'clsx';
+import { Chat } from './components/chat';
+import { useState } from 'react';
+import { useListeners } from './hooks/useListeners';
+import { Header } from './components/header';
+import { VideoPlayer } from './components/video-player';
+import { Fallback } from './components/fallback';
+import { UserList } from './components/user-list';
+
+export const RadioLayout: React.FC = () => {
+  const { videoRef, streamAvailable } = useStream();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isUserListOpen, setIsUserListOpen] = useState(false);
+  const [nickname, setNickname] = useState<string>(
+    () => localStorage.getItem('nickname') || '',
+  );
+  const listeners = useListeners();
+
+  const handlePlayClick = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handlePauseClick = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleMuteClick = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  return (
+    <div className={clsx(styles.container)}>
+      <Header
+        isPlaying={isPlaying}
+        isMuted={isMuted}
+        listeners={listeners}
+        nickname={nickname}
+        onMuteClick={handleMuteClick}
+        onUserListClick={() => setIsUserListOpen(true)}
+      />
+
+      <div className={clsx(styles.layout)}>
+        <div className={clsx(styles.video)}>
+          {streamAvailable ? (
+            <VideoPlayer
+              videoRef={videoRef}
+              isPlaying={isPlaying}
+              isMuted={isMuted}
+              isHovering={isHovering}
+              onPlayClick={handlePlayClick}
+              onPauseClick={handlePauseClick}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            />
+          ) : (
+            <Fallback />
+          )}
+        </div>
+        <div className={clsx(styles.sidebar)}>
+          <Chat nickname={nickname} setNickname={setNickname} />
+        </div>
+      </div>
+
+      <UserList
+        isOpen={isUserListOpen}
+        onClose={() => setIsUserListOpen(false)}
+      />
+    </div>
+  );
+};
+
+const styles = {
+  container: [
+    'w-full h-full bg-neutral-900/50 flex flex-col items-center md:justify-center text-neutral-100 p-4',
+  ],
+  layout: [
+    'flex flex-col md:flex-row md:gap-4 w-full h-full md:h-auto max-w-[1200px] md:justify-center',
+  ],
+  video: ['w-full h-full md:h-[55vh] flex flex-col items-center'],
+  sidebar: ['flex flex-col md:min-w-[350px] md:w-[350px] h-[40vh] md:h-[55vh]'],
+} as const;

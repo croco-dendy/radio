@@ -2,18 +2,21 @@ import { classes } from '@/styles';
 import type { PropsWithChildren } from 'react';
 import clsx from 'clsx';
 
-type Container = {
+interface ContainerProps extends PropsWithChildren {
+  /** Makes the container take full height and width */
   full?: boolean;
+  /** Applies a foggy glass effect to the container */
   fog?: boolean;
+  /** Makes the container content scrollable */
   scrollable?: boolean;
-};
+}
 
 export const Container = ({
   children,
   scrollable,
   full,
   fog,
-}: PropsWithChildren<Container>) => {
+}: ContainerProps) => {
   const isDefault = !fog && !full;
 
   return (

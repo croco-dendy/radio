@@ -1,9 +1,9 @@
 import { createRoute } from '@tanstack/react-router';
 import { Root } from './root';
-import { Radio } from '@/features';
+import { RadioLayout } from '@/features';
 
 const Home = () => {
-  return <Radio />;
+  return <RadioLayout />;
 };
 
 export const homeRoute = createRoute({

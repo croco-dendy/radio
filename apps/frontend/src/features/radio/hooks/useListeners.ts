@@ -1,34 +1,34 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { subscribe } from '@/services/socket';
+import { useSound } from './useSound';
 
 export const useListeners = () => {
   const [listeners, setListeners] = useState<number>(0);
   const prevListenersRef = useRef<number>(0);
-  const joinSoundRef = useRef<HTMLAudioElement | null>(null);
+  const { play } = useSound();
 
-  useEffect(() => {
-    // Initialize audio element
-    joinSoundRef.current = new Audio('/sounds/join.wav');
-    joinSoundRef.current.volume = 0.3; // Set volume to 30%
-
-    let ws: WebSocket | null = null;
-
-    const handleMessage = (msg: MessageEvent) => {
+  const handleMessage = useCallback(
+    (msg: MessageEvent) => {
       try {
         const data = JSON.parse(msg.data);
-        if (typeof data.listeners === 'number') {
+        if (data?.type === 'listeners' && typeof data.listeners === 'number') {
           const newListeners = data.listeners;
           // Play sound if someone joined (listeners count increased)
           if (newListeners > prevListenersRef.current) {
-            joinSoundRef.current?.play().catch(() => {});
+            play('join');
           }
           prevListenersRef.current = newListeners;
           setListeners(newListeners);
         }
       } catch {}
-    };
+    },
+    [play],
+  );
 
-    const handleClose = () => setListeners(0);
+  const handleClose = useCallback(() => setListeners(0), []);
+
+  useEffect(() => {
+    let ws: WebSocket | null = null;
 
     const attach = (socket: WebSocket) => {
       ws?.removeEventListener('message', handleMessage);
@@ -45,7 +45,7 @@ export const useListeners = () => {
       ws?.removeEventListener('close', handleClose);
       unsubscribe();
     };
-  }, []);
+  }, [handleMessage, handleClose]);
 
   return listeners;
 };

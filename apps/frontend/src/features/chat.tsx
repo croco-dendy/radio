@@ -1,28 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { useChat } from '@/hooks/useChat';
-import { useListeners } from '@/hooks/useListeners';
 import clsx from 'clsx';
 import { Message } from '@/components/message';
 
-const getMelomanLabel = (count: number) => {
-  const n = Math.abs(count) % 100;
-  const n1 = n % 10;
-
-  if (n > 10 && n < 20) return `${count} Меломанів`;
-  if (n1 > 1 && n1 < 5) return `${count} Меломани`;
-  if (n1 === 1) return `${count} Меломан`;
-  return `${count} Меломанів`;
+type ChatProps = {
+  nickname: string;
+  setNickname: (nickname: string) => void;
 };
 
-export const Chat = () => {
-  const [nickname, setNickname] = useState<string>(
-    () => localStorage.getItem('nickname') || '',
-  );
+export const Chat = ({ nickname, setNickname }: ChatProps) => {
   const [nickInput, setNickInput] = useState(nickname);
   const [message, setMessage] = useState('');
 
   const { messages, sendMessage } = useChat(nickname || null);
-  const listeners = useListeners();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -50,11 +40,7 @@ export const Chat = () => {
   return (
     <div className={clsx(styles.container)}>
       <div className={clsx(styles.header)}>
-        <span className={clsx(styles.listeners)}>{getMelomanLabel(listeners - 1)}</span>
-        <span className={clsx(styles.nickname)}>
-          <span className={clsx(styles.plus)}>+</span>
-          {nickname}
-        </span>
+        <h2 className={clsx(styles.title)}>Чатик</h2>
       </div>
       <div className={clsx(styles.chatArea)}>
         <div ref={containerRef} className={clsx(styles.messages)}>
@@ -75,10 +61,7 @@ export const Chat = () => {
             className={clsx(styles.input)}
             placeholder="Шо кажеш?"
           />
-          <button
-            type="submit"
-            className={clsx(styles.sendButton)}
-          >
+          <button type="submit" className={clsx(styles.sendButton)}>
             Пук
           </button>
         </form>
@@ -104,15 +87,17 @@ export const Chat = () => {
 };
 
 const styles = {
-  container: ['flex flex-col h-full max-h-[500px]'],
-  header: ['p-2 font-display uppercase w-full flex items-center justify-between gap-2'],
-  listeners: ['text-white/40'],
-  nickname: ['text-sun'],
-  plus: ['lowercase mr-2 text-white/60'],
+  container: ['flex flex-col h-full'],
+  header: [
+    'p-2 font-display uppercase w-full flex items-center justify-end',
+    'border-b border-moss/40',
+  ],
+  title: ['text-xl font-bold text-white/80'],
   chatArea: ['flex-1 h-full overflow-hidden flex border-y border-moss/40'],
   messages: [
     'w-full overflow-y-auto overflow-x-hidden space-y-1 p-2 flex flex-col flex-start',
     'scrollbar-thin scrollbar-thumb-moss/30 scrollbar-track-transparent',
+    'overflow-y-scroll scrollbar-gutter-stable',
   ],
   form: ['flex items-center gap-2'],
   input: [

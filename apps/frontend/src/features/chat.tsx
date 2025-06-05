@@ -89,26 +89,28 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
 const styles = {
   container: ['flex flex-col h-full'],
   header: [
-    'p-2 font-display uppercase w-full flex items-center justify-end',
+    'p-2 font-display uppercase w-full flex items-center justify-center md:justify-end',
     'border-b border-moss/40',
   ],
-  title: ['text-xl font-bold text-white/80'],
+  title: ['text-lg md:text-xl font-bold text-white/80'],
   chatArea: ['flex-1 h-full overflow-hidden flex border-y border-moss/40'],
   messages: [
     'w-full overflow-y-auto overflow-x-hidden space-y-1 p-2 flex flex-col flex-start',
     'scrollbar-thin scrollbar-thumb-moss/30 scrollbar-track-transparent',
     'overflow-y-scroll scrollbar-gutter-stable',
   ],
-  form: ['flex items-center gap-2'],
+  form: ['flex flex-col md:flex-row items-center gap-2'],
   input: [
-    'flex-grow p-2 rounded font-sans text-white bg-neutral-800/0',
+    'flex-grow w-full p-2 rounded font-sans text-white bg-neutral-800/0',
     'focus:bg-neutral-800/0 focus:outline-none',
   ],
   sendButton: [
     'bg-sun-calm shadow-md font-display font-bold text-l uppercase text-black px-4 py-1 rounded-full',
+    'w-full md:w-auto text-center',
   ],
-  join: ['flex gap-2'],
+  join: ['flex flex-col md:flex-row gap-2'],
   joinButton: [
     'bg-sun-calm shadow-md font-display font-bold text-l uppercase whitespace-nowrap text-black px-4 py-1 rounded-full',
+    'w-full md:w-auto',
   ],
 };

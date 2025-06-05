@@ -24,7 +24,8 @@ const TabsNavigation = () => {
 
 const styles = {
   container: [
-    'fixed bottom-[70px] left-1/2 -translate-x-1/2 px-4 py-2 rounded-full',
+    'fixed bottom-4 md:bottom-[70px] left-1/2 -translate-x-1/2',
+    'px-2 py-1 md:px-4 md:py-2 rounded-full',
     'shadow-xl flex gap-4 z-50',
   ],
   link: [

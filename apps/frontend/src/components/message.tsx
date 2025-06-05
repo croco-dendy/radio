@@ -35,11 +35,11 @@ export const Message = (props: MessageProps) => {
 const styles = {
   messageWrapper: ['flex w-full'],
   otherMessage: [
-    'text-sm flex flex-col p-2 bg-coal-relic/40 rounded-lg backdrop-blur-xl w-fit max-w-[80%]',
+    'text-sm flex flex-col p-2 bg-coal-relic/40 rounded-lg backdrop-blur-xl w-fit max-w-[90%] md:max-w-[80%]',
   ],
   selfMessage: [
     'text-sm flex flex-col p-2 text-right text-moss-fog break-words',
-    'whitespace-pre-wrap overflow-wrap-anywhere bg-river/30 rounded-lg backdrop-blur-xl w-fit max-w-[80%] ml-auto',
+    'whitespace-pre-wrap overflow-wrap-anywhere bg-river/30 rounded-lg backdrop-blur-xl w-fit max-w-[90%] md:max-w-[80%] ml-auto',
   ],
   nickname: ['font-display font-semibold text-moss/80 mr-2 uppercase'],
 };

@@ -24,6 +24,7 @@ export default Layout;
 const styles = {
   wrapper: [
     'flex flex-col h-screen overflow-hidden text-white bg-neutral-950 bg-cover bg-center',
+    'p-2 md:p-0',
   ],
   background: ['absolute w-full h-full object-cover mb-4 z-0'],
   main: ['flex-grow flex overflow-hidden z-10'],

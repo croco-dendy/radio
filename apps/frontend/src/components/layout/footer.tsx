@@ -15,7 +15,7 @@ const Footer = () => {
 
 const styles = {
   footer: [
-    'text-xs text-white/40 font-sans bg-coal-relic/80 backdrop-blur-md p-4',
+    'text-xs md:text-sm text-white/40 font-sans bg-coal-relic/80 backdrop-blur-md p-4',
   ],
   inner: ['flex flex-row items-center justify-center gap-4'],
   text: ['text-sm font-display font-thin text-center'],

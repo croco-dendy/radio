@@ -146,33 +146,33 @@ const styles = {
   container: [
     'min-h-screen w-full bg-neutral-900/50 flex flex-col items-center justify-center text-neutral-100 p-4',
   ],
-  header: ['w-full max-w-[1200px] mb-5 p-2'],
+  header: ['w-full max-w-[1200px] mb-5 p-2 md:p-4'],
   headerContent: ['flex justify-between items-center gap-4'],
   titleWrapper: ['flex items-center gap-3'],
   favicon: ['w-10 h-10'],
-  title: ['font-bold text-2xl drop-shadow-xl'],
+  title: ['font-bold text-xl md:text-2xl drop-shadow-xl'],
   toolbar: ['flex items-center gap-4'],
-  listeners: ['text-white/40 font-display uppercase'],
+  listeners: ['text-xs md:text-base text-white/40 font-display uppercase'],
   nickname: ['text-sun font-display uppercase'],
   plus: ['lowercase mr-2 text-white/60'],
   layout: [
     'flex flex-col md:flex-row gap-4 w-full max-w-[1200px] justify-center',
   ],
-  left: ['w-full h-[55vh] flex flex-col items-center'],
+  left: ['w-full md:w-2/3 h-[45vh] md:h-[55vh] flex flex-col items-center'],
   videoWrapper: [
     'relative w-full h-full border border-moss-relic/40 rounded-2xl shadow-2xl overflow-hidden',
   ],
   video: ['w-full h-full bg-black object-cover'],
   playButton: [
     'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-    'w-24 h-24 rounded-full bg-sun-calm/90 hover:bg-sun-calm',
+    'w-16 h-16 md:w-24 md:h-24 rounded-full bg-sun-calm/90 hover:bg-sun-calm',
     'flex items-center justify-center transition-colors duration-200',
     'shadow-lg hover:shadow-xl',
   ],
   playIcon: ['text-4xl text-black'],
   pauseButton: [
     'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-    'w-24 h-24 rounded-full bg-neutral-900/80 hover:bg-neutral-900',
+    'w-16 h-16 md:w-24 md:h-24 rounded-full bg-neutral-900/80 hover:bg-neutral-900',
     'flex items-center justify-center transition-colors duration-200',
     'shadow-lg hover:shadow-xl',
   ],
@@ -180,7 +180,7 @@ const styles = {
   overlay: ['absolute inset-0 bg-black/50 backdrop-blur-sm'],
   mutedLabel: [
     'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-    'text-6xl font-display font-bold uppercase tracking-widest',
+    'text-4xl md:text-6xl font-display font-bold uppercase tracking-widest',
     'text-white/80 drop-shadow-lg',
   ],
   muteButton: [
@@ -193,5 +193,5 @@ const styles = {
     'relative w-full h-full flex flex-col items-center justify-center rounded-2xl shadow-2xl border border-neutral-800 bg-neutral-900/60 overflow-hidden',
   ],
   fallbackText: ['text-xl font-bold opacity-20'],
-  chat: ['h-[55vh]'],
+  chat: ['h-[45vh] md:h-[55vh]'],
 };

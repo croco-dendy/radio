@@ -1,32 +1,22 @@
 import type React from 'react';
 import clsx from 'clsx';
-import type { User } from '@/features/radio/hooks/useUserList';
 import { useUserList } from '@/features/radio/hooks/useUserList';
 import { StatusIcon } from '../icons/status-icon';
 import { useUserColor } from '../../hooks/useUserColor';
 
 interface UserListProps {
   isOpen: boolean;
+  nickname: string;
   onClose: () => void;
 }
 
-// Helper function to get status display based on online status
-const getStatusDisplay = (isOnline: boolean) => {
-  return {
-    indicator: (
-      <StatusIcon
-        className={isOnline ? 'text-green-500' : 'text-gray-500 opacity-60'}
-        aria-label={isOnline ? 'Online status' : 'Offline status'}
-      />
-    ),
-    title: isOnline ? 'Онлайн' : 'Офлайн',
-  };
-};
-
-export const UserList: React.FC<UserListProps> = ({ isOpen, onClose }) => {
+export const UserList: React.FC<UserListProps> = ({
+  isOpen,
+  onClose,
+  nickname,
+}) => {
   const users = useUserList();
   const { getEffectiveColor } = useUserColor();
-  console.log('🚀 ~ users:', users);
 
   if (!isOpen) return null;
 
@@ -46,7 +36,7 @@ export const UserList: React.FC<UserListProps> = ({ isOpen, onClose }) => {
       >
         <div className={clsx(styles.header)}>
           <h3 id="user-list-title" className={clsx(styles.title)}>
-            Список користувачів ({users.length})
+            Меломани на Городі
           </h3>
           <button
             type="button"
@@ -71,6 +61,9 @@ export const UserList: React.FC<UserListProps> = ({ isOpen, onClose }) => {
                   )}
                 >
                   {user.nickname}
+                  {user.nickname === nickname && (
+                    <span className={clsx(styles.self)}>{'<- це ти'}</span>
+                  )}
                 </span>
                 <StatusIcon
                   className={clsx(
@@ -117,4 +110,5 @@ const styles = {
   nickname: ['font-display uppercase'],
   status: ['transition-colors duration-200 cursor-help'],
   empty: ['text-white/40 text-center py-4'],
+  self: ['ml-2 text-white/20 text-center py-4'],
 } as const;

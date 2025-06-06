@@ -1,5 +1,5 @@
 import type { ServerWebSocket } from 'bun';
-import type { WebSocketClient, WebSocketData } from '../types';
+import type { WebSocketData } from '../types';
 
 class ClientStore {
   private clients: Set<ServerWebSocket<WebSocketData>> = new Set();

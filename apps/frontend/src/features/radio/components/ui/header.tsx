@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import { getMelomanLabel } from '../../utils';
 import { SettingsIcon } from '../icons/settings-icon';
 import { useUserColor } from '@/features/radio/hooks/useUserColor';
+import { useUserList } from '../../hooks';
 
 interface HeaderProps {
   isPlaying: boolean;
   isMuted: boolean;
-  listeners: number;
   nickname: string;
   onMuteClick: () => void;
   onUserListClick: () => void;
@@ -17,13 +17,14 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   isPlaying,
   isMuted,
-  listeners,
   nickname,
   onMuteClick,
   onUserListClick,
   onSettingsClick,
 }) => {
   const { getEffectiveColor } = useUserColor();
+  const users = useUserList();
+  const listeners = users.length;
   const listenersWithoutUser = listeners - 1;
 
   return (

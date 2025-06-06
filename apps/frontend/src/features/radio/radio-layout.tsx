@@ -3,7 +3,6 @@ import { useStream } from './hooks/useStream';
 import clsx from 'clsx';
 import { Chat } from './components/chat';
 import { useState } from 'react';
-import { useListeners } from './hooks/useListeners';
 import { useUserColorsSync } from './hooks/useUserColorsSync';
 import { Header, VideoPlayer, Fallback } from './components/ui';
 import { UserList, AccountSettings } from './components/settings';
@@ -18,7 +17,6 @@ export const RadioLayout: React.FC = () => {
   const [nickname, setNickname] = useState<string>(
     () => localStorage.getItem('nickname') || '',
   );
-  const listeners = useListeners();
 
   // Enable real-time color synchronization
   useUserColorsSync();
@@ -53,7 +51,6 @@ export const RadioLayout: React.FC = () => {
       <Header
         isPlaying={isPlaying}
         isMuted={isMuted}
-        listeners={listeners}
         nickname={nickname}
         onMuteClick={handleMuteClick}
         onUserListClick={() => setIsUserListOpen(true)}
@@ -84,6 +81,7 @@ export const RadioLayout: React.FC = () => {
 
       <UserList
         isOpen={isUserListOpen}
+        nickname={nickname}
         onClose={() => setIsUserListOpen(false)}
       />
 

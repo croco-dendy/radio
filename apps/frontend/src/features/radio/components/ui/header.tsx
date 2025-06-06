@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
               <SettingsIcon />
             </button>
           )}
-          {nickname && listenersWithoutUser > 0 && (
+          {nickname && listeners > 0 && (
             <button
               type="button"
               onClick={onUserListClick}
@@ -97,7 +97,7 @@ const styles = {
   title: ['font-bold text-xl md:text-2xl drop-shadow-xl whitespace-nowrap'],
   toolbar: ['flex items-center gap-4 w-full justify-between md:justify-end'],
   listeners: ['text-base text-white/40 font-display uppercase'],
-  nickname: ['font-display uppercase cursor-pointer'],
+  nickname: ['font-display uppercase cursor-default'],
   plus: ['mr-2 text-white/60'],
   muteButton: [
     'px-4 py-2 rounded-full bg-coal-relic/40 hover:bg-coal-relic/80',

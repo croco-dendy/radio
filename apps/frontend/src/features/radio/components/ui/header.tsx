@@ -24,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSettingsClick,
 }) => {
   const { getEffectiveColor } = useUserColor();
+  const listenersWithoutUser = listeners - 1;
 
   return (
     <div className={clsx(styles.header)}>
@@ -51,22 +52,22 @@ export const Header: React.FC<HeaderProps> = ({
           {nickname && (
             <button
               type="button"
-              onClick={onUserListClick}
-              className={clsx(styles.userListButton)}
-            >
-              <span className={clsx(styles.listeners)}>
-                {getMelomanLabel(listeners - 1)} онлайн
-              </span>
-            </button>
-          )}
-          {nickname && (
-            <button
-              type="button"
               onClick={onSettingsClick}
               className={clsx(styles.settingsButton)}
               aria-label="Налаштування акаунту"
             >
               <SettingsIcon />
+            </button>
+          )}
+          {nickname && listenersWithoutUser > 0 && (
+            <button
+              type="button"
+              onClick={onUserListClick}
+              className={clsx(styles.userListButton)}
+            >
+              <span className={clsx(styles.listeners)}>
+                {getMelomanLabel(listenersWithoutUser)} онлайн
+              </span>
             </button>
           )}
           {nickname && (
@@ -96,21 +97,22 @@ const styles = {
   title: ['font-bold text-xl md:text-2xl drop-shadow-xl whitespace-nowrap'],
   toolbar: ['flex items-center gap-4 w-full justify-between md:justify-end'],
   listeners: ['text-base text-white/40 font-display uppercase'],
-  nickname: ['font-display uppercase'],
+  nickname: ['font-display uppercase cursor-pointer'],
   plus: ['mr-2 text-white/60'],
   muteButton: [
-    'px-4 py-2 rounded-full bg-neutral-900/80 hover:bg-neutral-900',
+    'px-4 py-2 rounded-full bg-coal-relic/40 hover:bg-coal-relic/80',
     'flex items-center gap-2 transition-colors duration-200',
     'shadow-lg hover:shadow-xl text-sm uppercase tracking-wider',
   ],
   userListButton: [
     'flex items-center gap-2 transition-colors duration-200',
+    'px-4 py-2 rounded-full bg-coal-relic/40 hover:bg-coal-relic/80',
     'shadow-lg hover:shadow-xl text-sm uppercase tracking-wider',
     'cursor-pointer',
   ],
   settingsButton: [
     'flex items-center justify-center w-8 h-8 rounded-full',
-    'bg-neutral-900/40 hover:bg-neutral-900/60',
+    'bg-coal-relic/40 hover:bg-coal-relic/80',
     'text-white/60 hover:text-white/80',
     'transition-colors duration-200',
     'cursor-pointer',

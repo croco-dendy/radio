@@ -6,4 +6,4 @@ export const getMelomanLabel = (count: number) => {
   if (n1 > 1 && n1 < 5) return `${count} Меломани`;
   if (n1 === 1) return `${count} Меломан`;
   return `${count} Меломанів`;
-}; 
+};

@@ -4,7 +4,6 @@ import type { WebSocketData, WebSocketServer } from './types';
 import { handleChatMessage } from './handlers/chatHandler';
 import { clientStore } from './utils/clientStore';
 import { getHistory } from '../utils/chatStore';
-import { getUsers, removeUser, type User } from '../utils/userStore';
 
 // Debounce broadcasts to prevent excessive updates
 let broadcastTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -34,17 +33,11 @@ export function startWsServer(port = 3001): WebSocketServer {
           ws.send(JSON.stringify({ type: 'chat', ...msg }));
         }
 
-        // Send initial users list
-        ws.send(JSON.stringify({ type: 'users', users: getUsers() }));
-
         // Broadcast updated listener count (debounced)
         debouncedBroadcastListeners();
       },
 
       close(ws: ServerWebSocket<WebSocketData>) {
-        if (ws.data?.nickname) {
-          removeUser(ws.data.nickname);
-        }
         clientStore.removeClient(ws);
         debouncedBroadcastListeners();
       },
@@ -99,13 +92,19 @@ export function startWsServer(port = 3001): WebSocketServer {
 function broadcastListeners() {
   const count = clientStore.getClientCount();
 
-  // Get connected users with nicknames and lastSeen info
-  const connectedUsers: User[] = [];
+  // Get connected users with nicknames, lastSeen info, and colors
+  const connectedUsers: {
+    nickname: string;
+    lastSeen: string;
+    color?: string | null;
+  }[] = [];
   for (const ws of clientStore.getClients()) {
     if (ws.data?.nickname) {
+      const lastActivityTime = clientStore.getLastActivity(ws);
       connectedUsers.push({
         nickname: ws.data.nickname,
-        lastSeen: new Date().toISOString(), // Currently active
+        lastSeen: new Date(lastActivityTime).toISOString(),
+        color: ws.data.color, // Include user's color setting
       });
     }
   }

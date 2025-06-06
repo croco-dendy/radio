@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import clsx from 'clsx';
-import { PlayIcon, PauseIcon } from './icons/player-icons';
+import { PlayIcon, PauseIcon } from '../icons/player-icons';
 
 interface VideoPlayerProps {
   videoRef: React.RefObject<HTMLVideoElement>;

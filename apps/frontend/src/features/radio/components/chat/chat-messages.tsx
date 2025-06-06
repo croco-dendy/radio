@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
-import { Message } from '@/components/message';
+import { Message } from './chat-message';
 import type { ChatMessagesProps } from './types';
 
 export const ChatMessages = ({ messages, nickname }: ChatMessagesProps) => {

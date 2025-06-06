@@ -1,2 +1,2 @@
-export * from './radio/radio-layout';
-export * from './radio/components/chat/chat';
+export { RadioLayout } from './radio/radio-layout';
+export * from './radio/components';

@@ -5,6 +5,9 @@ interface SoundConfig {
 
 interface SoundSettings {
   interfaceSounds: boolean;
+  messageSounds: boolean;
+  sendSounds: boolean;
+  joinSounds: boolean;
 }
 
 interface Storage {
@@ -23,7 +26,7 @@ const SOUNDS = {
 type SoundName = keyof typeof SOUNDS;
 
 export class SoundService {
-  private interfaceSoundsEnabled: boolean;
+  private settings: SoundSettings;
   private lastPlayTime: number;
   private readonly debounceTime: number;
   private readonly storage: Storage;
@@ -33,23 +36,40 @@ export class SoundService {
     this.storage = storage;
     this.lastPlayTime = 0;
     this.debounceTime = 1000; // 1 second
-    this.interfaceSoundsEnabled = this.loadSettings();
+    this.settings = this.loadSettings();
   }
 
-  private loadSettings(): boolean {
+  private loadSettings(): SoundSettings {
     const saved = this.storage.getItem('soundSettings');
     if (saved) {
-      const settings = JSON.parse(saved) as SoundSettings;
-      return settings.interfaceSounds;
+      try {
+        const settings = JSON.parse(saved) as Partial<SoundSettings>;
+        // Ensure all properties exist with default values
+        return {
+          interfaceSounds: settings.interfaceSounds ?? true,
+          messageSounds: settings.messageSounds ?? true,
+          sendSounds: settings.sendSounds ?? true,
+          joinSounds: settings.joinSounds ?? true,
+        };
+      } catch {
+        // If parsing fails, return defaults
+        return this.getDefaultSettings();
+      }
     }
-    return true;
+    return this.getDefaultSettings();
+  }
+
+  private getDefaultSettings(): SoundSettings {
+    return {
+      interfaceSounds: true,
+      messageSounds: true,
+      sendSounds: true,
+      joinSounds: true,
+    };
   }
 
   private saveSettings(): void {
-    this.storage.setItem(
-      'soundSettings',
-      JSON.stringify({ interfaceSounds: this.interfaceSoundsEnabled }),
-    );
+    this.storage.setItem('soundSettings', JSON.stringify(this.settings));
     this.notifyChange();
   }
 
@@ -71,7 +91,17 @@ export class SoundService {
   }
 
   public playSound(sound: SoundName): void {
-    if (!this.interfaceSoundsEnabled) return;
+    // Check both master switch and individual sound type
+    if (!this.settings.interfaceSounds) return;
+
+    // Check individual sound type settings
+    const soundTypeEnabled = {
+      message: this.settings.messageSounds,
+      send: this.settings.sendSounds,
+      join: this.settings.joinSounds,
+    }[sound];
+
+    if (!soundTypeEnabled) return;
 
     const now = Date.now();
     if (now - this.lastPlayTime < this.debounceTime) return;
@@ -82,12 +112,40 @@ export class SoundService {
   }
 
   public toggleInterfaceSounds(): void {
-    this.interfaceSoundsEnabled = !this.interfaceSoundsEnabled;
+    this.settings.interfaceSounds = !this.settings.interfaceSounds;
     this.saveSettings();
   }
 
   public isInterfaceSoundsEnabled(): boolean {
-    return this.interfaceSoundsEnabled;
+    return this.settings.interfaceSounds;
+  }
+
+  // Individual sound type methods
+  public toggleMessageSounds(): void {
+    this.settings.messageSounds = !this.settings.messageSounds;
+    this.saveSettings();
+  }
+
+  public isMessageSoundsEnabled(): boolean {
+    return this.settings.messageSounds;
+  }
+
+  public toggleSendSounds(): void {
+    this.settings.sendSounds = !this.settings.sendSounds;
+    this.saveSettings();
+  }
+
+  public isSendSoundsEnabled(): boolean {
+    return this.settings.sendSounds;
+  }
+
+  public toggleJoinSounds(): void {
+    this.settings.joinSounds = !this.settings.joinSounds;
+    this.saveSettings();
+  }
+
+  public isJoinSoundsEnabled(): boolean {
+    return this.settings.joinSounds;
   }
 }
 

@@ -1,6 +1,8 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { getMelomanLabel } from '../utils';
+import { getMelomanLabel } from '../../utils';
+import { SettingsIcon } from '../icons/settings-icon';
+import { useUserColor } from '@/features/radio/hooks/useUserColor';
 
 interface HeaderProps {
   isPlaying: boolean;
@@ -9,6 +11,7 @@ interface HeaderProps {
   nickname: string;
   onMuteClick: () => void;
   onUserListClick: () => void;
+  onSettingsClick: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,7 +21,10 @@ export const Header: React.FC<HeaderProps> = ({
   nickname,
   onMuteClick,
   onUserListClick,
+  onSettingsClick,
 }) => {
+  const { getEffectiveColor } = useUserColor();
+
   return (
     <div className={clsx(styles.header)}>
       <div className={clsx(styles.headerContent)}>
@@ -54,7 +60,22 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
           {nickname && (
-            <span className={clsx(styles.nickname)}>
+            <button
+              type="button"
+              onClick={onSettingsClick}
+              className={clsx(styles.settingsButton)}
+              aria-label="Налаштування акаунту"
+            >
+              <SettingsIcon />
+            </button>
+          )}
+          {nickname && (
+            <span
+              className={clsx(
+                styles.nickname,
+                getEffectiveColor(nickname, true),
+              )}
+            >
               <span className={clsx(styles.plus)}>+</span>
               {nickname}
             </span>
@@ -75,7 +96,7 @@ const styles = {
   title: ['font-bold text-xl md:text-2xl drop-shadow-xl whitespace-nowrap'],
   toolbar: ['flex items-center gap-4 w-full justify-between md:justify-end'],
   listeners: ['text-base text-white/40 font-display uppercase'],
-  nickname: ['text-sun font-display uppercase'],
+  nickname: ['font-display uppercase'],
   plus: ['mr-2 text-white/60'],
   muteButton: [
     'px-4 py-2 rounded-full bg-neutral-900/80 hover:bg-neutral-900',
@@ -85,6 +106,13 @@ const styles = {
   userListButton: [
     'flex items-center gap-2 transition-colors duration-200',
     'shadow-lg hover:shadow-xl text-sm uppercase tracking-wider',
+    'cursor-pointer',
+  ],
+  settingsButton: [
+    'flex items-center justify-center w-8 h-8 rounded-full',
+    'bg-neutral-900/40 hover:bg-neutral-900/60',
+    'text-white/60 hover:text-white/80',
+    'transition-colors duration-200',
     'cursor-pointer',
   ],
   buttonMuted: ['opacity-50'],

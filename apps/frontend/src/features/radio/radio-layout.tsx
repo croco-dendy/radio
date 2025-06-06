@@ -4,10 +4,9 @@ import clsx from 'clsx';
 import { Chat } from './components/chat';
 import { useState } from 'react';
 import { useListeners } from './hooks/useListeners';
-import { Header } from './components/header';
-import { VideoPlayer } from './components/video-player';
-import { Fallback } from './components/fallback';
-import { UserList } from './components/user-list';
+import { useUserColorsSync } from './hooks/useUserColorsSync';
+import { Header, VideoPlayer, Fallback } from './components/ui';
+import { UserList, AccountSettings } from './components/settings';
 
 export const RadioLayout: React.FC = () => {
   const { videoRef, streamAvailable } = useStream();
@@ -15,10 +14,14 @@ export const RadioLayout: React.FC = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isUserListOpen, setIsUserListOpen] = useState(false);
+  const [isAccountSettingsOpen, setIsAccountSettingsOpen] = useState(false);
   const [nickname, setNickname] = useState<string>(
     () => localStorage.getItem('nickname') || '',
   );
   const listeners = useListeners();
+
+  // Enable real-time color synchronization
+  useUserColorsSync();
 
   const handlePlayClick = () => {
     if (videoRef.current) {
@@ -41,6 +44,10 @@ export const RadioLayout: React.FC = () => {
     }
   };
 
+  const handleNicknameChange = (newNickname: string) => {
+    setNickname(newNickname);
+  };
+
   return (
     <div className={clsx(styles.container)}>
       <Header
@@ -50,6 +57,7 @@ export const RadioLayout: React.FC = () => {
         nickname={nickname}
         onMuteClick={handleMuteClick}
         onUserListClick={() => setIsUserListOpen(true)}
+        onSettingsClick={() => setIsAccountSettingsOpen(true)}
       />
 
       <div className={clsx(styles.layout)}>
@@ -70,13 +78,20 @@ export const RadioLayout: React.FC = () => {
           )}
         </div>
         <div className={clsx(styles.sidebar)}>
-          <Chat nickname={nickname} setNickname={setNickname} />
+          <Chat nickname={nickname} setNickname={handleNicknameChange} />
         </div>
       </div>
 
       <UserList
         isOpen={isUserListOpen}
         onClose={() => setIsUserListOpen(false)}
+      />
+
+      <AccountSettings
+        isOpen={isAccountSettingsOpen}
+        onClose={() => setIsAccountSettingsOpen(false)}
+        nickname={nickname}
+        onNicknameChange={handleNicknameChange}
       />
     </div>
   );

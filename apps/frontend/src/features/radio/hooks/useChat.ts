@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { subscribe, getSocket } from '@/services/socket';
 import { useSound } from './useSound';
-import type { User } from './useUserList';
 
 export interface ChatMessage {
   nickname: string;
@@ -11,16 +10,13 @@ export interface ChatMessage {
 
 export const useChat = (nickname: string | null) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
   const { play } = useSound();
 
   const onMessage = useCallback(
     (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        if (data?.type === 'users' && Array.isArray(data.users)) {
-          setUsers(data.users);
-        } else if (
+        if (
           data?.type === 'chat' &&
           typeof data.text === 'string' &&
           typeof data.nickname === 'string'
@@ -70,5 +66,5 @@ export const useChat = (nickname: string | null) => {
     [nickname, play],
   );
 
-  return { messages, sendMessage, users };
+  return { messages, sendMessage };
 };

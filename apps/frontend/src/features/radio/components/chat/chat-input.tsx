@@ -47,7 +47,7 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
         rows={1}
       />
       <button type="submit" className={clsx(styles.sendButton)}>
-        Пук
+        Ентер
       </button>
     </form>
   );

@@ -1,3 +1,5 @@
+import type { UserWithStatus } from '@/features/radio/hooks/useUserList';
+
 export type Message = {
   text: string;
   nickname: string;
@@ -12,6 +14,7 @@ export type ChatProps = {
 export type ChatMessagesProps = {
   messages: Message[];
   nickname: string;
+  users: UserWithStatus[];
 };
 
 export type ChatInputProps = {
@@ -21,4 +24,6 @@ export type ChatInputProps = {
 export type NicknameInputProps = {
   initialNickname: string;
   onSetNickname: (nickname: string) => void;
-}; 
+  onNicknameChange?: () => void;
+  error?: string | null;
+};

@@ -12,8 +12,15 @@ export interface JoinPayload {
   nickname: string;
 }
 
+export interface ColorUpdatePayload {
+  type: 'color_update';
+  nickname: string;
+  color: string | null; // null means auto mode
+}
+
 export interface WebSocketData {
   nickname?: string;
+  color?: string | null; // null means auto mode, undefined means not set
 }
 
 export interface WebSocketClient {

@@ -36,3 +36,16 @@ Create an optimized production bundle with:
 ```bash
 pnpm build
 ```
+
+📁 components/
+├── 🎯 icons/           # ← ALL ICONS HERE
+│   ├── player-icons.tsx
+│   ├── sound-icons.tsx
+│   ├── settings-icon.tsx
+│   ├── status-icon.tsx
+│   └── index.ts
+├── 🎨 ui/
+├── 💬 chat/
+├── 👤 user/
+├── 🔊 sound/
+└── index.ts

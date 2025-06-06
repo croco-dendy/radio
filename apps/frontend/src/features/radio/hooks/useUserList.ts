@@ -6,7 +6,39 @@ export interface User {
   lastSeen: string;
 }
 
-export const useUserList = () => {
+export interface UserWithStatus extends User {
+  isOnline: boolean;
+}
+
+// Helper function to determine if user is online based on lastSeen
+const isUserOnline = (lastSeen: string): boolean => {
+  try {
+    // Parse the ISO string and convert to local timezone
+    const lastSeenDate = new Date(lastSeen);
+    const now = new Date();
+
+    // Calculate the difference in milliseconds
+    const timeDifference = now.getTime() - lastSeenDate.getTime();
+    const fiveMinutesInMs = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    // User is online if they were seen within the last 5 minutes
+    return timeDifference <= fiveMinutesInMs;
+  } catch (error) {
+    // If there's an error parsing the date, assume user is offline
+    console.warn('Error parsing lastSeen date:', lastSeen, error);
+    return false;
+  }
+};
+
+// Helper function to enrich user with status information
+const enrichUserWithStatus = (user: User): UserWithStatus => {
+  return {
+    ...user,
+    isOnline: isUserOnline(user.lastSeen),
+  };
+};
+
+export const useUserList = (): UserWithStatus[] => {
   const [users, setUsers] = useState<User[]>([]);
 
   const handleMessage = useCallback((msg: MessageEvent) => {
@@ -30,8 +62,6 @@ export const useUserList = () => {
         }
 
         setUsers(userList);
-      } else if (data?.type === 'users' && Array.isArray(data.users)) {
-        setUsers(data.users);
       }
     } catch {}
   }, []);
@@ -53,5 +83,6 @@ export const useUserList = () => {
     };
   }, [handleMessage]);
 
-  return users;
+  // Return users enriched with status information
+  return users.map(enrichUserWithStatus);
 };

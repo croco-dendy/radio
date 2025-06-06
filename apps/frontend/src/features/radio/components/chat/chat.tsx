@@ -4,41 +4,89 @@ import { ChatInput } from './chat-input';
 import { ChatMessages } from './chat-messages';
 import { NicknameInput } from './nickname-input';
 import type { ChatProps } from './types';
-import { useSound } from '../../hooks/useSound';
-import { SoundControl } from '../sound/sound-control';
+import { SoundControl } from '../settings/sound-control';
 import { getSocket } from '@/services/socket';
+import { useUserList } from '../../hooks/useUserList';
+import { useState } from 'react';
 
 export const Chat = ({ nickname, setNickname }: ChatProps) => {
   const { messages, sendMessage } = useChat(nickname || null);
+  const users = useUserList();
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
 
   const handleSetNickname = (name: string) => {
-    setNickname(name);
-    localStorage.setItem('nickname', name);
+    const trimmedName = name.trim();
+
+    // Clear previous error
+    setNicknameError(null);
+
+    // Basic validation
+    if (trimmedName.length < 2) {
+      setNicknameError("Ім'я має бути не менше 2 символів");
+      return;
+    }
+
+    if (trimmedName.length > 20) {
+      setNicknameError("Ім'я має бути не більше 20 символів");
+      return;
+    }
+
+    // Check if nickname is reserved
+    if (
+      trimmedName.toLowerCase() === 'анонім' ||
+      trimmedName.toLowerCase() === 'анon'
+    ) {
+      setNicknameError("Це ім'я зарезервоване, спробуй інше");
+      return;
+    }
+
+    // Check if nickname is already taken
+    const isNicknameTaken = users.some(
+      (user) => user.nickname.toLowerCase() === trimmedName.toLowerCase(),
+    );
+
+    if (isNicknameTaken) {
+      setNicknameError("Це ім'я вже зайняте, спробуй інше");
+      return;
+    }
+
+    setNickname(trimmedName);
+    localStorage.setItem('nickname', trimmedName);
 
     // Send join message if socket is already connected
     try {
       const ws = getSocket();
       if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: 'join', nickname: name }));
+        ws.send(JSON.stringify({ type: 'join', nickname: trimmedName }));
       }
     } catch {
-      // Socket not ready yet, will be sent on next connection
+      // Пофіг
+    }
+  };
+
+  const handleNicknameChange = () => {
+    // Clear error when user starts typing
+    if (nicknameError) {
+      setNicknameError(null);
     }
   };
 
   return (
     <div className={clsx(styles.container)}>
-      <div className={clsx(styles.header)}>
+      <div className={clsx(styles.chatHeader)}>
         <SoundControl />
         <h2 className={clsx(styles.title)}>Чатік</h2>
       </div>
-      <ChatMessages messages={messages} nickname={nickname} />
+
+      <ChatMessages messages={messages} nickname={nickname} users={users} />
       {nickname ? (
         <ChatInput onSend={sendMessage} />
       ) : (
         <NicknameInput
-          initialNickname={nickname}
+          initialNickname={''}
           onSetNickname={handleSetNickname}
+          onNicknameChange={() => setNicknameError(null)}
+          error={nicknameError}
         />
       )}
     </div>
@@ -47,7 +95,7 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
 
 const styles = {
   container: ['flex flex-col w-full h-full'],
-  header: [
+  chatHeader: [
     'flex p-2 font-display uppercase w-full items-center justify-between',
     'border-b border-moss/40',
   ],

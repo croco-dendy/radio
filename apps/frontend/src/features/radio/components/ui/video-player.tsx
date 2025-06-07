@@ -24,26 +24,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onMouseEnter,
   onMouseLeave,
 }) => {
-  const [showControls, setShowControls] = useState(true);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const hideTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
-
-  useEffect(() => {
-    // Check if device is touch-enabled
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
-  }, []);
-
-  const handleTouchStart = useCallback(() => {
-    setShowControls(true);
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current);
-    }
-    hideTimeoutRef.current = setTimeout(() => {
-      if (isPlaying) {
-        setShowControls(false);
-      }
-    }, 2000);
-  }, [isPlaying]);
 
   useEffect(() => {
     return () => {
@@ -58,7 +39,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       className={clsx(styles.videoWrapper)}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onTouchStart={handleTouchStart}
     >
       <video
         ref={videoRef}
@@ -88,7 +68,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </span>
         </Button>
       )}
-      {isPlaying && (isHovering || (!isTouchDevice && showControls)) && (
+      {isPlaying && isHovering && (
         <Button
           variant="player"
           onClick={onPauseClick}

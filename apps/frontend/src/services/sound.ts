@@ -100,14 +100,13 @@ export class SoundService {
       send: this.settings.sendSounds,
       join: this.settings.joinSounds,
     }[sound];
-
     if (!soundTypeEnabled) return;
 
     const now = Date.now();
     if (now - this.lastPlayTime < this.debounceTime) return;
 
     const audio = this.createAudio(SOUNDS[sound]);
-    audio.play().catch(() => {});
+    audio.play();
     this.lastPlayTime = now;
   }
 

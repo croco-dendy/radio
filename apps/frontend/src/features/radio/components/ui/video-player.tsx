@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import clsx from 'clsx';
 import { PlayIcon, PauseIcon } from '../icons/player-icons';
+import { Button } from '@/components/ui';
 
 interface VideoPlayerProps {
   videoRef: React.RefObject<HTMLVideoElement>;
@@ -77,26 +78,26 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       {(isMuted || !isPlaying) && <div className={clsx(styles.overlay)} />}
       {isMuted && <div className={clsx(styles.mutedLabel)}>MUTED</div>}
       {!isPlaying && (
-        <button
-          type="button"
+        <Button
+          variant="player"
           onClick={onPlayClick}
-          className={clsx(styles.playerButton)}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
         >
           <span className={clsx(styles.playIcon)}>
             <PlayIcon className="w-24 h-24" />
           </span>
-        </button>
+        </Button>
       )}
       {isPlaying && (isHovering || (!isTouchDevice && showControls)) && (
-        <button
-          type="button"
+        <Button
+          variant="player"
           onClick={onPauseClick}
-          className={clsx(styles.playerButton)}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
         >
           <span className={clsx(styles.pauseIcon)}>
             <PauseIcon className="w-24 h-24" />
           </span>
-        </button>
+        </Button>
       )}
     </div>
   );
@@ -107,11 +108,7 @@ const styles = {
     'relative w-full h-full border border-moss-relic/40 rounded-2xl shadow-2xl overflow-hidden',
   ],
   video: ['w-full h-full bg-black object-cover'],
-  playerButton: [
-    'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-    'flex items-center justify-center opacity-70 hover:opacity-100',
-    'transition-opacity duration-200',
-  ],
+
   playIcon: ['text-black'],
   pauseIcon: ['text-white'],
   overlay: ['absolute inset-0 bg-black/50 backdrop-blur-sm'],

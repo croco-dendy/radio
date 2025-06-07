@@ -7,6 +7,7 @@ import { useUserList } from '@/features/radio/hooks/useUserList';
 import { useUserColor } from '@/features/radio/hooks/useUserColor';
 import { getSocket } from '@/services/socket';
 import { ColorPickerModal } from './color-picker-modal';
+import { CloseButton, Button, ToggleButton } from '@/components/ui';
 
 interface AccountSettingsProps {
   isOpen: boolean;
@@ -141,15 +142,11 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({
           <h3 id="account-settings-title" className={clsx(styles.title)}>
             Налаштування акаунту
           </h3>
-          <button
-            type="button"
+          <CloseButton
             onClick={onClose}
             onKeyDown={(e) => e.key === 'Enter' && onClose()}
-            className={clsx(styles.closeButton)}
             aria-label="Close account settings"
-          >
-            ✕
-          </button>
+          />
         </div>
 
         <div className={clsx(styles.content)}>
@@ -177,16 +174,16 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({
                   nicknameError && styles.inputError,
                 )}
               />
-              <button
-                type="button"
+              <Button
+                variant="primary"
                 onClick={handleChangeNickname}
                 disabled={
                   !newNickname.trim() || newNickname.trim() === nickname
                 }
-                className={clsx(styles.changeButton)}
+                size="sm"
               >
                 Змінити
-              </button>
+              </Button>
             </div>
             {nicknameError && (
               <div className={clsx(styles.error)}>{nicknameError}</div>
@@ -211,35 +208,23 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({
                 {nickname}
               </span>
             </div>
-            <button
-              type="button"
+            <Button
+              variant="primary"
               onClick={() => setIsColorPickerOpen(true)}
-              className={clsx(styles.colorPickerButton)}
             >
               Змінити колір
-            </button>
+            </Button>
           </div>
 
           <div className={clsx(styles.section)}>
             <h4 className={clsx(styles.sectionTitle)}>Налаштування звуку</h4>
             <div className={clsx(styles.toggleContainer)}>
               <span className={clsx(styles.label)}>Головний перемикач</span>
-              <button
-                type="button"
-                onClick={toggleMasterSound}
-                className={clsx(
-                  styles.toggle,
-                  masterSoundEnabled ? styles.toggleOn : styles.toggleOff,
-                )}
+              <ToggleButton
+                checked={masterSoundEnabled}
+                onToggle={toggleMasterSound}
                 aria-label={`${masterSoundEnabled ? 'Вимкнути' : 'Увімкнути'} всі звуки`}
-              >
-                <div
-                  className={clsx(
-                    styles.toggleKnob,
-                    masterSoundEnabled && styles.toggleKnobActive,
-                  )}
-                />
-              </button>
+              />
             </div>
 
             <div className={clsx(styles.soundSubsection)}>
@@ -247,95 +232,43 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({
 
               <div className={clsx(styles.toggleContainer)}>
                 <span className={clsx(styles.label)}>Звуки повідомлень</span>
-                <button
-                  type="button"
-                  onClick={toggleMessageSounds}
+                <ToggleButton
+                  checked={messageSounds && masterSoundEnabled}
+                  onToggle={toggleMessageSounds}
                   disabled={!masterSoundEnabled}
-                  className={clsx(
-                    styles.toggle,
-                    messageSounds && masterSoundEnabled
-                      ? styles.toggleOn
-                      : styles.toggleOff,
-                    !masterSoundEnabled && styles.toggleDisabled,
-                  )}
                   aria-label={`${messageSounds ? 'Вимкнути' : 'Увімкнути'} звуки повідомлень`}
-                >
-                  <div
-                    className={clsx(
-                      styles.toggleKnob,
-                      messageSounds &&
-                        masterSoundEnabled &&
-                        styles.toggleKnobActive,
-                    )}
-                  />
-                </button>
+                />
               </div>
 
               <div className={clsx(styles.toggleContainer)}>
                 <span className={clsx(styles.label)}>Звуки відправлення</span>
-                <button
-                  type="button"
-                  onClick={toggleSendSounds}
+                <ToggleButton
+                  checked={sendSounds && masterSoundEnabled}
+                  onToggle={toggleSendSounds}
                   disabled={!masterSoundEnabled}
-                  className={clsx(
-                    styles.toggle,
-                    sendSounds && masterSoundEnabled
-                      ? styles.toggleOn
-                      : styles.toggleOff,
-                    !masterSoundEnabled && styles.toggleDisabled,
-                  )}
                   aria-label={`${sendSounds ? 'Вимкнути' : 'Увімкнути'} звуки відправлення`}
-                >
-                  <div
-                    className={clsx(
-                      styles.toggleKnob,
-                      sendSounds &&
-                        masterSoundEnabled &&
-                        styles.toggleKnobActive,
-                    )}
-                  />
-                </button>
+                />
               </div>
 
               <div className={clsx(styles.toggleContainer)}>
                 <span className={clsx(styles.label)}>
                   Звуки входу користувачів
                 </span>
-                <button
-                  type="button"
-                  onClick={toggleJoinSounds}
+                <ToggleButton
+                  checked={joinSounds && masterSoundEnabled}
+                  onToggle={toggleJoinSounds}
                   disabled={!masterSoundEnabled}
-                  className={clsx(
-                    styles.toggle,
-                    joinSounds && masterSoundEnabled
-                      ? styles.toggleOn
-                      : styles.toggleOff,
-                    !masterSoundEnabled && styles.toggleDisabled,
-                  )}
                   aria-label={`${joinSounds ? 'Вимкнути' : 'Увімкнути'} звуки входу користувачів`}
-                >
-                  <div
-                    className={clsx(
-                      styles.toggleKnob,
-                      joinSounds &&
-                        masterSoundEnabled &&
-                        styles.toggleKnobActive,
-                    )}
-                  />
-                </button>
+                />
               </div>
             </div>
           </div>
 
           <div className={clsx(styles.section)}>
             <h4 className={clsx(styles.sectionTitle)}>Дані</h4>
-            <button
-              type="button"
-              onClick={handleClearAllData}
-              className={clsx(styles.dangerButton)}
-            >
+            <Button variant="danger" onClick={handleClearAllData}>
               Очистити всі дані
-            </button>
+            </Button>
             <p className={clsx(styles.warning)}>
               Це видалить ваше ім'я та всі налаштування
             </p>
@@ -363,12 +296,7 @@ const styles = {
   ],
   header: ['flex items-center justify-between p-4'],
   title: ['text-lg font-display uppercase text-white/80'],
-  closeButton: [
-    'w-8 h-8 flex items-center justify-center rounded-full',
-    'bg-neutral-900/40 hover:bg-neutral-900/60',
-    'text-white/60 hover:text-white/80',
-    'transition-colors duration-200',
-  ],
+
   content: [
     'flex flex-col gap-6 p-4 overflow-y-auto',
     'scrollbar-thin scrollbar-thumb-moss/30 scrollbar-track-transparent',
@@ -387,45 +315,16 @@ const styles = {
     'transition-colors duration-200',
   ],
   inputError: ['border-red-500/50 bg-red-500/10'],
-  changeButton: [
-    'px-4 py-2 rounded-lg bg-moss/40 hover:bg-moss/60',
-    'text-white/90 hover:text-white text-sm',
-    'transition-colors duration-200',
-    'border border-moss/20',
-    'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-moss/40',
-  ],
+
   error: [
     'text-red-400 text-sm px-3 py-1 bg-red-500/10 rounded-lg',
     'border border-red-500/20',
   ],
   toggleContainer: ['flex items-center justify-between gap-2'],
-  toggle: [
-    'relative w-12 h-6 rounded-full transition-colors duration-200',
-    'border-2 cursor-pointer',
-  ],
-  toggleOn: ['bg-moss/40 border-moss/60'],
-  toggleOff: ['bg-neutral-900/40 border-neutral-700'],
-  toggleDisabled: ['opacity-50 cursor-not-allowed'],
-  toggleKnob: [
-    'absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full',
-    'transition-transform duration-200',
-  ],
-  toggleKnobActive: ['transform translate-x-6'],
-  dangerButton: [
-    'px-4 py-2 rounded-lg bg-red-900/40 hover:bg-red-900/60',
-    'text-red-400 hover:text-red-300 text-sm',
-    'transition-colors duration-200',
-    'border border-red-700/40',
-  ],
+
   warning: ['text-white/40 text-xs'],
   colorPreview: ['flex items-center justify-between gap-2'],
   colorPreviewText: ['flex flex-col gap-1'],
   colorMode: ['text-xs text-white/40'],
   nicknamePreview: ['font-display uppercase'],
-  colorPickerButton: [
-    'w-full px-4 py-2 rounded-lg bg-moss/40 hover:bg-moss/60',
-    'text-white/90 hover:text-white text-sm',
-    'transition-colors duration-200',
-    'border border-moss/20',
-  ],
 } as const;

@@ -3,25 +3,11 @@ import type { ChatMessage } from '@/features/radio/hooks/useChat';
 import { useUser } from '@/features/radio/hooks/useUser';
 import { useUserColor } from '@/features/radio/hooks/useUserColor';
 import { StatusIcon } from '../icons/status-icon';
+import { formatTime } from '../../utils/time';
 
 type MessageProps = {
   message: ChatMessage;
   nickname: string;
-};
-
-// Helper function to format time for display as HH:MM
-const formatMessageTime = (timestamp: string): string => {
-  try {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString('uk-UA', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    });
-  } catch (error) {
-    console.warn('Error formatting message time:', timestamp, error);
-    return '';
-  }
 };
 
 export const Message = (props: MessageProps) => {
@@ -32,7 +18,7 @@ export const Message = (props: MessageProps) => {
   // Use the new useUser hook to get user data
   const user = useUser(message.nickname);
   const userIsOnline = user?.isOnline ?? false;
-  const messageTime = formatMessageTime(message.timestamp);
+  const messageTime = formatTime(message.timestamp);
 
   // Get user's color preference and generate effective color
   const { getEffectiveColor } = useUserColor();

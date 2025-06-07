@@ -2,6 +2,7 @@ import type React from 'react';
 import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 import { useUserColor } from '@/features/radio/hooks/useUserColor';
+import { CloseButton, Button } from '@/components/ui';
 
 interface ColorPickerModalProps {
   isOpen: boolean;
@@ -92,14 +93,10 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
           <h3 id="color-picker-title" className={clsx(styles.title)}>
             Оберіть колір імені
           </h3>
-          <button
-            type="button"
+          <CloseButton
             onClick={handleCancel}
-            className={clsx(styles.closeButton)}
             aria-label="Закрити вибір кольору"
-          >
-            ✕
-          </button>
+          />
         </div>
 
         <div className={clsx(styles.content)}>
@@ -115,16 +112,13 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
 
           <div className={clsx(styles.section)}>
             <h4 className={clsx(styles.sectionTitle)}>Автоматичний режим</h4>
-            <button
-              type="button"
+            <Button
+              variant="auto"
+              active={previewIsAuto}
               onClick={handleAutoPreview}
-              className={clsx(
-                styles.autoButton,
-                previewIsAuto && styles.autoButtonActive,
-              )}
             >
               {previewIsAuto ? '✓ Обрано автоматичний' : 'Обрати автоматичний'}
-            </button>
+            </Button>
             <p className={clsx(styles.description)}>
               Колір генерується автоматично на основі імені
             </p>
@@ -134,46 +128,38 @@ export const ColorPickerModal: React.FC<ColorPickerModalProps> = ({
             <h4 className={clsx(styles.sectionTitle)}>Обрати колір вручну</h4>
             <div className={clsx(styles.colorGrid)}>
               {colorOptions.map((color) => (
-                <button
+                <Button
                   key={color.value}
-                  type="button"
+                  variant="color"
+                  active={previewColor === color.value && !previewIsAuto}
                   onClick={() => handleColorPreview(color.value)}
-                  className={clsx(
-                    styles.colorButton,
-                    previewColor === color.value &&
-                      !previewIsAuto &&
-                      styles.colorButtonActive,
-                  )}
                   title={color.name}
                   style={{ backgroundColor: color.preview }}
                 >
                   {previewColor === color.value && !previewIsAuto && (
                     <span className={clsx(styles.colorCheckmark)}>✓</span>
                   )}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
 
           <div className={clsx(styles.actions)}>
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               onClick={handleCancel}
-              className={clsx(styles.cancelButton)}
+              className="flex-1"
             >
               Скасувати
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="primary"
               onClick={handleConfirm}
               disabled={!hasChanges}
-              className={clsx(
-                styles.confirmButton,
-                !hasChanges && styles.confirmButtonDisabled,
-              )}
+              className="flex-1"
             >
               Підтвердити
-            </button>
+            </Button>
           </div>
         </div>
       </dialog>
@@ -192,12 +178,7 @@ const styles = {
   ],
   header: ['flex items-center justify-between p-4'],
   title: ['text-lg font-display uppercase text-white/80'],
-  closeButton: [
-    'w-8 h-8 flex items-center justify-center rounded-full',
-    'bg-neutral-900/40 hover:bg-neutral-900/60',
-    'text-white/60 hover:text-white/80',
-    'transition-colors duration-200',
-  ],
+
   content: [
     'flex flex-col gap-6 p-4 overflow-y-auto',
     'scrollbar-thin scrollbar-thumb-moss/30 scrollbar-track-transparent',
@@ -210,36 +191,10 @@ const styles = {
   modeIndicator: ['text-xs text-white/40 bg-moss/30 px-2 py-1 rounded'],
   section: ['flex flex-col gap-3'],
   sectionTitle: ['text-base font-display uppercase text-white/60'],
-  autoButton: [
-    'w-full px-4 py-3 rounded-lg bg-moss/40 hover:bg-moss/60',
-    'text-white/90 hover:text-white text-sm',
-    'transition-colors duration-200',
-    'border border-moss/20',
-  ],
-  autoButtonActive: ['bg-moss/60 border-moss/80 ring-2 ring-moss/40'],
+
   description: ['text-white/40 text-xs'],
   colorGrid: ['flex flex-wrap gap-3'],
-  colorButton: [
-    'w-12 h-12 rounded-lg transition-colors duration-200',
-    'border border-white/10 hover:border-white/30',
-    'flex items-center justify-center',
-  ],
-  colorButtonActive: ['border-white/50 ring-2 ring-moss/40'],
+
   colorCheckmark: ['text-black text-lg font-bold'],
   actions: ['flex gap-3 pt-2'],
-  cancelButton: [
-    'flex-1 px-4 py-2 rounded-lg bg-neutral-900/40 hover:bg-neutral-900/60',
-    'text-white/60 hover:text-white/80 text-sm',
-    'transition-colors duration-200',
-    'border border-neutral-700',
-  ],
-  confirmButton: [
-    'flex-1 px-4 py-2 rounded-lg bg-moss/60 hover:bg-moss/80',
-    'text-white text-sm font-medium',
-    'transition-colors duration-200',
-    'border border-moss/40',
-  ],
-  confirmButtonDisabled: [
-    'opacity-50 cursor-not-allowed bg-moss/40 hover:bg-moss/40',
-  ],
 } as const;

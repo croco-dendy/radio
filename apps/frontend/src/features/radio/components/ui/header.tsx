@@ -3,7 +3,10 @@ import clsx from 'clsx';
 import { getMelomanLabel } from '../../utils';
 import { SettingsIcon } from '../icons/settings-icon';
 import { useUserColor } from '@/features/radio/hooks/useUserColor';
-import { useUserList } from '../../hooks';
+import { useSound, useUserList } from '../../hooks';
+import { Button } from '@/components/ui';
+import { useEffect, useRef } from 'react';
+import { soundService } from '@/services/sound';
 
 interface HeaderProps {
   isPlaying: boolean;
@@ -25,7 +28,24 @@ export const Header: React.FC<HeaderProps> = ({
   const { getEffectiveColor } = useUserColor();
   const users = useUserList();
   const listeners = users.length;
+  const prevListeners = useRef(0);
+  const joinSoundTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const listenersWithoutUser = listeners - 1;
+
+  useEffect(() => {
+    if (joinSoundTimer.current) {
+      clearTimeout(joinSoundTimer.current);
+      joinSoundTimer.current = null;
+    }
+
+    joinSoundTimer.current = setTimeout(() => {
+      if (listeners > prevListeners.current) {
+        soundService.playSound('join');
+      }
+      prevListeners.current = listeners;
+      joinSoundTimer.current = null;
+    }, 1500);
+  }, [listeners]);
 
   return (
     <div className={clsx(styles.header)}>
@@ -40,15 +60,11 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div className={clsx(styles.toolbar)}>
           {isPlaying && (
-            <button
-              type="button"
-              onClick={onMuteClick}
-              className={clsx(styles.muteButton)}
-            >
+            <Button variant="mute" active={isMuted} onClick={onMuteClick}>
               <span className={clsx(styles.muteLabel)}>
                 {isMuted ? 'muted' : 'mute'}
               </span>
-            </button>
+            </Button>
           )}
           {nickname && (
             <button
@@ -61,15 +77,11 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
           {nickname && listeners > 0 && (
-            <button
-              type="button"
-              onClick={onUserListClick}
-              className={clsx(styles.userListButton)}
-            >
+            <Button variant="mute" onClick={onUserListClick}>
               <span className={clsx(styles.listeners)}>
                 {getMelomanLabel(listenersWithoutUser)} онлайн
               </span>
-            </button>
+            </Button>
           )}
           {nickname && (
             <span

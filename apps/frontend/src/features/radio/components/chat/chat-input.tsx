@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import type { ChatInputProps } from './types';
 import clsx from 'clsx';
+import { Button } from '@/components/ui';
 
 export const ChatInput = ({ onSend }: ChatInputProps) => {
   const [message, setMessage] = useState('');
@@ -46,9 +47,13 @@ export const ChatInput = ({ onSend }: ChatInputProps) => {
         placeholder="Шо кажеш?"
         rows={1}
       />
-      <button type="submit" className={clsx(styles.sendButton)}>
+      <Button
+        type="submit"
+        variant="ember"
+        className="h-[40px] px-6 py-1 text-xl md:text-lg whitespace-nowrap"
+      >
         Ентер
-      </button>
+      </Button>
     </form>
   );
 };
@@ -62,10 +67,5 @@ const styles = {
     'flex-grow w-full p-2 rounded font-sans text-white bg-neutral-800/0',
     'focus:bg-neutral-800/0 focus:outline-none resize-none overflow-hidden',
     'min-h-[40px] max-h-[200px]',
-  ],
-  sendButton: [
-    'bg-ember shadow-md font-display font-bold text-xl md:text-lg uppercase',
-    'w-auto h-[40px] whitespace-nowrap text-black px-6 py-1 rounded-xl',
-    'disabled:opacity-50 disabled:cursor-not-allowed',
   ],
 };

@@ -17,10 +17,8 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
   const handleSetNickname = (name: string) => {
     const trimmedName = name.trim();
 
-    // Clear previous error
     setNicknameError(null);
 
-    // Basic validation
     if (trimmedName.length < 2) {
       setNicknameError("Ім'я має бути не менше 2 символів");
       return;
@@ -31,7 +29,6 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
       return;
     }
 
-    // Check if nickname is reserved
     if (
       trimmedName.toLowerCase() === 'анонім' ||
       trimmedName.toLowerCase() === 'анon'
@@ -40,7 +37,6 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
       return;
     }
 
-    // Check if nickname is already taken
     const isNicknameTaken = users.some(
       (user) => user.nickname.toLowerCase() === trimmedName.toLowerCase(),
     );
@@ -53,7 +49,6 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
     setNickname(trimmedName);
     localStorage.setItem('nickname', trimmedName);
 
-    // Send join message if socket is already connected
     try {
       const ws = getSocket();
       if (ws.readyState === WebSocket.OPEN) {
@@ -61,13 +56,6 @@ export const Chat = ({ nickname, setNickname }: ChatProps) => {
       }
     } catch {
       // Пофіг
-    }
-  };
-
-  const handleNicknameChange = () => {
-    // Clear error when user starts typing
-    if (nicknameError) {
-      setNicknameError(null);
     }
   };
 

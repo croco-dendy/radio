@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 import type { NicknameInputProps } from './types';
+import { Button } from '@/components/ui';
 
 export const NicknameInput = ({
   initialNickname,
@@ -37,14 +38,14 @@ export const NicknameInput = ({
           placeholder="Твоє ім'я..."
           className={clsx(styles.input, error && styles.inputError)}
         />
-        <button
+        <Button
           disabled={!nickInput}
-          type="button"
+          variant="ember"
           onClick={handleSetNickname}
-          className={clsx(styles.joinButton)}
+          className="h-full px-4 py-1 text-l whitespace-nowrap"
         >
           {nickInput ? 'Погнали' : 'Хочу в чат'}
-        </button>
+        </Button>
       </div>
       {error && <div className={clsx(styles.error)}>{error}</div>}
     </div>
@@ -62,11 +63,7 @@ const styles = {
     'focus:bg-neutral-800/0 focus:outline-none',
   ],
   inputError: ['border border-red-500/50 bg-red-500/10'],
-  joinButton: [
-    'bg-ember shadow-md font-display font-bold text-l uppercase',
-    'w-auto h-full whitespace-nowrap text-black px-4 py-1 rounded-xl',
-    'disabled:opacity-50 disabled:cursor-not-allowed',
-  ],
+
   error: [
     'text-red-400 text-sm px-3 py-1 bg-red-500/10 rounded-lg',
     'border border-red-500/20',

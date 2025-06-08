@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { PlayIcon, PauseIcon } from '../icons/player-icons';
 import { Button } from '@/components/ui';
@@ -43,6 +43,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       <video
         ref={videoRef}
         playsInline
+        controls
         autoPlay={false}
         className={clsx(styles.video)}
         style={{ aspectRatio: '16/9' }}

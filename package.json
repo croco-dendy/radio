@@ -10,7 +10,10 @@
     "lint:write": "turbo run lint:write",
     "test": "turbo run test",
     "prepare": "husky install",
-    "ui:dev": "pnpm --filter @radio/frontend dev"
+    "ui:dev": "pnpm --filter @radio/frontend dev",
+    "wave:dev": "pnpm --filter @radio/wave dev",
+    "wave:prod": "pnpm --filter @radio/wave pm2",
+    "wave:rtmp": "pnpm --filter @radio/wave rtmp"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.3",

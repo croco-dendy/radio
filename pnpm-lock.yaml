@@ -157,7 +157,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.5(@types/react@18.3.11)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
 
-  apps/stream:
+  apps/wave:
     dependencies:
       '@types/node-media-server':
         specifier: ^2.3.7

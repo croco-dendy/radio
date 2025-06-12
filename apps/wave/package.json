@@ -1,8 +1,8 @@
 {
-  "name": "@radio/stream",
+  "name": "@radio/wave",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "rtmp:dev": "./scripts/start-rtmp.sh",
+    "rtmp": "./scripts/start-rtmp.sh",
     "pm2": "pm2 start ecosystem.config.js --env production",
     "check-types": "tsc --noEmit"
   },

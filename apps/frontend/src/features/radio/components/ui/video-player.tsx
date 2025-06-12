@@ -58,7 +58,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </video>
       {(isMuted || !isPlaying) && <div className={clsx(styles.overlay)} />}
       {isMuted && <div className={clsx(styles.mutedLabel)}>MUTED</div>}
-      {!isPlaying && (
+      {/* {!isPlaying && (
         <Button
           variant="player"
           onClick={onPlayClick}
@@ -79,7 +79,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             <PauseIcon className="w-24 h-24" />
           </span>
         </Button>
-      )}
+      )} */}
     </div>
   );
 };

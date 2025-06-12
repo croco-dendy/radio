@@ -44,7 +44,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         ref={videoRef}
         playsInline
         controls
-        autoPlay={false}
         className={clsx(styles.video)}
         style={{ aspectRatio: '16/9' }}
       >
@@ -56,7 +55,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           default
         />
       </video>
-      {(isMuted || !isPlaying) && <div className={clsx(styles.overlay)} />}
+      {isMuted && <div className={clsx(styles.overlay)} />}
       {isMuted && <div className={clsx(styles.mutedLabel)}>MUTED</div>}
       {/* {!isPlaying && (
         <Button

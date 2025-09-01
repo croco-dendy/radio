@@ -79,6 +79,20 @@ export const RadioLayout: React.FC = () => {
         </div>
       </div>
 
+      {/* <div className={styles.spotify}>
+        <iframe
+          data-testid="embed-iframe"
+          style={{ borderRadius: '12px' }}
+          src="https://open.spotify.com/embed/album/1ZxChDw03SUFGUz0RC8A8M?utm_source=generator&theme=0"
+          width="100%"
+          height="152"
+          allowFullScreen
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          title="Spotify album embed"
+        />
+      </div> */}
+
       <UserList
         isOpen={isUserListOpen}
         nickname={nickname}
@@ -104,4 +118,5 @@ const styles = {
   ],
   video: ['w-full h-full md:h-[55vh] flex flex-col items-center'],
   sidebar: ['flex flex-col md:min-w-[350px] md:w-[350px] h-[40vh] md:h-[55vh]'],
+  spotify: ['w-full p-[100px]'],
 } as const;

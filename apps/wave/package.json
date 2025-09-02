@@ -3,7 +3,12 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "rtmp": "./scripts/start-rtmp.sh",
+    "telegram": "./scripts/telegram-stream.sh",
     "pm2": "pm2 start ecosystem.config.js --env production",
+    "pm2:dev": "pm2 start ecosystem.config.js --env development",
+    "pm2:stop": "pm2 stop ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js",
+    "pm2:logs": "pm2 logs",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {

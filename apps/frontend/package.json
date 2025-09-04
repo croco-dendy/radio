@@ -12,6 +12,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@radio/types": "workspace:*",
     "@fontsource-variable/montserrat": "^5.1.0",
     "@fontsource/montserrat-alternates": "^5.1.0",
     "@fontsource/ponomar": "^5.2.1",

@@ -9,10 +9,10 @@ module.exports = {
     },
     {
       name: 'telegram-stream',
-      script: './scripts/telegram-stream.sh',
-      interpreter: 'bash',
+      script: 'src/scripts/telegramStreamProcess.ts',
+      interpreter: 'bun',
       instances: 1,
-      autorestart: true,
+      autorestart: false,
       watch: false,
       max_memory_restart: '500M',
       env: {
@@ -21,7 +21,7 @@ module.exports = {
       env_development: {
         NODE_ENV: 'development'
       },
-      // PM2 specific settings for shell scripts
+      // PM2 specific settings
       kill_timeout: 5000,
       wait_ready: false,
       listen_timeout: 3000,
@@ -30,10 +30,10 @@ module.exports = {
       out_file: './logs/telegram-stream-out.log',
       error_file: './logs/telegram-stream-error.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
-      // Process management
-      min_uptime: '10s',
-      max_restarts: 10,
-      restart_delay: 4000
+      // Process management - don't auto-restart since this starts FFmpeg and exits
+      min_uptime: '1s',
+      max_restarts: 0,
+      restart_delay: 0
     }
   ],
 };

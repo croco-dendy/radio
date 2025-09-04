@@ -10,9 +10,13 @@
     "lint:write": "turbo run lint:write",
     "test": "turbo run test",
     "prepare": "husky install",
-    "ui:dev": "pnpm --filter @radio/frontend dev",
     "wave:dev": "pnpm --filter @radio/wave dev",
-    "wave:prod": "pnpm --filter @radio/wave pm2",
+    "frontend:dev": "pnpm --filter @radio/frontend dev",
+    "admin:dev": "pnpm --filter @radio/admin dev",
+    "wave:start": "pnpm --filter @radio/wave pm2:start",
+    "wave:stop": "pnpm --filter @radio/wave pm2:stop",
+    "wave:restart": "pnpm --filter @radio/wave pm2:restart",
+    "wave:logs": "pnpm --filter @radio/wave pm2:logs",
     "wave:rtmp": "pnpm --filter @radio/wave rtmp"
   },
   "devDependencies": {

@@ -1,0 +1,50 @@
+import { join } from 'node:path';
+import { mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { telegramStreamService } from './telegramStreamService';
+import { rtmpService } from './rtmpService';
+import type { TelegramStreamConfig } from '@/types/streaming';
+
+export class StreamService {
+  private dataDir = join(process.cwd(), 'data');
+
+  constructor() {
+    this.initializeDataDirectory();
+  }
+
+  private async initializeDataDirectory() {
+    if (!existsSync(this.dataDir)) {
+      await mkdir(this.dataDir, { recursive: true });
+    }
+  }
+
+  async startTelegramStream(): Promise<{ success: boolean; message: string }> {
+    return telegramStreamService.startTelegramStream();
+  }
+
+  async stopTelegramStream(): Promise<{ success: boolean; message: string }> {
+    return telegramStreamService.stopTelegramStream();
+  }
+
+  async updateTelegramConfig(updates: Partial<TelegramStreamConfig>) {
+    return telegramStreamService.updateTelegramConfig(updates);
+  }
+
+  async getTelegramConfig() {
+    return telegramStreamService.getTelegramConfig();
+  }
+
+  async startRtmpServer(): Promise<{ success: boolean; message: string }> {
+    return rtmpService.startRtmpServer();
+  }
+
+  async stopRtmpServer(): Promise<{ success: boolean; message: string }> {
+    return rtmpService.stopRtmpServer();
+  }
+
+  async restartRtmpServer(): Promise<{ success: boolean; message: string }> {
+    return rtmpService.restartRtmpServer();
+  }
+}
+
+export const streamService = new StreamService();

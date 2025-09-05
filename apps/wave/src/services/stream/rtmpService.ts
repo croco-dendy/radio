@@ -1,13 +1,11 @@
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
-import type { RtmpServerStatus } from '../types/streaming';
 
 const execAsync = promisify(exec);
 
 export class RtmpService {
   private containerName = 'rtmp-server';
 
-  // Check if RTMP server (Docker container) is running
   async isRtmpServerRunning(): Promise<boolean> {
     try {
       const { stdout } = await execAsync(
@@ -20,31 +18,6 @@ export class RtmpService {
     }
   }
 
-  // Get detailed RTMP server status
-  async getRtmpServerStatus(): Promise<RtmpServerStatus> {
-    try {
-      const { stdout } = await execAsync(
-        `docker ps --filter "name=${this.containerName}" --format "{{.Status}}"`,
-      );
-
-      const isRunning = stdout.trim().includes('Up');
-
-      return {
-        isRunning,
-        containerName: this.containerName,
-        status: isRunning ? stdout.trim() : 'Not running',
-      };
-    } catch (error) {
-      console.error('Error getting RTMP server status:', error);
-      return {
-        isRunning: false,
-        containerName: this.containerName,
-        error: `Failed to check RTMP server: ${error}`,
-      };
-    }
-  }
-
-  // Start RTMP server (if not already running)
   async startRtmpServer(): Promise<{ success: boolean; message: string }> {
     try {
       const isRunning = await this.isRtmpServerRunning();

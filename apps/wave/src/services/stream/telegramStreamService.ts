@@ -3,20 +3,14 @@ import { join } from 'node:path';
 import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { promisify } from 'node:util';
-import type {
-  TelegramStreamConfig,
-  TelegramStreamStatus,
-} from '../types/streaming';
+import type { TelegramStreamConfig } from '../../types/streaming';
 
 const execAsync = promisify(exec);
-
-export interface TelegramStreamServiceStatus extends TelegramStreamStatus {
-  config: TelegramStreamConfig;
-}
 
 export class TelegramStreamService {
   private dataDir = join(process.cwd(), 'data');
   private telegramConfigFile = join(this.dataDir, 'telegram-config.json');
+  private statusFile = join(this.dataDir, 'telegram-stream-status.json');
 
   // Default Telegram stream configuration
   private telegramConfig: TelegramStreamConfig = {
@@ -58,31 +52,121 @@ export class TelegramStreamService {
     }
   }
 
-  // Get quality settings based on quality preset
-  private getQualitySettings(quality: 'low' | 'medium' | 'high'): {
-    audioBitrate: string;
-  } {
-    switch (quality) {
-      case 'low':
-        return { audioBitrate: '64k' };
-      case 'high':
-        return { audioBitrate: '192k' };
-      default:
-        return { audioBitrate: '128k' };
+  // Get daemon status from status file
+  private async getDaemonStatus(): Promise<{
+    status: 'initializing' | 'running' | 'stopped' | 'error';
+    pid: number | null;
+    timestamp: string | null;
+    ffmpegPid: number | null;
+    restartAttempts: number;
+    details?: unknown;
+    streamHealth?: {
+      isConnected: boolean;
+      lastConnectionTime: string | null;
+      totalFramesSent: number;
+      currentBitrate: number;
+      connectionErrors: number;
+      lastHealthCheck: string | null;
+    };
+  } | null> {
+    try {
+      if (!existsSync(this.statusFile)) {
+        return null;
+      }
+
+      const statusData = await readFile(this.statusFile, 'utf-8');
+      return JSON.parse(statusData);
+    } catch (error) {
+      console.error('Error reading daemon status:', error);
+      return null;
     }
   }
 
-  // Check if Telegram stream (FFmpeg process) is running
+  // Check if Telegram stream is running via PM2
   async isTelegramStreamRunning(): Promise<boolean> {
     try {
-      // Check for the actual FFmpeg process that's streaming to Telegram
-      const { stdout } = await execAsync(
-        'pgrep -f "ffmpeg.*rtmps://dc4-1.rtmp.t.me"',
+      // First check PM2 status
+      const { stdout } = await execAsync('pm2 jlist');
+      const processes = JSON.parse(stdout);
+      const telegramProcess = processes.find(
+        (proc: { name: string; pm2_env: { status: string } }) =>
+          proc.name === 'telegram-stream',
       );
-      return stdout.trim().length > 0;
-    } catch (error) {
-      // pgrep returns exit code 1 when no processes are found, which is normal
+
+      if (!telegramProcess || telegramProcess.pm2_env.status !== 'online') {
+        return false;
+      }
+
+      // Check daemon status file for more accurate information
+      const daemonStatus = await this.getDaemonStatus();
+      if (
+        daemonStatus &&
+        daemonStatus.status === 'running' &&
+        daemonStatus.ffmpegPid
+      ) {
+        // Verify FFmpeg process is still alive
+        try {
+          const { stdout: ffmpegCheck } = await execAsync(
+            `ps -p ${daemonStatus.ffmpegPid}`,
+          );
+          return ffmpegCheck.includes(daemonStatus.ffmpegPid.toString());
+        } catch {
+          return false;
+        }
+      }
+
       return false;
+    } catch (error) {
+      console.error('Error checking PM2 telegram stream status:', error);
+      return false;
+    }
+  }
+
+  async getPM2ProcessInfo(): Promise<{
+    status: string;
+    pid: number | null;
+    uptime: number | null;
+    memory: number | null;
+    cpu: number | null;
+  }> {
+    try {
+      const { stdout } = await execAsync('pm2 jlist');
+      const processes = JSON.parse(stdout);
+      const telegramProcess = processes.find(
+        (proc: {
+          name: string;
+          pm2_env: { status: string; pm_uptime?: number };
+          pid?: number;
+          monit?: { memory: number; cpu: number };
+        }) => proc.name === 'telegram-stream',
+      );
+
+      if (!telegramProcess) {
+        return {
+          status: 'not_found',
+          pid: null,
+          uptime: null,
+          memory: null,
+          cpu: null,
+        };
+      }
+
+      return {
+        status: telegramProcess.pm2_env.status,
+        pid: telegramProcess.pid || null,
+        uptime: telegramProcess.pm2_env.pm_uptime || null,
+        memory: telegramProcess.monit?.memory || null,
+        cpu: telegramProcess.monit?.cpu || null,
+      };
+    } catch (error) {
+      console.error('Error getting PM2 process info:', error);
+      return {
+        status: 'error',
+        pid: null,
+        uptime: null,
+        memory: null,
+        cpu: null,
+      };
     }
   }
 
@@ -94,6 +178,16 @@ export class TelegramStreamService {
         return {
           success: false,
           message: 'Telegram stream is already running',
+        };
+      }
+
+      // Check if RTMP server is running first
+      const rtmpStatus = await this.checkRtmpServerStatus();
+      if (!rtmpStatus.isRunning) {
+        return {
+          success: false,
+          message:
+            'Cannot start Telegram stream: RTMP server is not running. Please start the RTMP server first.',
         };
       }
 
@@ -112,15 +206,28 @@ export class TelegramStreamService {
         };
       }
 
-      // Wait a moment for the process to start
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Wait a moment for the process to start and check status
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      // Check if it's actually running
+      // Check if it's actually running with FFmpeg
       const isNowRunning = await this.isTelegramStreamRunning();
       if (isNowRunning) {
         return {
           success: true,
           message: 'Telegram stream started successfully via PM2',
+        };
+      }
+
+      // If not running, check if daemon is waiting for RTMP
+      const daemonStatus = await this.getDaemonStatus();
+      if (
+        daemonStatus?.status === 'error' &&
+        (daemonStatus.details as { waiting?: boolean })?.waiting
+      ) {
+        return {
+          success: false,
+          message:
+            'Telegram stream daemon started but is waiting for RTMP server to become available',
         };
       }
 
@@ -134,6 +241,21 @@ export class TelegramStreamService {
         success: false,
         message: `Failed to start Telegram stream: ${error}`,
       };
+    }
+  }
+
+  // Check RTMP server status
+  private async checkRtmpServerStatus(): Promise<{ isRunning: boolean }> {
+    try {
+      // Check if Docker container is running
+      const { stdout } = await execAsync(
+        'docker ps --filter "name=rtmp-server" --format "{{.Status}}"',
+      );
+      const isRunning = stdout.trim().startsWith('Up');
+      return { isRunning };
+    } catch (error) {
+      console.error('Error checking RTMP server status:', error);
+      return { isRunning: false };
     }
   }
 
@@ -171,31 +293,6 @@ export class TelegramStreamService {
     }
   }
 
-  // Get Telegram stream status
-  async getTelegramStreamStatus(): Promise<TelegramStreamServiceStatus> {
-    try {
-      const isRunning = await this.isTelegramStreamRunning();
-
-      return {
-        success: true,
-        message: isRunning
-          ? 'Telegram stream is running via PM2'
-          : 'Telegram stream is not running',
-        isRunning,
-        config: this.telegramConfig,
-      };
-    } catch (error) {
-      console.error('Error getting Telegram stream status:', error);
-      return {
-        success: false,
-        message: `Failed to get Telegram stream status: ${error}`,
-        isRunning: false,
-        config: this.telegramConfig,
-      };
-    }
-  }
-
-  // Update Telegram stream configuration
   async updateTelegramConfig(updates: Partial<TelegramStreamConfig>): Promise<{
     success: boolean;
     message: string;

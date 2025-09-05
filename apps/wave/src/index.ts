@@ -2,11 +2,11 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { env } from '@/utils/env';
 import { startWsServer } from './ws/server';
-import { streamingRoutes } from './routes/stream';
+import { streamRoutes } from './routes/stream';
+import { monitoringRoutes } from './routes/monitoring';
 
 const app = new Hono();
 
-// Enable CORS for all routes
 app.use(
   '*',
   cors({
@@ -23,13 +23,12 @@ app.use(
   }),
 );
 
-// Health check endpoint
 app.get('/health', (c) => {
   return c.json({ status: 'healthy', timestamp: new Date().toISOString() });
 });
 
-// Mount streaming routes
-app.route('/api/streaming', streamingRoutes);
+app.route('/api/stream', streamRoutes);
+app.route('/api/monitoring', monitoringRoutes);
 
 Bun.serve({
   fetch: app.fetch,

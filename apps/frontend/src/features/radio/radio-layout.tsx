@@ -18,7 +18,6 @@ export const RadioLayout: React.FC = () => {
     () => localStorage.getItem('nickname') || '',
   );
 
-  // Enable real-time color synchronization
   useUserColorsSync();
 
   const handlePlayClick = () => {
@@ -78,20 +77,6 @@ export const RadioLayout: React.FC = () => {
           <Chat nickname={nickname} setNickname={handleNicknameChange} />
         </div>
       </div>
-
-      {/* <div className={styles.spotify}>
-        <iframe
-          data-testid="embed-iframe"
-          style={{ borderRadius: '12px' }}
-          src="https://open.spotify.com/embed/album/1ZxChDw03SUFGUz0RC8A8M?utm_source=generator&theme=0"
-          width="100%"
-          height="152"
-          allowFullScreen
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          title="Spotify album embed"
-        />
-      </div> */}
 
       <UserList
         isOpen={isUserListOpen}

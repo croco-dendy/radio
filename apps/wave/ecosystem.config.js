@@ -8,11 +8,11 @@ module.exports = {
       env_production: { PORT: 6970, SOCKET_PORT: 6971 },
     },
     {
-      name: 'telegram-stream',
-      script: 'src/scripts/telegramStreamProcess.ts',
-      interpreter: 'bun',
+      name: 'radio.telegram',
+      script: 'bun',
+      args: 'src/scripts/telegramStreamDaemon.ts',
       instances: 1,
-      autorestart: false,
+      autorestart: true,
       watch: false,
       max_memory_restart: '500M',
       env: {
@@ -21,19 +21,17 @@ module.exports = {
       env_development: {
         NODE_ENV: 'development'
       },
-      // PM2 specific settings
-      kill_timeout: 5000,
+      kill_timeout: 10000,
       wait_ready: false,
-      listen_timeout: 3000,
-      // Log management
+      listen_timeout: 15000,
       log_file: './logs/telegram-stream.log',
       out_file: './logs/telegram-stream-out.log',
       error_file: './logs/telegram-stream-error.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
-      // Process management - don't auto-restart since this starts FFmpeg and exits
-      min_uptime: '1s',
-      max_restarts: 0,
-      restart_delay: 0
+      min_uptime: '10s',
+      max_restarts: 10,
+      restart_delay: 5000,
+      stop_exit_codes: [0]
     }
   ],
 };

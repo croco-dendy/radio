@@ -4,7 +4,7 @@ export const MainPage = () => {
   return (
     <div className={clsx(styles.container)}>
       <div className={clsx(styles.content)}>
-        <h1 className={clsx(styles.title)}>Пан Радіо</h1>
+        <h1 className={clsx(styles.title)}>Радіо Пан</h1>
         <p className={clsx(styles.subtitle)}>
           Привіт! Це адмін панель для Вінілового Радіо. Тут можна редагувати
           музику, відео, новини та багато іншого. Щоб редагувати, авторизуйся.

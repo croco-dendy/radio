@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { StreamHealth, RtmpStats } from '@/services/streaming/types';
-import { ServiceCardTemplate } from './service-card';
+import { ServiceCardTemplate } from './cards/service-card';
 
 interface ServiceStatus {
   isRunning: boolean;

@@ -1,9 +1,14 @@
 import type React from 'react';
-import { useMonitoringDashboard } from '../hooks/use-optimized-monitoring';
-import { MonitoringHeader } from './monitoring/monitoring-header';
-import { StreamOverviewCards } from './cards/stream-overview-cards';
-import { RtmpStatusSection } from './monitoring/rtmp-status-section';
-import { TelegramStatusSection } from './monitoring/telegram-status-section';
+import type {
+  StreamHealth,
+  RtmpStats,
+  WebsiteStats,
+} from '@/services/streaming/types';
+import { useMonitoringDashboard } from '../../hooks/use-optimized-monitoring';
+import { MonitoringHeader } from './monitoring-header';
+import { StreamOverviewCards } from '../cards/stream-overview-cards';
+import { RtmpStatusSection } from './rtmp-status-section';
+import { TelegramStatusSection } from './telegram-status-section';
 
 interface StreamMonitoringProps {
   telegramRunning: boolean;

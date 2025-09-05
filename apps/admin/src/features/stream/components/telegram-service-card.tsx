@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { TelegramStreamStatus } from '@/services/streaming/types';
-import { ServiceCardTemplate } from './service-card';
+import { ServiceCardTemplate } from './cards/service-card';
 
 interface TelegramServiceCardProps {
   status: TelegramStreamStatus | undefined;

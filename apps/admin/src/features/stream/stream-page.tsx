@@ -2,9 +2,10 @@ import type React from 'react';
 import {
   RtmpServiceCard,
   TelegramServiceCard,
-  UnifiedStreamMonitoring,
+  StreamMonitoring,
   ErrorCard,
 } from './components';
+import { useStreamingStatus, useTelegramStream, useRtmpServer } from './hooks';
 
 export const StreamPage: React.FC = () => {
   const streamingStatus = useStreamingStatus();
@@ -36,7 +37,7 @@ export const StreamPage: React.FC = () => {
             isStarting={rtmpServer.isStarting}
             isStopping={rtmpServer.isStopping}
             isRestarting={rtmpServer.isRestarting}
-            rtmpStats={rtmpStats}
+            rtmpStats={rtmpServer.rtmpStats}
           />
 
           <TelegramServiceCard
@@ -51,7 +52,7 @@ export const StreamPage: React.FC = () => {
           />
         </div>
 
-        <UnifiedStreamMonitoring
+        <StreamMonitoring
           telegramRunning={
             telegramStream.telegramStreamStatus?.isRunning || false
           }

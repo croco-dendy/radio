@@ -1,4 +1,5 @@
 import type React from 'react';
+import type { RtmpStats, WebsiteStats } from '@/services/streaming/types';
 
 interface RtmpStatusSectionProps {
   rtmpStats: RtmpStats | null;

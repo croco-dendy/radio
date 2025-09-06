@@ -3,6 +3,9 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "check-types": "tsc --noEmit",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
     "rtmp": "./scripts/start-rtmp.sh",
     "telegram": "bun src/scripts/telegramStreamProcess.ts",
     "pm2:start": "pm2 start ecosystem.config.js --env production",

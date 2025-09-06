@@ -35,98 +35,67 @@ All API responses follow a consistent format:
 
 ## 🎵 Streaming Management
 
-### Get Streaming Status
-Get the current streaming status and system information.
+### Health Check
+Check the health status of the API server.
 
 ```http
-GET /api/streaming/status
+GET /health
 ```
 
 **Response:**
 ```json
 {
-  "isActive": true,
-  "mode": "radio",
-  "currentTrack": {
-    "id": "track-1",
-    "url": "https://example.com/audio.mp3",
-    "title": "Track Title",
-    "duration": 180,
-    "addedAt": "2024-01-01T00:00:00.000Z"
-  },
-  "uptime": 3600000,
-  "listeners": 42,
-  "error": null,
-  "rtmpStatus": {
-    "isRunning": true,
-    "containerName": "rtmp-server",
-    "status": "Up 2 hours",
-    "error": null
-  },
-  "telegramStatus": {
-    "isRunning": true,
-    "success": true,
-    "message": "Telegram stream is running"
-  }
+  "status": "healthy",
+  "timestamp": "2024-01-01T12:00:00.000Z"
 }
 ```
 
-### Get Current Mode
-Get the current streaming mode.
+## 🎛️ RTMP Server Management
+
+### Start RTMP Server
+Start the Docker-based RTMP server.
 
 ```http
-GET /api/streaming/mode
-```
-
-**Response:**
-```json
-{
-  "mode": "radio"
-}
-```
-
-### Set Streaming Mode
-Change the streaming mode between live and radio.
-
-```http
-POST /api/streaming/mode
-Content-Type: application/json
-
-{
-  "mode": "live"
-}
-```
-
-**Request Body:**
-- `mode` (string, required): Either "live" or "radio"
-
-**Response:**
-```json
-{
-  "success": true,
-  "mode": "live"
-}
-```
-
-### Start Streaming
-Start the streaming process.
-
-```http
-POST /api/streaming/start
+POST /api/stream/rtmp/start
 ```
 
 **Response:**
 ```json
 {
   "success": true,
-  "message": "Started radio streaming"
+  "message": "RTMP server started successfully"
 }
 ```
 
-### Stop Streaming
-Stop the streaming process.
+### Stop RTMP Server
+Stop the RTMP server.
 
 ```http
+POST /api/stream/rtmp/stop
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "RTMP server stopped successfully"
+}
+```
+
+### Restart RTMP Server
+Restart the RTMP server.
+
+```http
+POST /api/stream/rtmp/restart
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "RTMP server restarted successfully"
+}
+```
 POST /api/streaming/stop
 ```
 
@@ -376,11 +345,13 @@ GET /api/streaming/telegram/status
 }
 ```
 
+## 📱 Telegram Integration
+
 ### Start Telegram Stream
-Start streaming to Telegram.
+Start streaming to Telegram via PM2 daemon.
 
 ```http
-POST /api/streaming/telegram/start
+POST /api/stream/telegram/start
 ```
 
 **Response:**
@@ -391,11 +362,19 @@ POST /api/streaming/telegram/start
 }
 ```
 
+**Error Response:**
+```json
+{
+  "success": false,
+  "message": "Cannot start Telegram stream: RTMP server is not running. Please start the RTMP server first."
+}
+```
+
 ### Stop Telegram Stream
 Stop streaming to Telegram.
 
 ```http
-POST /api/streaming/telegram/stop
+POST /api/stream/telegram/stop
 ```
 
 **Response:**
@@ -410,7 +389,7 @@ POST /api/streaming/telegram/stop
 Get the current Telegram stream configuration.
 
 ```http
-GET /api/streaming/telegram/config
+GET /api/stream/telegram/config
 ```
 
 **Response:**
@@ -419,7 +398,7 @@ GET /api/streaming/telegram/config
   "success": true,
   "config": {
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
-    "streamKey": "your-stream-key",
+    "streamKey": "2560136036:m6Xk01Qa3dDMq3Rs7cic-Q",
     "inputUrl": "rtmp://localhost:1935/live/test",
     "quality": "medium",
     "audioBitrate": "128k"
@@ -431,7 +410,7 @@ GET /api/streaming/telegram/config
 Update the Telegram stream configuration.
 
 ```http
-PUT /api/streaming/telegram/config
+PUT /api/stream/telegram/config
 Content-Type: application/json
 
 {
@@ -442,10 +421,10 @@ Content-Type: application/json
 
 **Request Body:**
 - `rtmpUrl` (string, optional): Telegram RTMP URL
-- `streamKey` (string, optional): Telegram stream key
-- `inputUrl` (string, optional): Input stream URL
+- `streamKey` (string, optional): Telegram stream key  
+- `inputUrl` (string, optional): Input stream URL (default: rtmp://localhost:1935/live/test)
 - `quality` (string, optional): Stream quality ("low", "medium", "high")
-- `audioBitrate` (string, optional): Audio bitrate
+- `audioBitrate` (string, optional): Audio bitrate (e.g., "128k", "192k", "256k")
 
 **Response:**
 ```json
@@ -454,7 +433,7 @@ Content-Type: application/json
   "message": "Telegram configuration updated successfully",
   "config": {
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
-    "streamKey": "your-stream-key",
+    "streamKey": "2560136036:m6Xk01Qa3dDMq3Rs7cic-Q",
     "inputUrl": "rtmp://localhost:1935/live/test",
     "quality": "high",
     "audioBitrate": "192k"

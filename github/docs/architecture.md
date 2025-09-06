@@ -268,9 +268,29 @@ StreamingService
 | Wave API | 6970 | HTTP | REST API server |
 | WebSocket | 6971 | WebSocket | Real-time updates |
 | Admin Panel | 3001 | HTTP | Admin interface |
-| Frontend | 5173 | HTTP | Public interface |
-| RTMP Server | 1935 | RTMP | Audio input |
-| HLS Output | 8069 | HTTP | HLS stream |
+| Frontend | 5173 | HTTP | Public interface (dev) |
+| RTMP Server | 1935 | RTMP | Audio input from OBS |
+| HLS Output | 8069 | HTTP | HLS stream output |
+
+### 2. Service Dependencies
+
+```
+Docker (RTMP Server)
+    ↓
+Wave Backend (API + WebSocket)
+    ↓
+┌─────────────────┬─────────────────┐
+│  Admin Panel    │  Telegram       │
+│  (Port 3001)    │  Daemon (PM2)   │
+└─────────────────┴─────────────────┘
+    ↓                    ↓
+Frontend (Port 5173)  Telegram Stream
+```
+
+### 3. Critical Dependencies
+- **FFmpeg**: Required for Telegram streaming (must be in PATH)
+- **Docker**: Required for RTMP server container
+- **PM2**: Required for Telegram daemon process management
 
 ### 2. CORS Configuration
 

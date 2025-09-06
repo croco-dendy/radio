@@ -62,8 +62,10 @@ radio/
 ### Prerequisites
 - Node.js 22.15.0+
 - Bun 1.2.9+
+- pnpm 10.8.0+ (package manager)
 - Docker (for RTMP server)
 - PM2 (for production deployment)
+- FFmpeg (for Telegram streaming)
 
 ### Installation
 ```bash
@@ -111,6 +113,7 @@ pnpm frontend:dev
 ### Technical Documentation
 - [🏗️ Architecture Overview](docs/architecture.md)
 - [🔄 Data Flow](docs/data-flow.md)
+- [📡 Streaming Setup Guide](docs/streaming-setup.md)
 - [🎨 Design System](docs/design-system.md)
 - [🧪 Testing](docs/testing.md)
 
@@ -180,26 +183,96 @@ Each application has its own environment configuration:
 ## 🚨 Troubleshooting
 
 ### Common Issues
-- **Port Conflicts**: Check that ports 6970, 6971, 3001, and 1935 are available
-- **FFmpeg Issues**: Ensure FFmpeg is installed and accessible
-- **Docker Issues**: Verify Docker is running and accessible
-- **PM2 Issues**: Check PM2 installation and process status
+
+#### FFmpeg Not Found (Telegram Streaming)
+**Error**: `ENOENT: no such file or directory, posix_spawn 'ffmpeg'`
+**Solution**: Install FFmpeg:
+```bash
+# Ubuntu/Debian
+sudo apt update && sudo apt install ffmpeg
+
+# macOS
+brew install ffmpeg
+
+# Verify installation
+ffmpeg -version
+```
+
+#### Port Conflicts
+**Error**: Address already in use
+**Solution**: Check and kill processes using required ports:
+```bash
+# Check ports
+sudo lsof -i :6970  # Wave API
+sudo lsof -i :6971  # WebSocket
+sudo lsof -i :3001  # Admin Panel
+sudo lsof -i :1935  # RTMP Server
+sudo lsof -i :8069  # HLS Output
+
+# Kill process
+sudo kill -9 <PID>
+```
+
+#### Telegram Stream Daemon Errors
+**Error**: Telegram process keeps restarting
+**Solution**: Check configuration and dependencies:
+```bash
+# Check PM2 status
+pm2 status
+
+# Check Telegram stream logs
+pm2 logs radio.telegram
+
+# Restart Telegram service
+pm2 restart radio.telegram
+```
+
+#### Docker RTMP Server Issues
+**Error**: RTMP server not responding
+**Solution**: 
+```bash
+# Check Docker container
+docker ps --filter "name=rtmp-server"
+
+# Check container logs
+docker logs rtmp-server
+
+# Restart RTMP server
+docker restart rtmp-server
+```
 
 ### Debug Commands
 ```bash
 # Check all services status
-pnpm wave:logs
 pm2 status
+pnpm wave:logs
 
 # Check RTMP server
-docker ps | grep rtmp
+docker ps | grep rtmp-server
+docker logs rtmp-server
 
 # Check Telegram stream
-pm2 logs telegram-stream
+pm2 logs radio.telegram --lines 50
 
-# Check admin panel
+# Check Wave backend
+pm2 logs radio.wave --lines 50
+
+# Test API endpoints
+curl http://localhost:6970/api/streaming/status
 curl http://localhost:3001/health
+
+# Check FFmpeg installation
+which ffmpeg
+ffmpeg -version
 ```
+
+### Service Dependencies
+Ensure services start in this order:
+1. **Docker** (RTMP server)
+2. **Wave Backend** (API server)
+3. **Telegram Daemon** (requires Wave backend and RTMP)
+4. **Admin Panel** (requires Wave backend)
+5. **Frontend** (requires Wave backend)
 
 ## 🤝 Contributing
 

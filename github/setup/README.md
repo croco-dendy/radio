@@ -6,10 +6,11 @@ This guide will walk you through setting up the Radio Streaming Platform from sc
 
 ### Required Software
 - **Node.js**: 22.15.0 or higher
-- **Bun**: 1.2.9 or higher
+- **Bun**: 1.2.9 or higher  
+- **pnpm**: 10.8.0 or higher (package manager)
 - **Docker**: Latest version with Docker Compose
 - **PM2**: For production process management
-- **FFmpeg**: For audio processing and streaming
+- **FFmpeg**: For audio processing and Telegram streaming (critical dependency)
 
 ### System Requirements
 - **OS**: Linux, macOS, or Windows with WSL2
@@ -84,16 +85,29 @@ pm2 --version
 ```bash
 sudo apt update
 sudo apt install ffmpeg
+
+# Verify installation
+ffmpeg -version
+which ffmpeg  # Should show /usr/bin/ffmpeg
 ```
 
 #### macOS
 ```bash
 brew install ffmpeg
+
+# Verify installation
+ffmpeg -version
+which ffmpeg
 ```
 
 #### Windows
 - Download from https://ffmpeg.org/download.html
-- Add to PATH environment variable
+- Extract to C:\ffmpeg
+- Add C:\ffmpeg\bin to PATH environment variable
+- Verify: `ffmpeg -version` in Command Prompt
+
+#### ⚠️ Critical Note
+FFmpeg is **required** for Telegram streaming functionality. The Telegram stream daemon will fail with `ENOENT` errors if FFmpeg is not properly installed and accessible in PATH.
 
 ## 📦 Project Setup
 

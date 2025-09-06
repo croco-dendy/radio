@@ -166,13 +166,20 @@ class TelegramStreamDaemon {
     }
   }
 
-  private buildFFmpegCommand(): string {
-    return `ffmpeg -i '${this.config.inputUrl}' \
-      -vn -c:a aac \
-      -b:a ${this.config.audioBitrate} \
-      -ar 44100 -ac 2 \
-      -preset ultrafast -tune zerolatency \
-      -f flv '${this.config.rtmpUrl}${this.config.streamKey}'`;
+  private buildFFmpegCommand(): string[] {
+    return [
+      'ffmpeg',
+      '-i', this.config.inputUrl,
+      '-vn',
+      '-c:a', 'aac',
+      '-b:a', this.config.audioBitrate,
+      '-ar', '44100',
+      '-ac', '2',
+      '-preset', 'ultrafast',
+      '-tune', 'zerolatency',
+      '-f', 'flv',
+      `${this.config.rtmpUrl}${this.config.streamKey}`
+    ];
   }
 
   private async startFFmpeg(): Promise<void> {
@@ -192,10 +199,11 @@ class TelegramStreamDaemon {
     };
 
     return new Promise((resolve, reject) => {
-      const command = this.buildFFmpegCommand();
-      log(`Starting FFmpeg command: ${command}`);
+      const commandArgs = this.buildFFmpegCommand();
+      const [command, ...args] = commandArgs;
+      log(`Starting FFmpeg command: ${commandArgs.join(' ')}`);
 
-      this.ffmpegProcess = spawn(command, {
+      this.ffmpegProcess = spawn(command, args, {
         stdio: ['ignore', 'pipe', 'pipe'],
       });
 

@@ -107,16 +107,27 @@ LOG_DIR=./logs              # Log directory
 ### Telegram Integration
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/streaming/telegram/status` | Get Telegram status |
-| `POST` | `/api/streaming/telegram/start` | Start Telegram stream |
-| `POST` | `/api/streaming/telegram/stop` | Stop Telegram stream |
-| `GET` | `/api/streaming/telegram/config` | Get Telegram config |
-| `PUT` | `/api/streaming/telegram/config` | Update Telegram config |
+| `POST` | `/api/stream/telegram/start` | Start Telegram stream via PM2 |
+| `POST` | `/api/stream/telegram/stop` | Stop Telegram stream |
+| `GET` | `/api/stream/telegram/config` | Get Telegram config |
+| `PUT` | `/api/stream/telegram/config` | Update Telegram config |
+
+### RTMP Server Management
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/stream/rtmp/start` | Start RTMP Docker container |
+| `POST` | `/api/stream/rtmp/stop` | Stop RTMP server |
+| `POST` | `/api/stream/rtmp/restart` | Restart RTMP server |
 
 ### Health & Monitoring
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/health` | Health check endpoint |
+
+### Service Management
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/monitoring/*` | Future monitoring endpoints |
 
 ## 🔄 WebSocket Events
 

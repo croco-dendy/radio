@@ -10,7 +10,7 @@ module.exports = {
     {
       name: 'radio.telegram',
       script: 'bun',
-      args: 'src/scripts/telegramStreamDaemon.ts',
+      args: 'scripts/telegramStreamDaemon.ts',
       instances: 1,
       autorestart: true,
       watch: false,

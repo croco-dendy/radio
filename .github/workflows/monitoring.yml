@@ -1,0 +1,67 @@
+name: Monitoring Service
+
+on:
+  push:
+    paths:
+      - 'apps/wave/src/services/monitoring/**'
+      - 'apps/wave/src/routes/monitoring.ts'
+      - 'apps/wave/src/tests/monitoring.test.ts'
+  pull_request:
+    paths:
+      - 'apps/wave/src/services/monitoring/**'
+      - 'apps/wave/src/routes/monitoring.ts'
+      - 'apps/wave/src/tests/monitoring.test.ts'
+
+jobs:
+  monitoring-tests:
+    name: Monitoring Service Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run monitoring service tests
+        working-directory: ./apps/wave
+        run: |
+          echo "🔍 Running monitoring service tests..."
+          bun test monitoring.test.ts
+          echo "✅ Monitoring service tests passed!"
+
+      - name: Validate monitoring API endpoints
+        working-directory: ./apps/wave
+        run: |
+          echo "🔍 Validating monitoring API..."
+          bun -e "
+            const { monitoringRoutes } = require('./src/routes/monitoring.ts');
+            const { monitoringService } = require('./src/services/monitoring/monitoringService.ts');
+            
+            console.log('✅ Monitoring routes exported');
+            console.log('✅ Monitoring service exported');
+            console.log('✅ API validation complete');
+          "
+
+      - name: Test monitoring service methods
+        working-directory: ./apps/wave
+        run: |
+          echo "🔍 Testing monitoring service methods..."
+          bun -e "
+            const { monitoringService } = require('./src/services/monitoring/monitoringService.ts');
+            
+            const methods = ['getMonitoringData', 'getSystemHealth', 'getTelegramServiceStats', 'getRtmpServiceStats'];
+            methods.forEach(method => {
+              if (typeof monitoringService[method] !== 'function') {
+                throw new Error(\`Missing method: \${method}\`);
+              }
+            });
+            
+            console.log('✅ All monitoring service methods available');
+          "

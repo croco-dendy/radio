@@ -3,15 +3,9 @@ import { Root } from './routes/root';
 import { indexRoute } from './routes/index';
 import { collectionRoute } from './routes/collection';
 import { usersRoute } from './routes/users';
-import { streamingRoute } from './routes/streaming';
 
 const router = createRouter({
-  routeTree: Root.addChildren([
-    indexRoute,
-    collectionRoute,
-    usersRoute,
-    streamingRoute,
-  ]),
+  routeTree: Root.addChildren([indexRoute, collectionRoute, usersRoute]),
 });
 
 export default router;

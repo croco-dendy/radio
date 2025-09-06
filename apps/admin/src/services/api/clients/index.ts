@@ -1,2 +1,2 @@
 export * from './admin';
-export * from './queryClient';
+export * from './query-client';

@@ -1,4 +1,4 @@
-export { StatsCard } from './StatsCard';
-export { ActionButton } from './ActionButton';
-export { RecentActivityItem } from './RecentActivityItem';
-export { PageLayout } from './PageLayout';
+export { StatsCard } from './stats-card';
+export { ActionButton } from './action-button';
+export { RecentActivityItem } from './recent-activity-item';
+export { PageLayout } from './page-layout';

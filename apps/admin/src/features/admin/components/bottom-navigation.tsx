@@ -16,7 +16,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
     { path: '/', label: 'Головна' },
     { path: '/collection', label: 'Колекція' },
     { path: '/users', label: 'Меломани' },
-    { path: '/streaming', label: 'Стрімінг' },
   ];
 
   return (

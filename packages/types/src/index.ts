@@ -1,4 +1,14 @@
 // Radio project shared types
+
+// Core API Response Types
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+// Legacy types - used by frontend app but not admin
 export interface StreamInfo {
   id: string;
   name: string;
@@ -27,13 +37,6 @@ export interface User {
   createdAt: Date;
 }
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
-}
-
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
@@ -42,3 +45,117 @@ export interface PaginatedResponse<T> {
   hasNext: boolean;
   hasPrev: boolean;
 }
+
+// Streaming & Monitoring Types
+export interface StreamHealth {
+  isConnected: boolean;
+  lastConnectionTime: string | null;
+  totalFramesSent: number;
+  currentBitrate: number;
+  connectionErrors: number;
+  lastHealthCheck: string | null;
+}
+
+export interface TelegramServiceStats {
+  isRunning: boolean;
+  pm2Status: {
+    pid: number;
+    status: string;
+    cpu: number;
+    memory: number;
+    uptime: number;
+  } | null;
+  daemonStatus: {
+    status: 'initializing' | 'running' | 'stopped' | 'error';
+    pid: number | null;
+    ffmpegPid: number | null;
+    restartAttempts: number;
+    lastUpdate: string | null;
+    streamHealth?: StreamHealth;
+  } | null;
+  ffmpegRunning: boolean;
+  lastHealthCheck: string;
+}
+
+export interface RtmpServiceStats {
+  isRunning: boolean;
+  containerName: string;
+  status: string;
+  stats: {
+    container: {
+      cpuPercent: number;
+      memoryUsage: number;
+      memoryLimit: number;
+      memoryPercent: number;
+      networkIn: number;
+      networkOut: number;
+    } | null;
+    rtmp: {
+      activePublishers: number;
+      totalConnections: number;
+      applications: Array<{
+        name: string;
+        streams: Array<{
+          name: string;
+          bandwidth: number;
+          clients: number;
+        }>;
+      }>;
+    } | null;
+  } | null;
+  lastHealthCheck: string;
+}
+
+// Admin App - Monitoring Types (USED)
+export interface MonitoringData {
+  services: {
+    telegram: TelegramServiceStats | null;
+    rtmp: RtmpServiceStats | null;
+  };
+  timestamp: string;
+  uptime: number;
+}
+
+// Admin App - Stream Control Types (USED)
+export interface TelegramStreamConfig {
+  rtmpUrl: string;
+  streamKey: string;
+  inputUrl: string;
+  quality: 'low' | 'medium' | 'high';
+  audioBitrate: string;
+}
+
+export interface StreamControlResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface ConfigResponse<T> {
+  success: boolean;
+  config?: T;
+  error?: string;
+}
+
+// Backend/Internal Types - not used in admin frontend but kept for backend
+export interface SystemHealth {
+  telegram: TelegramServiceStats | null;
+  rtmp: RtmpServiceStats | null;
+  timestamp: string;
+}
+
+export interface ServiceMetrics {
+  uptime: number;
+  restarts: number;
+  errors: number;
+  lastError?: string;
+  performance: {
+    cpu: number;
+    memory: number;
+    network: {
+      in: number;
+      out: number;
+    };
+  };
+}
+
+export type QualityPreset = 'low' | 'medium' | 'high';

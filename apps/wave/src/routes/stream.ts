@@ -23,6 +23,16 @@ streamRoutes.post('/telegram/stop', async (c) => {
   }
 });
 
+streamRoutes.post('/telegram/restart', async (c) => {
+  try {
+    const result = await streamService.restartTelegramStream();
+    return c.json(result);
+  } catch (error) {
+    console.error('Error restarting Telegram stream:', error);
+    return c.json({ error: 'Failed to restart Telegram stream' }, 500);
+  }
+});
+
 streamRoutes.get('/telegram/config', async (c) => {
   try {
     const config = await streamService.getTelegramConfig();

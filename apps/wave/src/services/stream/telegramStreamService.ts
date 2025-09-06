@@ -293,6 +293,51 @@ export class TelegramStreamService {
     }
   }
 
+  // Restart Telegram stream using PM2
+  async restartTelegramStream(): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    try {
+      console.log('Restarting Telegram stream via PM2...');
+
+      // Use PM2 restart command
+      const { stdout, stderr } = await execAsync('pm2 restart telegram-stream');
+
+      if (stderr && !stderr.includes('Process successfully restarted')) {
+        console.error('PM2 restart stderr:', stderr);
+        return {
+          success: false,
+          message: `Failed to restart Telegram stream: ${stderr}`,
+        };
+      }
+
+      console.log('PM2 restart stdout:', stdout);
+
+      // Wait a moment for the process to fully restart
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const isRunning = await this.isTelegramStreamRunning();
+      if (!isRunning) {
+        return {
+          success: false,
+          message: 'Telegram stream failed to start after restart',
+        };
+      }
+
+      return {
+        success: true,
+        message: 'Telegram stream restarted successfully via PM2',
+      };
+    } catch (error) {
+      console.error('Error restarting Telegram stream:', error);
+      return {
+        success: false,
+        message: `Failed to restart Telegram stream: ${error}`,
+      };
+    }
+  }
+
   async updateTelegramConfig(updates: Partial<TelegramStreamConfig>): Promise<{
     success: boolean;
     message: string;

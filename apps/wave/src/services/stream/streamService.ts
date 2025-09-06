@@ -26,6 +26,13 @@ export class StreamService {
     return telegramStreamService.stopTelegramStream();
   }
 
+  async restartTelegramStream(): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    return telegramStreamService.restartTelegramStream();
+  }
+
   async updateTelegramConfig(updates: Partial<TelegramStreamConfig>) {
     return telegramStreamService.updateTelegramConfig(updates);
   }

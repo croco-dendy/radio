@@ -1,11 +1,11 @@
 import type React from 'react';
-import { useState } from 'react';
-import { Outlet } from '@tanstack/react-router';
+import { Outlet, useLocation } from '@tanstack/react-router';
 import { BottomNavigation } from './components';
 import clsx from 'clsx';
 
 export const AdminLayout: React.FC = () => {
-  const [currentRoute, setCurrentRoute] = useState('/');
+  const location = useLocation();
+  const currentRoute = location.pathname;
 
   return (
     <div className={clsx(styles.container)}>
@@ -17,10 +17,7 @@ export const AdminLayout: React.FC = () => {
         <Outlet />
       </div>
 
-      <BottomNavigation
-        currentRoute={currentRoute}
-        onRouteChange={setCurrentRoute}
-      />
+      <BottomNavigation currentRoute={currentRoute} />
     </div>
   );
 };

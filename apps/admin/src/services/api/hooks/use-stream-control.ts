@@ -5,7 +5,7 @@ import {
   type UseQueryOptions,
 } from '@tanstack/react-query';
 import { streamControlApi } from '../stream-control-api';
-import type { TelegramStreamConfig } from '@radio/types';
+import type { TelegramStreamConfig, RtmpServerConfig } from '@radio/types';
 
 // Telegram Stream Hooks
 export const useTelegramConfig = (
@@ -25,8 +25,9 @@ export const useStartTelegramStream = () => {
   return useMutation({
     mutationFn: streamControlApi.telegram.start,
     onSuccess: () => {
-      // Invalidate monitoring data to reflect the new state
-      queryClient.invalidateQueries({ queryKey: ['monitoring'] });
+      // Invalidate and immediately refetch monitoring data
+      queryClient.invalidateQueries({ queryKey: ['monitoring', 'data'] });
+      queryClient.refetchQueries({ queryKey: ['monitoring', 'data'] });
     },
   });
 };
@@ -37,7 +38,9 @@ export const useStopTelegramStream = () => {
   return useMutation({
     mutationFn: streamControlApi.telegram.stop,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['monitoring'] });
+      // Invalidate and immediately refetch monitoring data
+      queryClient.invalidateQueries({ queryKey: ['monitoring', 'data'] });
+      queryClient.refetchQueries({ queryKey: ['monitoring', 'data'] });
     },
   });
 };
@@ -48,7 +51,9 @@ export const useRestartTelegramStream = () => {
   return useMutation({
     mutationFn: streamControlApi.telegram.restart,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['monitoring'] });
+      // Invalidate and immediately refetch monitoring data
+      queryClient.invalidateQueries({ queryKey: ['monitoring', 'data'] });
+      queryClient.refetchQueries({ queryKey: ['monitoring', 'data'] });
     },
   });
 };
@@ -74,7 +79,7 @@ export const useStartRtmpServer = () => {
   return useMutation({
     mutationFn: streamControlApi.rtmp.start,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['monitoring'] });
+      queryClient.invalidateQueries({ queryKey: ['monitoring', 'data'] });
     },
   });
 };
@@ -85,7 +90,7 @@ export const useStopRtmpServer = () => {
   return useMutation({
     mutationFn: streamControlApi.rtmp.stop,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['monitoring'] });
+      queryClient.invalidateQueries({ queryKey: ['monitoring', 'data'] });
     },
   });
 };
@@ -96,7 +101,33 @@ export const useRestartRtmpServer = () => {
   return useMutation({
     mutationFn: streamControlApi.rtmp.restart,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['monitoring'] });
+      queryClient.invalidateQueries({ queryKey: ['monitoring', 'data'] });
+    },
+  });
+};
+
+// RTMP Configuration Hooks
+export const useRtmpConfig = (
+  options?: Omit<UseQueryOptions<RtmpServerConfig>, 'queryKey' | 'queryFn'>,
+) => {
+  return useQuery({
+    queryKey: ['stream', 'rtmp', 'config'],
+    queryFn: streamControlApi.rtmp.getConfig,
+    staleTime: 30000, // Config doesn't change often
+    ...options,
+  });
+};
+
+export const useUpdateRtmpConfig = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (config: Partial<RtmpServerConfig>) =>
+      streamControlApi.rtmp.updateConfig(config),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['stream', 'rtmp', 'config'],
+      });
     },
   });
 };

@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { streamService } from '../services/stream/streamService';
+import { rtmpConfigService } from '../services/stream/rtmpConfigService';
 
 const streamRoutes = new Hono();
 
@@ -81,6 +82,28 @@ streamRoutes.post('/rtmp/restart', async (c) => {
   } catch (error) {
     console.error('Error restarting RTMP server:', error);
     return c.json({ error: 'Failed to restart RTMP server' }, 500);
+  }
+});
+
+// RTMP Configuration endpoints
+streamRoutes.get('/rtmp/config', async (c) => {
+  try {
+    const config = await rtmpConfigService.getRtmpConfig();
+    return c.json({ success: true, config });
+  } catch (error) {
+    console.error('Error getting RTMP config:', error);
+    return c.json({ error: 'Failed to get RTMP config' }, 500);
+  }
+});
+
+streamRoutes.put('/rtmp/config', async (c) => {
+  try {
+    const updates = await c.req.json();
+    const result = await rtmpConfigService.updateRtmpConfig(updates);
+    return c.json(result);
+  } catch (error) {
+    console.error('Error updating RTMP config:', error);
+    return c.json({ error: 'Failed to update RTMP config' }, 500);
   }
 });
 

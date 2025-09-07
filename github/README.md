@@ -43,19 +43,25 @@ radio/
 
 ### Admin Panel
 - **Modern UI**: Built with React 18, TypeScript, and Tailwind CSS
-- **Real-time Updates**: Live status monitoring with 5-second refresh
-- **Stream Controls**: Complete streaming management interface
-- **RTMP Management**: Start/stop/restart RTMP server
-- **Telegram Integration**: Manage Telegram streaming
+- **Real-time Updates**: Live status monitoring with WebSocket support
+- **Stream Control Interface**: Complete streaming management with tabs
+  - **Monitoring Tab**: Real-time service status and system health
+  - **Configuration Tab**: Service configuration management
+  - **Logs Tab**: System and service logs
+- **Service Management**: 
+  - RTMP server start/stop/restart
+  - Telegram streaming with daemon control
+  - Configuration updates for both services
 - **Error Handling**: Comprehensive error reporting and recovery
 
 ### Technical Stack
 - **Backend**: Bun runtime with Hono framework
 - **Frontend**: React 18 with Vite build system
-- **State Management**: React Query for server state
-- **Styling**: Tailwind CSS with custom design system
-- **Type Safety**: Full TypeScript coverage
+- **State Management**: React Query for server state, Zustand for client state
+- **Styling**: Tailwind CSS with custom Ukrainian-themed design system
+- **Type Safety**: Full TypeScript coverage with shared types package
 - **Process Management**: PM2 for production deployment
+- **Real-time**: WebSocket connections for live updates
 
 ## 🚀 Quick Start
 
@@ -120,31 +126,35 @@ pnpm frontend:dev
 ## 🎛️ Usage
 
 ### Admin Panel Access
-Navigate to `http://localhost:3001/streaming` to access the streaming controls.
+Navigate to `http://localhost:3001/stream-control` to access the stream control interface.
 
 ### API Endpoints
-All streaming operations are available via REST API at `http://localhost:6970/api/streaming/`:
+All streaming operations are available via REST API at `http://localhost:6970/api/stream/`:
 
+#### Stream Control API (`/api/stream`)
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/status` | Get streaming status |
-| `GET` | `/mode` | Get current mode |
-| `POST` | `/mode` | Set streaming mode |
-| `GET` | `/tracks` | Get audio tracks |
-| `POST` | `/tracks` | Add audio track |
-| `PUT` | `/tracks/:id` | Update audio track |
-| `DELETE` | `/tracks/:id` | Delete audio track |
-| `POST` | `/start` | Start streaming |
-| `POST` | `/stop` | Stop streaming |
-| `GET` | `/now-playing` | Get current track info |
-| `POST` | `/skip` | Skip to next track |
-| `GET` | `/telegram/status` | Get Telegram stream status |
 | `POST` | `/telegram/start` | Start Telegram stream |
 | `POST` | `/telegram/stop` | Stop Telegram stream |
-| `GET` | `/rtmp/status` | Get RTMP server status |
+| `POST` | `/telegram/restart` | Restart Telegram stream |
+| `GET` | `/telegram/config` | Get Telegram configuration |
+| `PUT` | `/telegram/config` | Update Telegram configuration |
 | `POST` | `/rtmp/start` | Start RTMP server |
 | `POST` | `/rtmp/stop` | Stop RTMP server |
 | `POST` | `/rtmp/restart` | Restart RTMP server |
+| `GET` | `/rtmp/config` | Get RTMP configuration |
+| `PUT` | `/rtmp/config` | Update RTMP configuration |
+
+#### Monitoring API (`/api/monitoring`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/` | Get complete monitoring data |
+| `GET` | `/health` | Get system health overview |
+| `GET` | `/telegram` | Get Telegram service statistics |
+| `GET` | `/rtmp` | Get RTMP service statistics |
+| `GET` | `/metrics/:service` | Get metrics for specific service |
+| `GET` | `/logs` | Get system logs |
+| `GET` | `/logs/:service` | Get logs for specific service |
 
 ### Streaming Modes
 
@@ -258,8 +268,9 @@ pm2 logs radio.telegram --lines 50
 pm2 logs radio.wave --lines 50
 
 # Test API endpoints
-curl http://localhost:6970/api/streaming/status
-curl http://localhost:3001/health
+curl http://localhost:6970/health
+curl http://localhost:6970/api/monitoring/
+curl http://localhost:6970/api/stream/telegram/config
 
 # Check FFmpeg installation
 which ffmpeg

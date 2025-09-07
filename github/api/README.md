@@ -17,11 +17,11 @@ Currently, the API does not require authentication. All endpoints are publicly a
 
 ### [📡 Streaming API](streaming.md)
 Complete reference for all streaming-related endpoints:
-- **Streaming Management**: Start/stop streaming, mode control
-- **Track Management**: CRUD operations for audio tracks
-- **RTMP Server**: RTMP server management
-- **Telegram Integration**: Telegram streaming controls
-- **Health Monitoring**: System health and status
+- **Stream Control**: Telegram and RTMP stream management
+- **Configuration Management**: Service configuration updates
+- **RTMP Server**: RTMP server start/stop/restart
+- **Telegram Integration**: Telegram streaming controls with daemon management
+- **Service Monitoring**: Real-time service status and health
 
 ### [🔌 WebSocket API](websocket.md)
 Real-time communication endpoints:
@@ -30,11 +30,12 @@ Real-time communication endpoints:
 - **Message Format**: WebSocket message structure
 - **Error Handling**: WebSocket error management
 
-### [📊 Status Endpoints](status.md)
+### [📊 Monitoring API](monitoring.md)
 System monitoring and status endpoints:
-- **Health Checks**: System health monitoring
+- **Service Monitoring**: Real-time service status and health
 - **Performance Metrics**: System performance data
 - **Resource Usage**: CPU, memory, network metrics
+- **Log Management**: System and service logs
 - **Process Status**: External process monitoring
 
 ## 🎯 Key Features
@@ -82,36 +83,42 @@ class StreamingAPI {
     return response.json();
   }
 
-  // Streaming operations
-  async getStatus() {
-    return this.request('/api/streaming/status');
+  // Monitoring operations
+  async getMonitoringData() {
+    return this.request('/api/monitoring/');
   }
 
-  async startStreaming() {
-    return this.request('/api/streaming/start', { method: 'POST' });
+  async getSystemHealth() {
+    return this.request('/api/monitoring/health');
   }
 
-  async addTrack(track: { url: string; title: string; duration?: number }) {
-    return this.request('/api/streaming/tracks', {
-      method: 'POST',
-      body: JSON.stringify(track),
-    });
+  // Stream control operations
+  async startTelegramStream() {
+    return this.request('/api/stream/telegram/start', { method: 'POST' });
+  }
+
+  async getTelegramConfig() {
+    return this.request('/api/stream/telegram/config');
   }
 }
 ```
 
 ### cURL Examples
 ```bash
-# Get streaming status
-curl http://localhost:6970/api/streaming/status
+# Get monitoring data
+curl http://localhost:6970/api/monitoring/
 
-# Start streaming
-curl -X POST http://localhost:6970/api/streaming/start
+# Get system health
+curl http://localhost:6970/api/monitoring/health
 
-# Add a track
-curl -X POST http://localhost:6970/api/streaming/tracks \
-  -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com/track.mp3", "title": "My Track"}'
+# Start Telegram stream
+curl -X POST http://localhost:6970/api/stream/telegram/start
+
+# Get Telegram configuration
+curl http://localhost:6970/api/stream/telegram/config
+
+# Start RTMP server
+curl -X POST http://localhost:6970/api/stream/rtmp/start
 ```
 
 ### WebSocket Example
@@ -183,9 +190,10 @@ Currently, there are no rate limits implemented. All endpoints are accessible wi
 
 ### Health Checks
 - **API Health**: `GET /health`
-- **Stream Status**: `GET /api/streaming/status`
-- **RTMP Status**: `GET /api/streaming/rtmp/status`
-- **Telegram Status**: `GET /api/streaming/telegram/status`
+- **Monitoring Data**: `GET /api/monitoring/`
+- **System Health**: `GET /api/monitoring/health`
+- **Telegram Status**: `GET /api/monitoring/telegram`
+- **RTMP Status**: `GET /api/monitoring/rtmp`
 
 ### Metrics
 - **Response Time**: Average response time per endpoint
@@ -200,8 +208,8 @@ Currently, there are no rate limits implemented. All endpoints are accessible wi
 # Health check
 curl http://localhost:6970/health
 
-# Get status
-curl http://localhost:6970/api/streaming/status
+# Get monitoring data
+curl http://localhost:6970/api/monitoring/
 
 # Test WebSocket
 wscat -c ws://localhost:6971

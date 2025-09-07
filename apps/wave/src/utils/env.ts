@@ -15,8 +15,8 @@ const getChatHistoryFile = () => {
 };
 
 export const env = {
-  port: Number.parseInt(process.env.PORT || '8888'),
-  socketPort: Number.parseInt(process.env.SOCKET_PORT || '8889'),
+  port: Number.parseInt(process.env.PORT || '6870'),
+  socketPort: Number.parseInt(process.env.SOCKET_PORT || '6871'),
   environment: isProduction ? 'production' : 'development',
   chatHistoryFile: getChatHistoryFile(),
 };

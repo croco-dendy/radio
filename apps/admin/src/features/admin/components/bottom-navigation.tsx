@@ -5,17 +5,16 @@ import { RadioLogo, NowPlaying } from './';
 
 interface BottomNavigationProps {
   currentRoute: string;
-  onRouteChange: (route: string) => void;
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   currentRoute,
-  onRouteChange,
 }) => {
   const navItems = [
     { path: '/', label: 'Головна' },
     { path: '/collection', label: 'Колекція' },
     { path: '/users', label: 'Меломани' },
+    { path: '/stream-control', label: 'Стрім' },
   ];
 
   return (
@@ -34,7 +33,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 <Link
                   key={item.path}
                   to={item.path}
-                  onClick={() => onRouteChange(item.path)}
                   className={clsx(
                     styles.navLink,
                     isActive ? styles.navLinkActive : styles.navLinkInactive,

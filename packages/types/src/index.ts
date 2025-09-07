@@ -84,11 +84,11 @@ export interface RtmpServiceStats {
   stats: {
     container: {
       cpuPercent: number;
-      memoryUsage: number;
-      memoryLimit: number;
+      memoryUsage: number; // in bytes
+      memoryLimit: number; // in bytes
       memoryPercent: number;
-      networkIn: number;
-      networkOut: number;
+      networkIn: number; // in GB
+      networkOut: number; // in GB
     } | null;
     rtmp: {
       activePublishers: number;
@@ -125,6 +125,33 @@ export interface TelegramStreamConfig {
   audioBitrate: string;
 }
 
+export interface RtmpServerConfig {
+  port: number;
+  chunkSize: number;
+  maxConnections: number;
+  outQueue: number;
+  outCork: number;
+  pingInterval: number;
+  pingTimeout: number;
+  application: {
+    name: string;
+    allowPublishFrom: string[];
+    allowPlayFrom: string;
+    hls: {
+      enabled: boolean;
+      fragmentLength: number;
+      playlistLength: number;
+      cleanup: boolean;
+    };
+    recording: {
+      enabled: boolean;
+      path?: string;
+    };
+    dropIdlePublisher: number;
+    syncDelay: number;
+  };
+}
+
 export interface StreamControlResponse {
   success: boolean;
   message: string;
@@ -156,6 +183,21 @@ export interface ServiceMetrics {
       out: number;
     };
   };
+}
+
+// Logging Types
+export interface LogEntry {
+  timestamp: string;
+  level: 'error' | 'warn' | 'info' | 'debug';
+  message: string;
+  source: string;
+}
+
+export interface LogData {
+  entries: LogEntry[];
+  totalLines: number;
+  source: string;
+  lastUpdated: string;
 }
 
 export type QualityPreset = 'low' | 'medium' | 'high';

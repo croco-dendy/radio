@@ -90,7 +90,7 @@ export class TelegramStreamService {
       const processes = JSON.parse(stdout);
       const telegramProcess = processes.find(
         (proc: { name: string; pm2_env: { status: string } }) =>
-          proc.name === 'telegram-stream',
+          proc.name === 'radio.telegram',
       );
 
       if (!telegramProcess || telegramProcess.pm2_env.status !== 'online') {
@@ -138,7 +138,7 @@ export class TelegramStreamService {
           pm2_env: { status: string; pm_uptime?: number };
           pid?: number;
           monit?: { memory: number; cpu: number };
-        }) => proc.name === 'telegram-stream',
+        }) => proc.name === 'radio.telegram',
       );
 
       if (!telegramProcess) {
@@ -195,7 +195,7 @@ export class TelegramStreamService {
 
       // Start the PM2 process
       const { stdout, stderr } = await execAsync(
-        'pm2 start ecosystem.config.js --only telegram-stream --env production',
+        'pm2 start ecosystem.config.js --only radio.telegram --env production',
       );
 
       if (stderr && !stderr.includes('already exists')) {
@@ -270,7 +270,7 @@ export class TelegramStreamService {
       console.log('Stopping Telegram stream via PM2...');
 
       // Stop the PM2 process
-      const { stdout, stderr } = await execAsync('pm2 stop telegram-stream');
+      const { stdout, stderr } = await execAsync('pm2 stop radio.telegram');
 
       if (stderr) {
         console.error('PM2 error:', stderr);
@@ -302,7 +302,7 @@ export class TelegramStreamService {
       console.log('Restarting Telegram stream via PM2...');
 
       // Use PM2 restart command
-      const { stdout, stderr } = await execAsync('pm2 restart telegram-stream');
+      const { stdout, stderr } = await execAsync('pm2 restart radio.telegram');
 
       if (stderr && !stderr.includes('Process successfully restarted')) {
         console.error('PM2 restart stderr:', stderr);

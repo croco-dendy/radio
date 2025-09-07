@@ -2,6 +2,7 @@ import { waveApiClient } from './clients/http-client';
 import type {
   StreamControlResponse,
   TelegramStreamConfig,
+  RtmpServerConfig,
   ConfigResponse,
 } from '@radio/types';
 
@@ -73,6 +74,28 @@ export const streamControlApi = {
     restart: async (): Promise<StreamControlResponse> => {
       const response = await waveApiClient.post<StreamControlResponse>(
         '/api/stream/rtmp/restart',
+      );
+      return response.data;
+    },
+
+    getConfig: async (): Promise<RtmpServerConfig> => {
+      const response = await waveApiClient.get<
+        ConfigResponse<RtmpServerConfig>
+      >('/api/stream/rtmp/config');
+
+      if (!response.data.success || !response.data.config) {
+        throw new Error(response.data.error || 'Failed to fetch RTMP config');
+      }
+
+      return response.data.config;
+    },
+
+    updateConfig: async (
+      config: Partial<RtmpServerConfig>,
+    ): Promise<StreamControlResponse> => {
+      const response = await waveApiClient.put<StreamControlResponse>(
+        '/api/stream/rtmp/config',
+        config,
       );
       return response.data;
     },

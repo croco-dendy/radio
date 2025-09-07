@@ -198,9 +198,9 @@ pnpm frontend:dev
 - **RTMP Server**: rtmp://localhost:1935/live
 
 #### Test Streaming
-1. Open admin panel at http://localhost:3001/streaming
-2. Check RTMP server status
-3. Start a test stream
+1. Open admin panel at http://localhost:3001/stream-control
+2. Check RTMP server status in the Monitoring tab
+3. Start a test stream using the service controls
 4. Verify audio is playing
 
 ## 🏭 Production Setup
@@ -351,7 +351,7 @@ docker ps
 
 # Test API endpoints
 curl http://localhost:6970/health
-curl http://localhost:6970/api/streaming/status
+curl http://localhost:6970/api/monitoring/
 
 # Check logs
 tail -f apps/wave/logs/wave.log
@@ -362,9 +362,10 @@ pm2 logs telegram-stream
 
 ### Health Checks
 - **API Health**: `GET /health`
-- **Streaming Status**: `GET /api/streaming/status`
-- **RTMP Status**: `GET /api/streaming/rtmp/status`
-- **Telegram Status**: `GET /api/streaming/telegram/status`
+- **Monitoring Data**: `GET /api/monitoring/`
+- **System Health**: `GET /api/monitoring/health`
+- **Telegram Status**: `GET /api/monitoring/telegram`
+- **RTMP Status**: `GET /api/monitoring/rtmp`
 
 ### Log Files
 - **Wave Server**: `apps/wave/logs/wave.log`

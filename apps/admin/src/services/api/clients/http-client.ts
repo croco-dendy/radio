@@ -21,5 +21,5 @@ const createHttpClient = (baseURL: string): AxiosInstance => {
 };
 
 export const waveApiClient = createHttpClient(
-  import.meta.env.VITE_WAVE_API_URL || 'http://localhost:3000',
+  import.meta.env.VITE_API_URL || 'http://localhost:6870',
 );

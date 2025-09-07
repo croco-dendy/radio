@@ -92,4 +92,3 @@ export interface MonitoringResponse {
   data?: MonitoringData;
   error?: string;
 }
-

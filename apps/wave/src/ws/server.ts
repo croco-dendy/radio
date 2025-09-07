@@ -18,7 +18,7 @@ function debouncedBroadcastListeners() {
   }, 100); // 100ms debounce
 }
 
-export function startWsServer(port = 3001): WebSocketServer {
+export function startWsServer(port = 6871): WebSocketServer {
   const server = serve({
     fetch(req, server) {
       if (server.upgrade(req)) return;

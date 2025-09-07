@@ -9,6 +9,7 @@ import type {
   RtmpServiceStats,
   SystemHealth,
 } from './types';
+import type { LogData, LogEntry } from '@radio/types';
 
 const execAsync = promisify(exec);
 
@@ -158,7 +159,7 @@ export class MonitoringService {
         };
       }>;
       const telegramProcess = processes.find(
-        (p) => p.name === 'telegram-stream',
+        (p) => p.name === 'radio.telegram',
       );
 
       if (!telegramProcess) {
@@ -254,18 +255,18 @@ export class MonitoringService {
       const memoryUsage = this.parseMemoryValue(memParts[0]);
       const memoryLimit = this.parseMemoryValue(memParts[1]);
 
-      // Parse network I/O (e.g., "1.23kB / 4.56MB")
+      // Parse network I/O (e.g., "5.54GB / 8.02GB")
       const netParts = netIO.split(' / ');
-      const networkIn = this.parseMemoryValue(netParts[0]);
-      const networkOut = this.parseMemoryValue(netParts[1]);
+      const networkIn = Number.parseFloat(netParts[0].replace('GB', ''));
+      const networkOut = Number.parseFloat(netParts[1].replace('GB', ''));
 
       return {
         cpuPercent: Number.parseFloat(cpuPercent.replace('%', '')),
         memoryUsage,
         memoryLimit,
         memoryPercent: Number.parseFloat(memPercent.replace('%', '')),
-        networkIn,
-        networkOut,
+        networkIn, // Already in GB
+        networkOut, // Already in GB
       };
     } catch (error) {
       console.error('Error getting container stats:', error);
@@ -286,14 +287,13 @@ export class MonitoringService {
     }>;
   } | null> {
     try {
-      // Try to get nginx-rtmp-module statistics if available
-      // This would require the RTMP server to expose stats endpoint
+      // Get nginx-rtmp-module statistics from the correct endpoint
       const { stdout } = await execAsync(
-        `docker exec ${containerName} curl -s http://localhost:8080/stat 2>/dev/null || echo '{}'`,
+        `docker exec ${containerName} curl -s http://localhost:8069/rtmp_stats 2>/dev/null || echo ''`,
       );
 
-      if (stdout.trim() === '{}' || !stdout.trim()) {
-        // Return default/mock data if stats endpoint is not available
+      if (!stdout.trim()) {
+        // Return default data if stats endpoint is not available
         return {
           activePublishers: 0,
           totalConnections: 0,
@@ -306,27 +306,120 @@ export class MonitoringService {
         };
       }
 
-      // Parse nginx-rtmp stats XML or JSON
-      // This is a simplified version - actual implementation would depend on the stats format
-      return {
-        activePublishers: 1, // Would parse from actual stats
-        totalConnections: 5, // Would parse from actual stats
-        applications: [
-          {
-            name: 'live',
-            streams: [
-              {
-                name: 'test',
-                bandwidth: 2500000,
-                clients: 3,
-              },
-            ],
-          },
-        ],
-      };
+      // Parse nginx-rtmp stats XML
+      return this.parseRtmpStatsXml(stdout);
     } catch (error) {
       console.error('Error getting RTMP server stats:', error);
       return null;
+    }
+  }
+
+  private parseRtmpStatsXml(xmlData: string): {
+    activePublishers: number;
+    totalConnections: number;
+    applications: Array<{
+      name: string;
+      streams: Array<{
+        name: string;
+        bandwidth: number;
+        clients: number;
+      }>;
+    }>;
+  } {
+    try {
+      // Extract basic stats using regex patterns
+      const nacceptedMatch = xmlData.match(/<naccepted>(\d+)<\/naccepted>/);
+      const totalConnections = nacceptedMatch
+        ? Number.parseInt(nacceptedMatch[1], 10)
+        : 0;
+
+      // Extract applications
+      const applications: Array<{
+        name: string;
+        streams: Array<{
+          name: string;
+          bandwidth: number;
+          clients: number;
+        }>;
+      }> = [];
+
+      // Find all application blocks
+      const applicationMatches = xmlData.matchAll(
+        /<application>(.*?)<\/application>/gs,
+      );
+
+      for (const appMatch of applicationMatches) {
+        const appContent = appMatch[1];
+        const nameMatch = appContent.match(/<name>(.*?)<\/name>/);
+        const appName = nameMatch ? nameMatch[1] : 'unknown';
+
+        // Extract live streams
+        const liveMatch = appContent.match(/<live>(.*?)<\/live>/s);
+        const streams: Array<{
+          name: string;
+          bandwidth: number;
+          clients: number;
+        }> = [];
+
+        if (liveMatch) {
+          const liveContent = liveMatch[1];
+
+          // Extract stream information
+          const streamMatches = liveContent.matchAll(
+            /<stream>(.*?)<\/stream>/gs,
+          );
+
+          for (const streamMatch of streamMatches) {
+            const streamContent = streamMatch[1];
+            const streamNameMatch = streamContent.match(/<name>(.*?)<\/name>/);
+            const bandwidthMatch = streamContent.match(
+              /<bw_out>(\d+)<\/bw_out>/,
+            );
+            const clientsMatch = streamContent.match(
+              /<nclients>(\d+)<\/nclients>/,
+            );
+
+            streams.push({
+              name: streamNameMatch ? streamNameMatch[1] : 'unknown',
+              bandwidth: bandwidthMatch
+                ? Number.parseInt(bandwidthMatch[1], 10)
+                : 0,
+              clients: clientsMatch ? Number.parseInt(clientsMatch[1], 10) : 0,
+            });
+          }
+        }
+
+        applications.push({
+          name: appName,
+          streams,
+        });
+      }
+
+      // Count active publishers (streams with bandwidth > 0)
+      const activePublishers = applications.reduce(
+        (count, app) =>
+          count + app.streams.filter((stream) => stream.bandwidth > 0).length,
+        0,
+      );
+
+      return {
+        activePublishers,
+        totalConnections,
+        applications,
+      };
+    } catch (error) {
+      console.error('Error parsing RTMP stats XML:', error);
+      // Return default data on parse error
+      return {
+        activePublishers: 0,
+        totalConnections: 0,
+        applications: [
+          {
+            name: 'live',
+            streams: [],
+          },
+        ],
+      };
     }
   }
 
@@ -339,6 +432,298 @@ export class MonitoringService {
     if (value.includes('MB')) return num * 1000 * 1000;
     if (value.includes('kB')) return num * 1000;
     return num;
+  }
+
+  async getLogs(source = 'all', lines = 100): Promise<LogData> {
+    try {
+      const logEntries: LogEntry[] = [];
+
+      if (source === 'all' || source === 'telegram') {
+        const telegramLogs = await this.getServiceLogs('telegram', lines);
+        logEntries.push(...telegramLogs.entries);
+      }
+
+      if (source === 'all' || source === 'rtmp') {
+        const rtmpLogs = await this.getServiceLogs('rtmp', lines);
+        logEntries.push(...rtmpLogs.entries);
+      }
+
+      if (source === 'all' || source === 'wave') {
+        const waveLogs = await this.getServiceLogs('wave', lines);
+        logEntries.push(...waveLogs.entries);
+      }
+
+      // Sort by timestamp (oldest first for chronological display)
+      logEntries.sort(
+        (a, b) =>
+          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+      );
+
+      return {
+        entries: logEntries.slice(0, lines),
+        totalLines: logEntries.length,
+        source,
+        lastUpdated: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error('Error getting logs:', error);
+      return {
+        entries: [],
+        totalLines: 0,
+        source,
+        lastUpdated: new Date().toISOString(),
+      };
+    }
+  }
+
+  async getServiceLogs(service: string, lines = 100): Promise<LogData> {
+    try {
+      let logEntries: LogEntry[] = [];
+
+      switch (service) {
+        case 'telegram':
+          logEntries = await this.getTelegramLogs(lines);
+          break;
+        case 'rtmp':
+          logEntries = await this.getRtmpLogs(lines);
+          break;
+        case 'wave':
+          logEntries = await this.getWaveLogs(lines);
+          break;
+        default:
+          throw new Error(`Unknown service: ${service}`);
+      }
+
+      return {
+        entries: logEntries,
+        totalLines: logEntries.length,
+        source: service,
+        lastUpdated: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error(`Error getting ${service} logs:`, error);
+      return {
+        entries: [],
+        totalLines: 0,
+        source: service,
+        lastUpdated: new Date().toISOString(),
+      };
+    }
+  }
+
+  private async getTelegramLogs(lines: number): Promise<LogEntry[]> {
+    try {
+      // Get PM2 logs for radio.telegram process
+      const { stdout } = await execAsync(
+        `pm2 logs radio.telegram --lines ${lines} --nostream`,
+      );
+      return this.parsePM2Logs(stdout, 'telegram');
+    } catch (error) {
+      console.error('Error getting Telegram logs:', error);
+      return [];
+    }
+  }
+
+  private async getRtmpLogs(lines: number): Promise<LogEntry[]> {
+    try {
+      // Get Docker logs for RTMP container
+      const { stdout } = await execAsync(
+        `docker logs rtmp-server --tail ${lines} 2>&1`,
+      );
+      return this.parseDockerLogs(stdout, 'rtmp');
+    } catch (error) {
+      console.error('Error getting RTMP logs:', error);
+      return [];
+    }
+  }
+
+  private async getWaveLogs(lines: number): Promise<LogEntry[]> {
+    try {
+      // Get PM2 logs for wave process
+      const { stdout } = await execAsync(
+        `pm2 logs radio.wave --lines ${lines} --nostream`,
+      );
+      return this.parsePM2Logs(stdout, 'wave');
+    } catch (error) {
+      console.error('Error getting Wave logs:', error);
+      return [];
+    }
+  }
+
+  private parsePM2Logs(logOutput: string, source: string): LogEntry[] {
+    const entries: LogEntry[] = [];
+    const lines = logOutput.split('\n').filter((line) => line.trim());
+
+    for (const line of lines) {
+      try {
+        // Skip PM2 header lines
+        if (
+          line.includes('[TAILING]') ||
+          line.includes('Tailing last') ||
+          (line.includes('last') && line.includes('lines:'))
+        ) {
+          continue;
+        }
+
+        // Clean ANSI color codes from the line
+        const cleanLine = this.stripAnsiCodes(line);
+
+        // Try multiple PM2 log formats
+        let match = null;
+        let timestamp = '';
+        let level = '';
+        let message = '';
+        let serviceAndLevel = '';
+
+        // Format 1: 9|radio.te | 2025-09-07 13:12:24 +00:00: [2025-09-07T13:12:24.164Z] TELEGRAM-DAEMON INFO: message
+        match = cleanLine.match(
+          /^\d+\|[^|]+\| (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{2}:\d{2}): \[([^\]]+)\] ([^:]+): ([^:]+): (.+)$/,
+        );
+        if (match) {
+          [, timestamp, , serviceAndLevel, , message] = match;
+          // Extract level from serviceAndLevel (e.g., "TELEGRAM-DAEMON WARNING" -> "WARNING")
+          level = serviceAndLevel.split(' ').pop() || 'info';
+        } else {
+          // Format 2: 2025-09-07 13:11:14 +00:00: [2025-09-07T13:11:14.154Z] TELEGRAM-DAEMON INFO: message (without PM2 prefix)
+          match = cleanLine.match(
+            /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{2}:\d{2}): \[([^\]]+)\] ([^:]+): ([^:]+): (.+)$/,
+          );
+          if (match) {
+            [, timestamp, , serviceAndLevel, , message] = match;
+            // Extract level from serviceAndLevel (e.g., "TELEGRAM-DAEMON WARNING" -> "WARNING")
+            level = serviceAndLevel.split(' ').pop() || 'info';
+          } else {
+            // Format 3: [timestamp] [level] message (original format)
+            match = cleanLine.match(/^\[([^\]]+)\] \[([^\]]+)\] (.+)$/);
+            if (match) {
+              [, timestamp, level, message] = match;
+            } else {
+              // Format 4: timestamp message (simple format)
+              match = cleanLine.match(
+                /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s+(.+)$/,
+              );
+              if (match) {
+                [, timestamp, message] = match;
+                level = 'info';
+              } else {
+                // Format 5: Simple timestamp message (from error logs)
+                match = cleanLine.match(
+                  /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [+-]\d{2}:\d{2}): (.+)$/,
+                );
+                if (match) {
+                  [, timestamp, message] = match;
+                  level = this.detectLogLevel(message);
+                } else {
+                  // Fallback for lines that don't match any expected format
+                  entries.push({
+                    timestamp: new Date().toISOString(),
+                    level: 'info',
+                    message: this.stripAnsiCodes(line.trim()),
+                    source,
+                  });
+                  continue;
+                }
+              }
+            }
+          }
+        }
+
+        entries.push({
+          timestamp: this.parseTimestamp(timestamp),
+          level: this.normalizeLogLevel(level),
+          message: this.stripAnsiCodes(message.trim()),
+          source,
+        });
+      } catch (error) {
+        // Skip malformed log entries
+      }
+    }
+
+    return entries;
+  }
+
+  private parseDockerLogs(logOutput: string, source: string): LogEntry[] {
+    const entries: LogEntry[] = [];
+    const lines = logOutput.split('\n').filter((line) => line.trim());
+
+    for (const line of lines) {
+      try {
+        // Docker log format: timestamp message
+        const match = line.match(
+          /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s+(.+)$/,
+        );
+        if (match) {
+          const [, timestamp, message] = match;
+          entries.push({
+            timestamp,
+            level: this.detectLogLevel(message),
+            message: message.trim(),
+            source,
+          });
+        } else {
+          // Fallback for lines that don't match the expected format
+          entries.push({
+            timestamp: new Date().toISOString(),
+            level: 'info',
+            message: line.trim(),
+            source,
+          });
+        }
+      } catch (error) {
+        // Skip malformed log entries
+      }
+    }
+
+    return entries;
+  }
+
+  private parseTimestamp(timestamp: string): string {
+    try {
+      // Try to parse various timestamp formats
+      const date = new Date(timestamp);
+      if (!Number.isNaN(date.getTime())) {
+        return date.toISOString();
+      }
+      return new Date().toISOString();
+    } catch (error) {
+      return new Date().toISOString();
+    }
+  }
+
+  private normalizeLogLevel(
+    level: string,
+  ): 'error' | 'warn' | 'info' | 'debug' {
+    const normalized = level.toLowerCase();
+    if (normalized.includes('error') || normalized.includes('err'))
+      return 'error';
+    if (normalized.includes('warning') || normalized.includes('warn'))
+      return 'warn';
+    if (normalized.includes('debug')) return 'debug';
+    return 'info';
+  }
+
+  private detectLogLevel(message: string): 'error' | 'warn' | 'info' | 'debug' {
+    const lowerMessage = message.toLowerCase();
+    if (
+      lowerMessage.includes('error') ||
+      lowerMessage.includes('failed') ||
+      lowerMessage.includes('exception')
+    ) {
+      return 'error';
+    }
+    if (lowerMessage.includes('warning') || lowerMessage.includes('warn')) {
+      return 'warn';
+    }
+    if (lowerMessage.includes('debug')) {
+      return 'debug';
+    }
+    return 'info';
+  }
+
+  private stripAnsiCodes(str: string): string {
+    // Remove ANSI escape sequences (color codes, etc.)
+    const escapeChar = String.fromCharCode(27);
+    return str.replace(new RegExp(`${escapeChar}\\[[0-9;]*m`, 'g'), '');
   }
 }
 

@@ -125,6 +125,11 @@ class TelegramStreamDaemon {
   }
 
   private parseFFmpegOutput(output: string): void {
+    // Debug logging to understand what we're parsing
+    if (output.includes('bitrate=') || output.includes('frame=')) {
+      log(`🔍 Parsing FFmpeg output: ${output.trim()}`);
+    }
+
     if (
       output.includes('Stream mapping:') ||
       output.includes('Press [q] to stop')
@@ -141,12 +146,15 @@ class TelegramStreamDaemon {
       const frames = Number.parseInt(frameMatch[1], 10);
       if (frames > this.streamHealth.totalFramesSent) {
         this.streamHealth.totalFramesSent = frames;
+        log(`📊 Updated frames sent: ${frames}`);
       }
     }
 
     const bitrateMatch = output.match(/bitrate=\s*([\d.]+)kbits\/s/);
     if (bitrateMatch) {
-      this.streamHealth.currentBitrate = Number.parseFloat(bitrateMatch[1]);
+      const bitrate = Number.parseFloat(bitrateMatch[1]);
+      this.streamHealth.currentBitrate = bitrate;
+      log(`📊 Updated bitrate: ${bitrate} kbps`);
     }
 
     if (
@@ -160,25 +168,47 @@ class TelegramStreamDaemon {
       warning(`Connection issue detected: ${output}`);
     }
 
+    // Set connected status when we see active streaming data
     if (output.includes('fps=') && output.includes('bitrate=')) {
-      this.streamHealth.isConnected = true;
+      if (!this.streamHealth.isConnected) {
+        this.streamHealth.isConnected = true;
+        this.streamHealth.lastConnectionTime = new Date();
+        log('✅ Stream connection confirmed via fps/bitrate data');
+      }
       this.streamHealth.lastHealthCheck = new Date();
+    }
+
+    // Also set connected when we have valid bitrate data
+    if (bitrateMatch && this.streamHealth.currentBitrate > 0) {
+      if (!this.streamHealth.isConnected) {
+        this.streamHealth.isConnected = true;
+        this.streamHealth.lastConnectionTime = new Date();
+        log('✅ Stream connection confirmed via bitrate data');
+      }
     }
   }
 
   private buildFFmpegCommand(): string[] {
     return [
       'ffmpeg',
-      '-i', this.config.inputUrl,
+      '-i',
+      this.config.inputUrl,
       '-vn',
-      '-c:a', 'aac',
-      '-b:a', this.config.audioBitrate,
-      '-ar', '44100',
-      '-ac', '2',
-      '-preset', 'ultrafast',
-      '-tune', 'zerolatency',
-      '-f', 'flv',
-      `${this.config.rtmpUrl}${this.config.streamKey}`
+      '-c:a',
+      'aac',
+      '-b:a',
+      this.config.audioBitrate,
+      '-ar',
+      '44100',
+      '-ac',
+      '2',
+      '-preset',
+      'ultrafast',
+      '-tune',
+      'zerolatency',
+      '-f',
+      'flv',
+      `${this.config.rtmpUrl}${this.config.streamKey}`,
     ];
   }
 
@@ -442,6 +472,17 @@ class TelegramStreamDaemon {
           this.scheduleRestart();
         }
       }, 30000); // Check every 30 seconds
+
+      // Periodic status update to ensure monitoring service gets fresh data
+      setInterval(() => {
+        if (!this.isShuttingDown && this.ffmpegProcess) {
+          // Update status with current stream health data
+          this.updateStatus('running', {
+            streamHealth: this.streamHealth,
+            lastUpdate: new Date().toISOString(),
+          });
+        }
+      }, 5000); // Update every 5 seconds
     } catch (err) {
       error(
         `Failed to start daemon: ${err instanceof Error ? err.message : String(err)}`,

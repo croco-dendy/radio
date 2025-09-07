@@ -2,10 +2,19 @@ module.exports = {
   apps: [
     {
       name: 'radio.wave',
-      script: 'src/index.ts',
-      interpreter: 'bun',
+      script: 'bun',
+      args: 'src/index.ts',
       instances: 1,
       env_production: { PORT: 6970, SOCKET_PORT: 6971 },
+      // Disable log rotation and use smaller log files
+      log_file: './logs/wave.log',
+      out_file: './logs/wave-out.log',
+      error_file: './logs/wave-error.log',
+      log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
+      merge_logs: true,
+      log_file_max_size: '10M',
+      log_file_backups: 0,
+      disable_logs: false
     },
     {
       name: 'radio.telegram',
@@ -31,7 +40,12 @@ module.exports = {
       min_uptime: '10s',
       max_restarts: 10,
       restart_delay: 5000,
-      stop_exit_codes: [0]
+      stop_exit_codes: [0],
+      // Disable log rotation and use smaller log files
+      merge_logs: true,
+      log_file_max_size: '10M',
+      log_file_backups: 0,
+      disable_logs: false
     }
   ],
 };

@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'apps/**'
+      - 'apps/wave/**'
       - 'packages/types/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -12,7 +12,7 @@ on:
   pull_request:
     branches: [main, develop]
     paths:
-      - 'apps/**'
+      - 'apps/wave/**'
       - 'packages/types/**'
       - 'package.json'
       - 'pnpm-lock.yaml'

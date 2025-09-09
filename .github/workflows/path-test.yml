@@ -1,0 +1,28 @@
+name: Path Test
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/wave/**'
+      - 'packages/types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+
+jobs:
+  path-test:
+    name: Test Path Filtering
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Show Changed Files
+        run: |
+          echo "=== Changed files in this PR ==="
+          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+          echo ""
+          echo "=== Files matching Wave workflow paths ==="
+          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '^(apps/wave/|packages/types/|package\.json|pnpm-lock\.yaml|turbo\.json)$' || echo "No files match Wave workflow paths"
+          echo ""
+          echo "=== Wave workflow should run if any files above match ==="

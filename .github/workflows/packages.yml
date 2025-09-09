@@ -48,17 +48,3 @@ jobs:
           pnpm run lint
           echo "✅ Packages linting passed!"
 
-  summary:
-    name: 📋 Packages CI Summary
-    runs-on: ubuntu-latest
-    needs: [build-and-lint]
-    if: always()
-    
-    steps:
-      - name: Summary
-        run: |
-          echo "🎉 Shared Packages CI Complete!"
-          echo ""
-          echo "✅ Build & Lint: ${{ needs.build-and-lint.result }}"
-          echo ""
-          echo "Shared packages are ready! 📦"

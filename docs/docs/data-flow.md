@@ -23,7 +23,7 @@ Wave Backend → Admin Panel (Management)
 2. **RTMP Processing**: Docker-based RTMP server processes audio
 3. **HLS Generation**: RTMP server generates HLS segments
 4. **Stream Distribution**: 
-   - HLS stream to frontend players
+   - HLS stream to player apps
    - Telegram stream to Telegram channels
 5. **Management**: Wave backend coordinates all operations
 6. **Monitoring**: Admin panel provides real-time management

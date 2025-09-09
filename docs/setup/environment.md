@@ -33,7 +33,7 @@ VITE_APP_NAME=Radio Admin
 VITE_APP_VERSION=1.0.0
 ```
 
-### Frontend (`apps/frontend/.env`)
+### Player (`apps/player/.env`)
 ```env
 # API Configuration
 VITE_API_URL=http://localhost:6970
@@ -73,11 +73,11 @@ VITE_APP_VERSION=1.0.0
 ```typescript
 // Wave Backend CORS configuration
 const allowedOrigins = [
-  'http://localhost:3000',    // Development frontend
+  'http://localhost:3000',    // Development player
   'http://localhost:3001',    // Admin panel
   'http://127.0.0.1:3001',    // Local admin
   'http://deimos:3001',       // Local network
-  'https://stream.adoo.one',  // Production frontend
+  'https://stream.adoo.one',  // Production player
   'https://wave.adoo.one',    // Production backend
 ];
 ```
@@ -227,7 +227,7 @@ sudo ufw allow 8069/tcp  # HLS
 
 ### PWA Configuration
 ```json
-// apps/frontend/public/manifest.json
+// apps/player/public/manifest.json
 {
   "name": "Radio Player",
   "short_name": "Radio",
@@ -252,7 +252,7 @@ sudo ufw allow 8069/tcp  # HLS
 # Update environment files
 cp apps/wave/.env.development apps/wave/.env
 cp apps/admin/.env.development apps/admin/.env
-cp apps/frontend/.env.development apps/frontend/.env
+cp apps/player/.env.development apps/player/.env
 
 # Build applications
 pnpm build

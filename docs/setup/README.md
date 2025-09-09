@@ -153,13 +153,13 @@ VITE_API_URL=http://localhost:6970
 VITE_SOCKET_URL=ws://localhost:6971
 ```
 
-#### Frontend
+#### Player
 ```bash
-cd apps/frontend
+cd apps/player
 cp .env.example .env
 ```
 
-Edit `apps/frontend/.env`:
+Edit `apps/player/.env`:
 ```env
 VITE_API_URL=http://localhost:6970
 VITE_SOCKET_URL=ws://localhost:6971
@@ -188,8 +188,8 @@ pnpm wave:dev
 # In another terminal, start admin panel
 pnpm admin:dev
 
-# In another terminal, start frontend
-pnpm frontend:dev
+# In another terminal, start player
+pnpm player:dev
 ```
 
 ### 3. Verify Installation
@@ -216,7 +216,7 @@ pnpm build
 # Or build individually
 pnpm --filter @radio/wave build
 pnpm --filter @radio/admin build
-pnpm --filter @radio/frontend build
+pnpm --filter @radio/player build
 ```
 
 ### 2. Start with PM2
@@ -416,7 +416,7 @@ After successful setup:
 
 1. **Configure Audio Sources**: Add your radio station's audio sources
 2. **Set Up Telegram**: Configure Telegram streaming if needed
-3. **Customize UI**: Modify the admin panel and frontend as needed
+3. **Customize UI**: Modify the admin panel and player as needed
 4. **Set Up Monitoring**: Configure logging and monitoring
 5. **Deploy to Production**: Follow the production deployment guide
 

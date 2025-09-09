@@ -390,4 +390,4 @@ pnpm dev
 
 ---
 
-**Next**: [Frontend Documentation](frontend.md) | [API Reference](../api/streaming.md)
+**Next**: [Player Documentation](player.md) | [API Reference](../api/streaming.md)

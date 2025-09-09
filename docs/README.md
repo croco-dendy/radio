@@ -21,7 +21,7 @@ radio/
 ├── apps/
 │   ├── wave/          # Backend streaming server (Bun + Hono)
 │   ├── admin/         # Admin panel (React + TypeScript)
-│   └── frontend/      # Public frontend (React + Vite)
+│   └── player/        # Public player (React + Vite)
 ├── packages/
 │   └── types/         # Shared TypeScript types
 ├── docs/              # Documentation (this folder)
@@ -94,8 +94,8 @@ pnpm wave:dev
 # Admin panel
 pnpm admin:dev
 
-# Public frontend
-pnpm frontend:dev
+# Public player
+pnpm player:dev
 ```
 
 ## 📚 Documentation
@@ -109,7 +109,7 @@ pnpm frontend:dev
 ### Applications
 - [🌊 Wave Backend](apps/wave.md)
 - [🎛️ Admin Panel](apps/admin.md)
-- [📱 Frontend](apps/frontend.md)
+- [🎵 Player](apps/player.md)
 
 ### API Reference
 - [📡 Streaming API](api/streaming.md)
@@ -179,7 +179,7 @@ Each application has its own environment configuration:
 
 - **Wave Backend**: `apps/wave/.env`
 - **Admin Panel**: `apps/admin/.env`
-- **Frontend**: `apps/frontend/.env`
+- **Player**: `apps/player/.env`
 
 ### Data Storage
 - **Audio Tracks**: `data/audio-tracks.json`

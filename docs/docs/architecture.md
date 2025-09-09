@@ -127,7 +127,7 @@ Wave Backend → Admin Panel (Management)
 2. **RTMP Processing**: Docker-based RTMP server processes audio
 3. **HLS Generation**: RTMP server generates HLS segments
 4. **Stream Distribution**: 
-   - HLS stream to frontend players
+   - HLS stream to player apps
    - Telegram stream to Telegram channels
 5. **Management**: Wave backend coordinates all operations
 6. **Monitoring**: Admin panel provides real-time management
@@ -295,11 +295,11 @@ Frontend (Port 5173)  Telegram Stream
 ```typescript
 // Allowed origins
 const allowedOrigins = [
-  'http://localhost:3000',    // Development frontend
+  'http://localhost:3000',    // Development player
   'http://localhost:3001',    // Admin panel
   'http://127.0.0.1:3001',    // Local admin
   'http://deimos:3001',       // Local network
-  'https://stream.adoo.one',  // Production frontend
+  'https://stream.adoo.one',  // Production player
   'https://wave.adoo.one',    // Production backend
 ];
 ```

@@ -10,20 +10,6 @@ import {
 } from '@/services/api/hooks/use-stream-control';
 import { useNotificationMutation } from '@/hooks/use-notification-mutations';
 
-const qualityOptions = [
-  { value: 'low' as const, label: 'Low' },
-  { value: 'medium' as const, label: 'Medium' },
-  { value: 'high' as const, label: 'High' },
-];
-
-const bitrateOptions = [
-  { value: '64k', label: '64 kbps' },
-  { value: '96k', label: '96 kbps' },
-  { value: '128k', label: '128 kbps' },
-  { value: '192k', label: '192 kbps' },
-  { value: '256k', label: '256 kbps' },
-];
-
 // Shared input styles matching the design system
 const inputStyles = [
   'w-full px-3 py-2 text-sm bg-coal/80 border border-white/20 rounded-lg',
@@ -149,69 +135,6 @@ export const TelegramConfigCard: React.FC = () => {
                   {currentConfig.streamKey || 'Not configured'}
                 </div>
               )}
-            </div>
-
-            {/* Compact grid for other settings */}
-            <div className="grid grid-cols-2 gap-3">
-              {/* Quality */}
-              <div>
-                <label
-                  htmlFor="quality"
-                  className="block text-xs font-medium text-amber-400/80 mb-1.5 uppercase tracking-wide"
-                >
-                  Quality
-                </label>
-                {isEditing ? (
-                  <select
-                    id="quality"
-                    value={currentConfig.quality}
-                    onChange={(e) =>
-                      handleInputChange('quality', e.target.value)
-                    }
-                    className={clsx(inputStyles)}
-                  >
-                    {qualityOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <div className={clsx(readOnlyStyles, 'capitalize')}>
-                    {currentConfig.quality}
-                  </div>
-                )}
-              </div>
-
-              {/* Audio Bitrate */}
-              <div>
-                <label
-                  htmlFor="audioBitrate"
-                  className="block text-xs font-medium text-amber-400/80 mb-1.5 uppercase tracking-wide"
-                >
-                  Bitrate
-                </label>
-                {isEditing ? (
-                  <select
-                    id="audioBitrate"
-                    value={currentConfig.audioBitrate}
-                    onChange={(e) =>
-                      handleInputChange('audioBitrate', e.target.value)
-                    }
-                    className={clsx(inputStyles)}
-                  >
-                    {bitrateOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <div className={clsx(readOnlyStyles)}>
-                    {currentConfig.audioBitrate}
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Advanced settings - collapsible in edit mode */}

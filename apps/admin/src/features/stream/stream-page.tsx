@@ -1,14 +1,13 @@
 import clsx from 'clsx';
 import { PageLayout } from '@/components/shared';
 import { sharedStyles } from '@/styles/shared-styles';
-import { useMonitoringData } from '@/services/api/hooks/use-monitoring';
+import { useMonitoringData } from '@/services/api/hooks';
 import { useWebSocket } from '@/hooks/use-websocket';
 import { Tabs, MonitoringTab, ConfigurationTab, LogsTab } from './components';
 
 export const StreamControlPage = () => {
   const { data: monitoring, isLoading, error } = useMonitoringData();
 
-  // Enable WebSocket for real-time updates
   useWebSocket({ autoConnect: true });
 
   if (error) {

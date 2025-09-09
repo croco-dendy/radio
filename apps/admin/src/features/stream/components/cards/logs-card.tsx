@@ -11,21 +11,21 @@ interface LogsCardProps {
 const LOG_LEVELS = {
   error: { color: 'text-red-400', bg: 'bg-red-400/10' },
   warn: { color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
-  info: { color: 'text-blue-400', bg: 'bg-blue-400/10' },
+  info: { color: 'text-blue-400', bg: 'bg-coal-relic-400/10' },
   debug: { color: 'text-gray-400', bg: 'bg-gray-400/10' },
 } as const;
 
 const SOURCE_COLORS = {
-  telegram: 'text-purple-400',
-  rtmp: 'text-green-400',
-  wave: 'text-blue-400',
+  telegram: 'text-blue-400 bg-blue-400/10',
+  rtmp: 'text-green-400 bg-green-400/10',
+  wave: 'text-ember bg-ember/10',
 } as const;
 
 export const LogsCard: React.FC<LogsCardProps> = ({ className }) => {
   const [selectedSource, setSelectedSource] = useState<string>('all');
   const [lines, setLines] = useState<number>(50);
   const [sortOrder, setSortOrder] = useState<'chronological' | 'reverse'>(
-    'chronological',
+    'reverse',
   );
   const logsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -154,9 +154,9 @@ export const LogsCard: React.FC<LogsCardProps> = ({ className }) => {
             type="button"
             onClick={() => setSelectedSource(source.id)}
             className={clsx(
-              'px-4 py-2 text-sm rounded-full whitespace-nowrap border backdrop-blur-sm',
+              'px-4 py-2 text-sm font-display rounded-full whitespace-nowrap border backdrop-blur-sm',
               selectedSource === source.id
-                ? 'bg-amber-500/20 text-amber-400 border-amber-400/30'
+                ? 'bg-ember/10 text-ember border-ember/30'
                 : 'bg-coal/60 text-white/80 border-white/10',
             )}
           >
@@ -188,11 +188,9 @@ export const LogsCard: React.FC<LogsCardProps> = ({ className }) => {
                 <div
                   key={`${entry.timestamp}-${entry.source}-${index}`}
                   className={clsx(
-                    'flex items-start gap-3 p-3 rounded-lg border transition-all duration-200',
+                    'flex items-start gap-3 px-3 py-2 rounded-lg border transition-all duration-200',
                     LOG_LEVELS[entry.level].bg,
-                    isRecent
-                      ? 'border-amber-400/30 shadow-sm shadow-amber-400/10'
-                      : 'border-white/5',
+                    isRecent ? 'border-ember/0' : 'border-white/0',
                   )}
                 >
                   <span className="text-amber-400/60 text-xs mt-0.5 flex-shrink-0 font-mono">
@@ -200,21 +198,19 @@ export const LogsCard: React.FC<LogsCardProps> = ({ className }) => {
                   </span>
                   <span
                     className={clsx(
-                      'text-xs px-2 py-0.5 rounded-full flex-shrink-0 border',
+                      'text-xs px-2 py-0.5 rounded-full flex-shrink-0',
                       LOG_LEVELS[entry.level].color,
                       LOG_LEVELS[entry.level].bg,
-                      'border-current/20',
                     )}
                   >
                     {entry.level.toUpperCase()}
                   </span>
                   <span
                     className={clsx(
-                      'text-xs px-2 py-0.5 rounded-full flex-shrink-0 border border-current/20',
+                      'text-xs px-2 py-0.5 rounded-full flex-shrink-0',
                       SOURCE_COLORS[
                         entry.source as keyof typeof SOURCE_COLORS
                       ] || 'text-amber-400/80',
-                      'bg-current/10',
                     )}
                   >
                     {entry.source}

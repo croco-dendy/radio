@@ -2,8 +2,6 @@ export interface TelegramStreamConfig {
   rtmpUrl: string;
   streamKey: string;
   inputUrl: string;
-  quality: 'low' | 'medium' | 'high';
-  audioBitrate: string;
 }
 
 export interface ApiResponse<T> {

@@ -103,7 +103,7 @@ describe('Monitoring Service', () => {
 
       const data = await res.json();
       expect(data.success).toBe(false);
-      expect(data.error).toContain('Unknown service');
+      expect(data.error).toContain('Invalid service');
     });
 
     test('should accept valid service names in metrics endpoint', async () => {

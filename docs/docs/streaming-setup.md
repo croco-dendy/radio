@@ -65,17 +65,12 @@ curl -X PUT http://localhost:6970/api/stream/telegram/config \
   -d '{
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
     "streamKey": "YOUR_TELEGRAM_STREAM_KEY",
-    "inputUrl": "rtmp://localhost:1935/live/test",
-    "quality": "medium",
-    "audioBitrate": "128k"
+    "inputUrl": "rtmp://localhost:1935/live/test"
   }'
 ```
 
-### 3. Quality Settings
-Available quality presets:
-- **low**: 96k bitrate, optimized for voice
-- **medium**: 128k bitrate, good for music
-- **high**: 192k bitrate, high quality audio
+### 3. Stream Configuration
+The Telegram stream now uses direct audio passthrough (`-c:a copy`) for minimal CPU usage and maximum quality preservation.
 
 ## 🚀 Service Management
 

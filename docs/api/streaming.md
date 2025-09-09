@@ -338,9 +338,7 @@ GET /api/streaming/telegram/status
   "config": {
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
     "streamKey": "your-stream-key",
-    "inputUrl": "rtmp://localhost:1935/live/test",
-    "quality": "medium",
-    "audioBitrate": "128k"
+    "inputUrl": "rtmp://localhost:1935/live/test"
   }
 }
 ```
@@ -399,9 +397,7 @@ GET /api/stream/telegram/config
   "config": {
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
     "streamKey": "2560136036:m6Xk01Qa3dDMq3Rs7cic-Q",
-    "inputUrl": "rtmp://localhost:1935/live/test",
-    "quality": "medium",
-    "audioBitrate": "128k"
+    "inputUrl": "rtmp://localhost:1935/live/test"
   }
 }
 ```
@@ -414,8 +410,7 @@ PUT /api/stream/telegram/config
 Content-Type: application/json
 
 {
-  "quality": "high",
-  "audioBitrate": "192k"
+  "streamKey": "new-stream-key"
 }
 ```
 
@@ -423,8 +418,6 @@ Content-Type: application/json
 - `rtmpUrl` (string, optional): Telegram RTMP URL
 - `streamKey` (string, optional): Telegram stream key  
 - `inputUrl` (string, optional): Input stream URL (default: rtmp://localhost:1935/live/test)
-- `quality` (string, optional): Stream quality ("low", "medium", "high")
-- `audioBitrate` (string, optional): Audio bitrate (e.g., "128k", "192k", "256k")
 
 **Response:**
 ```json
@@ -434,9 +427,7 @@ Content-Type: application/json
   "config": {
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
     "streamKey": "2560136036:m6Xk01Qa3dDMq3Rs7cic-Q",
-    "inputUrl": "rtmp://localhost:1935/live/test",
-    "quality": "high",
-    "audioBitrate": "192k"
+    "inputUrl": "rtmp://localhost:1935/live/test"
   }
 }
 ```

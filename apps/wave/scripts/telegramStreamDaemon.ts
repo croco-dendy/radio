@@ -62,8 +62,6 @@ class TelegramStreamDaemon {
     rtmpUrl: 'rtmps://dc4-1.rtmp.t.me/s/',
     streamKey: '2560136036:m6Xk01Qa3dDMq3Rs7cic-Q',
     inputUrl: 'rtmp://localhost:1935/live/test',
-    quality: 'medium',
-    audioBitrate: '128k',
   };
 
   constructor() {
@@ -192,20 +190,10 @@ class TelegramStreamDaemon {
     return [
       'ffmpeg',
       '-i',
-      this.config.inputUrl,
-      '-vn',
+      this.config.inputUrl, // Audio input from RTMP
+      '-vn', // Disable video completely
       '-c:a',
-      'aac',
-      '-b:a',
-      this.config.audioBitrate,
-      '-ar',
-      '44100',
-      '-ac',
-      '2',
-      '-preset',
-      'ultrafast',
-      '-tune',
-      'zerolatency',
+      'copy', // Copy audio stream without re-encoding (minimal CPU)
       '-f',
       'flv',
       `${this.config.rtmpUrl}${this.config.streamKey}`,

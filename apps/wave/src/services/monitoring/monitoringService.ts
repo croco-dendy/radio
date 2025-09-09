@@ -19,6 +19,7 @@ export class MonitoringService {
     this.dataDir,
     'telegram-stream-status.json',
   );
+  private telegramConfigFile = join(this.dataDir, 'telegram-config.json');
 
   async getSystemHealth(): Promise<SystemHealth> {
     const [telegramStats, rtmpStats] = await Promise.allSettled([
@@ -55,11 +56,11 @@ export class MonitoringService {
       // Get daemon status from file
       const daemonStatus = await this.getTelegramDaemonStatus();
 
-      // Check if FFmpeg process is running
-      const ffmpegRunning = await this.isTelegramFFmpegRunning();
+      // Get masked stream key
+      const streamKey = await this.getMaskedStreamKey();
 
       return {
-        isRunning: pm2Info.isRunning || ffmpegRunning,
+        isRunning: pm2Info.isRunning || daemonStatus?.status === 'running',
         pm2Status:
           pm2Info.isRunning &&
           pm2Info.pid &&
@@ -85,8 +86,8 @@ export class MonitoringService {
               streamHealth: daemonStatus.streamHealth,
             }
           : null,
-        ffmpegRunning,
         lastHealthCheck: new Date().toISOString(),
+        streamKey,
       };
     } catch (error) {
       console.error('Error getting Telegram service stats:', error);
@@ -219,17 +220,6 @@ export class MonitoringService {
     } catch (error) {
       console.error('Error reading telegram daemon status:', error);
       return null;
-    }
-  }
-
-  private async isTelegramFFmpegRunning(): Promise<boolean> {
-    try {
-      const { stdout } = await execAsync(
-        'pgrep -f "ffmpeg.*rtmps://dc4-1.rtmp.t.me"',
-      );
-      return stdout.trim().length > 0;
-    } catch (error) {
-      return false;
     }
   }
 
@@ -513,11 +503,24 @@ export class MonitoringService {
 
   private async getTelegramLogs(lines: number): Promise<LogEntry[]> {
     try {
-      // Get PM2 logs for radio.telegram process
-      const { stdout } = await execAsync(
-        `pm2 logs radio.telegram --lines ${lines} --nostream`,
-      );
-      return this.parsePM2Logs(stdout, 'telegram');
+      // Get logs from both stdout and stderr files to ensure chronological ordering
+      // PM2 separates logs into different files, so we need to combine them
+      const [stdoutResult, stderrResult] = await Promise.allSettled([
+        execAsync(`pm2 logs radio.telegram --lines ${lines} --nostream --out`),
+        execAsync(`pm2 logs radio.telegram --lines ${lines} --nostream --err`),
+      ]);
+
+      let combinedLogs = '';
+
+      if (stdoutResult.status === 'fulfilled') {
+        combinedLogs += stdoutResult.value.stdout;
+      }
+
+      if (stderrResult.status === 'fulfilled') {
+        combinedLogs += stderrResult.value.stdout;
+      }
+
+      return this.parsePM2Logs(combinedLogs, 'telegram');
     } catch (error) {
       console.error('Error getting Telegram logs:', error);
       return [];
@@ -539,11 +542,24 @@ export class MonitoringService {
 
   private async getWaveLogs(lines: number): Promise<LogEntry[]> {
     try {
-      // Get PM2 logs for wave process
-      const { stdout } = await execAsync(
-        `pm2 logs radio.wave --lines ${lines} --nostream`,
-      );
-      return this.parsePM2Logs(stdout, 'wave');
+      // Get logs from both stdout and stderr files to ensure chronological ordering
+      // PM2 separates logs into different files, so we need to combine them
+      const [stdoutResult, stderrResult] = await Promise.allSettled([
+        execAsync(`pm2 logs radio.wave --lines ${lines} --nostream --out`),
+        execAsync(`pm2 logs radio.wave --lines ${lines} --nostream --err`),
+      ]);
+
+      let combinedLogs = '';
+
+      if (stdoutResult.status === 'fulfilled') {
+        combinedLogs += stdoutResult.value.stdout;
+      }
+
+      if (stderrResult.status === 'fulfilled') {
+        combinedLogs += stderrResult.value.stdout;
+      }
+
+      return this.parsePM2Logs(combinedLogs, 'wave');
     } catch (error) {
       console.error('Error getting Wave logs:', error);
       return [];
@@ -639,6 +655,14 @@ export class MonitoringService {
       }
     }
 
+    // Sort entries by timestamp to ensure chronological order
+    // This is important because PM2 might return logs from different streams
+    // in a non-chronological order
+    entries.sort(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+    );
+
     return entries;
   }
 
@@ -724,6 +748,33 @@ export class MonitoringService {
     // Remove ANSI escape sequences (color codes, etc.)
     const escapeChar = String.fromCharCode(27);
     return str.replace(new RegExp(`${escapeChar}\\[[0-9;]*m`, 'g'), '');
+  }
+
+  private async getMaskedStreamKey(): Promise<string | undefined> {
+    try {
+      if (!existsSync(this.telegramConfigFile)) {
+        return undefined;
+      }
+
+      const configData = await readFile(this.telegramConfigFile, 'utf-8');
+      const config = JSON.parse(configData);
+
+      if (!config.streamKey || typeof config.streamKey !== 'string') {
+        return undefined;
+      }
+
+      const streamKey = config.streamKey;
+      if (streamKey.length <= 4) {
+        return streamKey; // If key is too short, return as is
+      }
+
+      // Show compact format: "••••••••c-Q" instead of "**********************c-Q"
+      const lastFour = streamKey.slice(-4);
+      return `••••••••${lastFour}`;
+    } catch (error) {
+      console.error('Error reading telegram config for stream key:', error);
+      return undefined;
+    }
   }
 }
 

@@ -11,7 +11,7 @@ The Radio Streaming Platform is a distributed system designed for high-performan
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Admin Panel   │    │   Wave Backend  │
 │   (React)       │    │   (React)       │    │   (Bun + Hono)  │
-│   Port: 5173    │    │   Port: 3001    │    │   Port: 6970    │
+│   Port: 3030    │    │   Port: 3001    │    │   Port: 6970    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          └───────────────────────┼───────────────────────┘
@@ -214,8 +214,6 @@ interface TelegramStreamConfig {
   rtmpUrl: string;      // Telegram RTMP URL
   streamKey: string;    // Telegram stream key
   inputUrl: string;     // Input stream URL
-  quality: 'low' | 'medium' | 'high';
-  audioBitrate: string; // Audio bitrate
 }
 ```
 

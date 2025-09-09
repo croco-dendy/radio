@@ -85,8 +85,6 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
     if (!stats) return [];
 
     const daemonStatus = stats.daemonStatus?.status || 'unknown';
-    const isRunning =
-      daemonStatus === 'running' || daemonStatus === 'initializing';
 
     const baseStats: StatItem[] = [
       {
@@ -94,12 +92,16 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
         value: getStatusDisplayValue(daemonStatus),
         highlight: daemonStatus === 'error',
       },
-      {
-        label: 'FFmpeg',
-        value: stats.ffmpegRunning ? 'Running' : 'Stopped',
-        highlight: !stats.ffmpegRunning && isRunning,
-      },
     ];
+
+    // Add stream key if available
+    if (stats.streamKey) {
+      baseStats.push({
+        label: 'Stream Key',
+        value: stats.streamKey,
+        highlight: false,
+      });
+    }
 
     if (stats.pm2Status) {
       baseStats.push(
@@ -174,18 +176,6 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
       };
     }
 
-    // FFmpeg not running when service is running
-    if (telegramRunning && !stats.ffmpegRunning) {
-      return {
-        type: 'warning' as const,
-        message: 'FFmpeg process not running',
-        action: {
-          label: 'Restart',
-          onClick: () => mutations.restart.mutate(undefined),
-        },
-      };
-    }
-
     // Stream health issues - use actual metrics instead of unreliable isConnected flag
     const streamHealth = stats.daemonStatus?.streamHealth;
     if (telegramRunning && streamHealth) {
@@ -247,9 +237,9 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
     },
     {
       label: 'Restart',
-      variant: 'accent' as const,
+      variant: 'secondary' as const,
       onClick: () => mutations.restart.mutate(undefined),
-      disabled: isLoading,
+      disabled: isLoading || !isRunning,
       loading: mutations.restart.isPending,
     },
   ];

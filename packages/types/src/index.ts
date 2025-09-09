@@ -73,8 +73,8 @@ export interface TelegramServiceStats {
     lastUpdate: string | null;
     streamHealth?: StreamHealth;
   } | null;
-  ffmpegRunning: boolean;
   lastHealthCheck: string;
+  streamKey?: string; // Masked stream key for identification
 }
 
 export interface RtmpServiceStats {
@@ -121,8 +121,6 @@ export interface TelegramStreamConfig {
   rtmpUrl: string;
   streamKey: string;
   inputUrl: string;
-  quality: 'low' | 'medium' | 'high';
-  audioBitrate: string;
 }
 
 export interface RtmpServerConfig {

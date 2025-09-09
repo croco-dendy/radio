@@ -17,8 +17,6 @@ export class TelegramStreamService {
     rtmpUrl: 'rtmps://dc4-1.rtmp.t.me/s/',
     streamKey: '2560136036:m6Xk01Qa3dDMq3Rs7cic-Q',
     inputUrl: 'rtmp://localhost:1935/live/test',
-    quality: 'medium',
-    audioBitrate: '128k',
   };
 
   constructor() {

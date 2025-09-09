@@ -24,8 +24,8 @@ export interface TelegramServiceStats {
     lastUpdate: string | null;
     streamHealth?: StreamHealth;
   } | null;
-  ffmpegRunning: boolean;
   lastHealthCheck: string;
+  streamKey?: string; // Masked stream key for identification
 }
 
 export interface RtmpServiceStats {

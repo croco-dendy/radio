@@ -179,7 +179,10 @@ This starts a Docker container with:
 
 ### 2. Start Backend Services
 ```bash
-# Start Wave backend
+# In root folder you can start everything by running:
+pnpm dev
+
+# Or start Wave backend
 pnpm wave:dev
 
 # In another terminal, start admin panel
@@ -281,9 +284,7 @@ Edit `apps/wave/data/telegram-config.json`:
 {
   "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
   "streamKey": "your-telegram-stream-key",
-  "inputUrl": "rtmp://localhost:1935/live/test",
-  "quality": "medium",
-  "audioBitrate": "128k"
+  "inputUrl": "rtmp://localhost:1935/live/test"
 }
 ```
 

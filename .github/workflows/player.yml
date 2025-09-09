@@ -1,10 +1,10 @@
-name: 📱 Frontend App
+name: 🎵 Player App
 
 on:
   push:
     branches: [main, develop]
     paths:
-      - 'apps/frontend/**'
+      - 'apps/player/**'
       - 'packages/types/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -12,7 +12,7 @@ on:
   pull_request:
     branches: [main, develop]
     paths:
-      - 'apps/frontend/**'
+      - 'apps/player/**'
       - 'packages/types/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -20,7 +20,7 @@ on:
 
 jobs:
   build-and-lint:
-    name: 🔨 Build & Lint Frontend
+    name: 🔨 Build & Lint Player
     runs-on: ubuntu-latest
     
     steps:
@@ -40,19 +40,19 @@ jobs:
 
       - name: Type check
         run: |
-          echo "🔍 Type checking Frontend app..."
-          pnpm turbo run check-types --filter=@radio/frontend
-          echo "✅ Frontend type check passed!"
+          echo "🔍 Type checking Player app..."
+          pnpm turbo run check-types --filter=@radio/player
+          echo "✅ Player type check passed!"
 
       - name: Lint
         run: |
-          echo "🔍 Linting Frontend app..."
-          pnpm turbo run lint --filter=@radio/frontend
-          echo "✅ Frontend linting passed!"
+          echo "🔍 Linting Player app..."
+          pnpm turbo run lint --filter=@radio/player
+          echo "✅ Player linting passed!"
 
       - name: Build
         run: |
-          echo "🔨 Building Frontend app..."
-          pnpm turbo run build --filter=@radio/frontend
-          echo "✅ Frontend build passed!"
+          echo "🔨 Building Player app..."
+          pnpm turbo run build --filter=@radio/player
+          echo "✅ Player build passed!"
 

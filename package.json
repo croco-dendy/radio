@@ -11,7 +11,7 @@
     "test": "turbo run test",
     "prepare": "husky install",
     "wave:dev": "pnpm --filter @radio/wave dev",
-    "frontend:dev": "pnpm --filter @radio/frontend dev",
+    "player:dev": "pnpm --filter @radio/player dev",
     "admin:dev": "pnpm --filter @radio/admin dev",
     "wave:start": "pnpm --filter @radio/wave pm2:start",
     "wave:stop": "pnpm --filter @radio/wave pm2:stop",

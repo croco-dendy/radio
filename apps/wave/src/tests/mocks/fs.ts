@@ -48,6 +48,8 @@ export const removeMockFile = (filePath: string) => {
 
 // Helper to clear all mock files
 export const clearMockFiles = () => {
-  Object.keys(mockFiles).forEach((key) => delete mockFiles[key]);
+  for (const key of Object.keys(mockFiles)) {
+    delete mockFiles[key];
+  }
 };
 

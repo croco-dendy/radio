@@ -3,20 +3,8 @@ name: 🎛️ Admin Frontend
 on:
   push:
     branches: [main, develop]
-    paths:
-      - 'apps/admin/**'
-      - 'packages/types/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'turbo.json'
   pull_request:
     branches: [main, develop]
-    paths:
-      - 'apps/admin/**'
-      - 'packages/types/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'turbo.json'
 
 jobs:
   build-and-lint:

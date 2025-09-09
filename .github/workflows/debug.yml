@@ -2,7 +2,13 @@ name: Debug Workflow
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+    paths:
+      - 'apps/wave/**'
+      - 'packages/types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
 
 jobs:
   debug:

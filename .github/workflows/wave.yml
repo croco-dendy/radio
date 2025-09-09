@@ -1,0 +1,51 @@
+name: 🌊 Wave Backend
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-test:
+    name: 🔨 Build, Lint & Test Wave
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.15.0'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Type check
+        run: |
+          echo "🔍 Type checking Wave backend..."
+          pnpm turbo run check-types --filter=@radio/wave
+          echo "✅ Wave type check passed!"
+
+      - name: Lint
+        run: |
+          echo "🔍 Linting Wave backend..."
+          pnpm turbo run lint --filter=@radio/wave
+          echo "✅ Wave linting passed!"
+
+      - name: Run tests
+        run: |
+          echo "🧪 Running Wave tests..."
+          pnpm turbo run test --filter=@radio/wave
+          echo "✅ Wave tests passed!"
+

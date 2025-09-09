@@ -1,0 +1,10 @@
+export const getEnv = () => import.meta.env.VITE_APP_ENV;
+
+export const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:6870';
+export const socketUrl =
+  import.meta.env.VITE_SOCKET_URL || 'ws://localhost:6871';
+export const streamUrl = import.meta.env.VITE_STREAM_URL;
+
+export const isDev = getEnv() === 'development';
+export const isProd = getEnv() === 'production';
+export const isPreview = getEnv() === 'preview';

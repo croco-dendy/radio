@@ -11,7 +11,10 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noEmit": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@radio/types": ["packages/types/src"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }

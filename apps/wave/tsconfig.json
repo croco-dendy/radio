@@ -7,8 +7,9 @@
     "jsxImportSource": "hono/jsx",
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@radio/types": ["../../packages/types/src"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "scripts/telegramStreamDaemon.ts"]
 }

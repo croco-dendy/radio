@@ -1,0 +1,58 @@
+name: 🎵 Player App
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/player/**'
+      - 'packages/types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/player/**'
+      - 'packages/types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+
+jobs:
+  build-and-lint:
+    name: 🔨 Build & Lint Player
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.15.0'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: |
+          echo "🔍 Type checking Player app..."
+          pnpm turbo run check-types --filter=@radio/player
+          echo "✅ Player type check passed!"
+
+      - name: Lint
+        run: |
+          echo "🔍 Linting Player app..."
+          pnpm turbo run lint --filter=@radio/player
+          echo "✅ Player linting passed!"
+
+      - name: Build
+        run: |
+          echo "🔨 Building Player app..."
+          pnpm turbo run build --filter=@radio/player
+          echo "✅ Player build passed!"
+

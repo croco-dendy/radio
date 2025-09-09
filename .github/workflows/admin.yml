@@ -2,7 +2,7 @@ name: 🎛️ Admin Frontend
 
 on:
   push:
-    branches: [main, develop, feature/*]
+    branches: [main, develop]
     paths:
       - 'apps/admin/**'
       - 'packages/types/**'

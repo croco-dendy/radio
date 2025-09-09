@@ -2,7 +2,7 @@ name: 📦 Shared Packages
 
 on:
   push:
-    branches: [main, develop, feature/*]
+    branches: [main, develop]
     paths:
       - 'packages/**'
       - 'package.json'

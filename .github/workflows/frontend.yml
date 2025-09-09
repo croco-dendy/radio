@@ -2,7 +2,7 @@ name: 📱 Frontend App
 
 on:
   push:
-    branches: [main, develop, feature/*]
+    branches: [main, develop]
     paths:
       - 'apps/frontend/**'
       - 'packages/types/**'

@@ -2,7 +2,7 @@ name: 🌊 Wave Backend
 
 on:
   push:
-    branches: [main, develop, feature/*]
+    branches: [main, develop]
     paths:
       - 'apps/wave/**'
       - 'packages/types/**'

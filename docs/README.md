@@ -24,7 +24,7 @@ radio/
 │   └── frontend/      # Public frontend (React + Vite)
 ├── packages/
 │   └── types/         # Shared TypeScript types
-├── github/            # Documentation (this folder)
+├── docs/              # Documentation (this folder)
 │   ├── docs/          # Technical documentation
 │   ├── apps/          # App-specific documentation
 │   ├── setup/         # Setup and deployment guides
@@ -35,11 +35,11 @@ radio/
 ## 🎯 Key Features
 
 ### Streaming Capabilities
-- **Dual Mode Operation**: Live streaming and playlist-based radio
-- **Real-time Control**: Start/stop streaming via web interface
-- **Track Management**: Add, edit, and delete audio tracks
-- **Now Playing**: Real-time track information display
-- **Skip Functionality**: Skip to next track in radio mode
+- **RTMP Server Management**: Start, stop, and restart RTMP streaming server
+- **Telegram Integration**: Stream to Telegram channels via PM2 daemon
+- **Configuration Management**: Update RTMP and Telegram stream settings
+- **Real-time Monitoring**: System health and service status monitoring
+- **Docker Integration**: Container-based RTMP server management
 
 ### Admin Panel
 - **Modern UI**: Built with React 18, TypeScript, and Tailwind CSS
@@ -102,8 +102,8 @@ pnpm frontend:dev
 
 ### Setup & Deployment
 - [📋 Complete Setup Guide](setup/README.md)
-- [🐳 Docker Deployment](setup/docker.md)
-- [☁️ Production Deployment](setup/production.md)
+- [🐳 Docker Deployment](setup/README.md#docker-setup)
+- [☁️ Production Deployment](setup/README.md#production-setup)
 - [🔧 Environment Configuration](setup/environment.md)
 
 ### Applications
@@ -113,15 +113,15 @@ pnpm frontend:dev
 
 ### API Reference
 - [📡 Streaming API](api/streaming.md)
-- [🔌 WebSocket API](api/websocket.md)
-- [📊 Status Endpoints](api/status.md)
+- [🔌 WebSocket API](api/streaming.md#websocket-events)
+- [📊 Status Endpoints](api/streaming.md#monitoring-endpoints)
 
 ### Technical Documentation
 - [🏗️ Architecture Overview](docs/architecture.md)
 - [🔄 Data Flow](docs/data-flow.md)
 - [📡 Streaming Setup Guide](docs/streaming-setup.md)
-- [🎨 Design System](docs/design-system.md)
-- [🧪 Testing](docs/testing.md)
+- [🎨 Design System](apps/admin.md#design-system)
+- [🧪 Testing](apps/admin.md#testing)
 
 ## 🎛️ Usage
 
@@ -156,20 +156,21 @@ All streaming operations are available via REST API at `http://localhost:6970/ap
 | `GET` | `/logs` | Get system logs |
 | `GET` | `/logs/:service` | Get logs for specific service |
 
-### Streaming Modes
+### Streaming Services
 
-#### Live Mode
-- Streams directly from external audio sources
-- Real-time audio streaming
-- No playlist management needed
-- Perfect for live shows and events
+#### RTMP Server
+- Docker-based RTMP streaming server
+- Accepts RTMP input streams
+- Provides HLS output for web playback
+- Configurable stream keys and URLs
+- Perfect for live streaming from external sources
 
-#### Radio Mode
-- Plays from a managed playlist of audio tracks
-- Supports track management (add/remove tracks)
-- Skip to next track functionality
-- Automatic playlist looping
-- Perfect for automated radio stations
+#### Telegram Integration
+- Stream to Telegram channels via PM2 daemon
+- Automatic stream management
+- Configuration-based setup
+- Error handling and recovery
+- Perfect for broadcasting to Telegram audiences
 
 ## 🔧 Configuration
 
@@ -301,7 +302,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support and questions:
 - Create an issue in the repository
-- Check the documentation in the `github/` folder
+- Check the documentation in the `docs/` folder
 - Review the troubleshooting section above
 
 ---

@@ -23,20 +23,20 @@ Complete reference for all streaming-related endpoints:
 - **Telegram Integration**: Telegram streaming controls with daemon management
 - **Service Monitoring**: Real-time service status and health
 
-### [🔌 WebSocket API](websocket.md)
-Real-time communication endpoints:
-- **Connection Management**: WebSocket connection handling
-- **Event Types**: Real-time event specifications
-- **Message Format**: WebSocket message structure
-- **Error Handling**: WebSocket error management
-
-### [📊 Monitoring API](monitoring.md)
+### [📊 Monitoring API](streaming.md#monitoring-endpoints)
 System monitoring and status endpoints:
 - **Service Monitoring**: Real-time service status and health
 - **Performance Metrics**: System performance data
 - **Resource Usage**: CPU, memory, network metrics
 - **Log Management**: System and service logs
 - **Process Status**: External process monitoring
+
+### WebSocket API
+Real-time communication endpoints (documented in streaming.md):
+- **Connection Management**: WebSocket connection handling
+- **Event Types**: Real-time event specifications
+- **Message Format**: WebSocket message structure
+- **Error Handling**: WebSocket error management
 
 ## 🎯 Key Features
 

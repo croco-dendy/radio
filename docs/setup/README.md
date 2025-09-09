@@ -422,8 +422,8 @@ After successful setup:
 
 ## 📚 Additional Resources
 
-- [Docker Deployment Guide](docker.md)
-- [Production Deployment](production.md)
+- [Docker Deployment Guide](#2-start-rtmp-server)
+- [Production Deployment](#production-setup)
 - [Environment Configuration](environment.md)
 - [API Documentation](../api/README.md)
 - [Architecture Overview](../docs/architecture.md)

@@ -322,4 +322,4 @@ node -e "console.log('PORT:', process.env.PORT)"
 
 ---
 
-**Next**: [Production Deployment](production.md) | [Docker Setup](docker.md)
+**Next**: [Production Deployment](../setup/README.md#production-setup) | [Docker Setup](../setup/README.md#2-start-rtmp-server)

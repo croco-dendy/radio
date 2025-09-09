@@ -33,7 +33,7 @@ All API responses follow a consistent format:
 }
 ```
 
-## 🎵 Streaming Management
+## 🎵 Health Check
 
 ### Health Check
 Check the health status of the API server.
@@ -96,254 +96,51 @@ POST /api/stream/rtmp/restart
   "message": "RTMP server restarted successfully"
 }
 ```
-POST /api/streaming/stop
+
+### Get RTMP Configuration
+Get the current RTMP server configuration.
+
+```http
+GET /api/stream/rtmp/config
 ```
 
 **Response:**
 ```json
 {
   "success": true,
-  "message": "Streaming stopped successfully"
-}
-```
-
-### Get Now Playing
-Get information about the currently playing track.
-
-```http
-GET /api/streaming/now-playing
-```
-
-**Response:**
-```json
-{
-  "track": {
-    "id": "track-1",
-    "url": "https://example.com/audio.mp3",
-    "title": "Track Title",
-    "duration": 180,
-    "addedAt": "2024-01-01T00:00:00.000Z"
-  },
-  "position": 45.5,
-  "duration": 180,
-  "isPlaying": true
-}
-```
-
-### Skip Track
-Skip to the next track in the playlist (radio mode only).
-
-```http
-POST /api/streaming/skip
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Skipped to next track"
-}
-```
-
-## 🎵 Track Management
-
-### Get All Tracks
-Get a list of all audio tracks.
-
-```http
-GET /api/streaming/tracks
-```
-
-**Response:**
-```json
-{
-  "tracks": [
-    {
-      "id": "track-1",
-      "url": "https://example.com/audio1.mp3",
-      "title": "Track 1",
-      "duration": 180,
-      "addedAt": "2024-01-01T00:00:00.000Z"
-    },
-    {
-      "id": "track-2",
-      "url": "https://example.com/audio2.mp3",
-      "title": "Track 2",
-      "duration": 240,
-      "addedAt": "2024-01-01T01:00:00.000Z"
-    }
-  ]
-}
-```
-
-### Add New Track
-Add a new audio track to the playlist.
-
-```http
-POST /api/streaming/tracks
-Content-Type: application/json
-
-{
-  "url": "https://example.com/new-track.mp3",
-  "title": "New Track",
-  "duration": 200
-}
-```
-
-**Request Body:**
-- `url` (string, required): Audio file URL
-- `title` (string, required): Track title
-- `duration` (number, optional): Track duration in seconds
-
-**Response:**
-```json
-{
-  "id": "track-3",
-  "url": "https://example.com/new-track.mp3",
-  "title": "New Track",
-  "duration": 200,
-  "addedAt": "2024-01-01T02:00:00.000Z"
-}
-```
-
-### Update Track
-Update an existing audio track.
-
-```http
-PUT /api/streaming/tracks/{id}
-Content-Type: application/json
-
-{
-  "title": "Updated Track Title",
-  "duration": 220
-}
-```
-
-**Path Parameters:**
-- `id` (string, required): Track ID
-
-**Request Body:**
-- `url` (string, optional): Audio file URL
-- `title` (string, optional): Track title
-- `duration` (number, optional): Track duration in seconds
-
-**Response:**
-```json
-{
-  "id": "track-3",
-  "url": "https://example.com/new-track.mp3",
-  "title": "Updated Track Title",
-  "duration": 220,
-  "addedAt": "2024-01-01T02:00:00.000Z"
-}
-```
-
-### Delete Track
-Delete an audio track from the playlist.
-
-```http
-DELETE /api/streaming/tracks/{id}
-```
-
-**Path Parameters:**
-- `id` (string, required): Track ID
-
-**Response:**
-```json
-{
-  "success": true
-}
-```
-
-## 📡 RTMP Server Management
-
-### Get RTMP Server Status
-Get the current status of the RTMP server.
-
-```http
-GET /api/streaming/rtmp/status
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "isRunning": true,
-  "containerName": "rtmp-server",
-  "status": "Up 2 hours",
-  "error": null
-}
-```
-
-### Start RTMP Server
-Start the RTMP server.
-
-```http
-POST /api/streaming/rtmp/start
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "RTMP server started successfully"
-}
-```
-
-### Stop RTMP Server
-Stop the RTMP server.
-
-```http
-POST /api/streaming/rtmp/stop
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "RTMP server stopped successfully"
-}
-```
-
-### Restart RTMP Server
-Restart the RTMP server.
-
-```http
-POST /api/streaming/rtmp/restart
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "RTMP server restarted successfully"
-}
-```
-
-## 📱 Telegram Integration
-
-### Get Telegram Stream Status
-Get the current status of the Telegram stream.
-
-```http
-GET /api/streaming/telegram/status
-```
-
-**Response:**
-```json
-{
-  "isRunning": true,
-  "success": true,
-  "message": "Telegram stream is running via PM2",
   "config": {
-    "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
-    "streamKey": "your-stream-key",
-    "inputUrl": "rtmp://localhost:1935/live/test"
+    "rtmpUrl": "rtmp://localhost:1935/live",
+    "hlsUrl": "http://localhost:8069/hls/",
+    "streamKey": "your-stream-key"
   }
 }
 ```
 
-## 📱 Telegram Integration
+### Update RTMP Configuration
+Update the RTMP server configuration.
+
+```http
+PUT /api/stream/rtmp/config
+```
+
+**Request Body:**
+```json
+{
+  "rtmpUrl": "rtmp://localhost:1935/live",
+  "hlsUrl": "http://localhost:8069/hls/",
+  "streamKey": "new-stream-key"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "RTMP configuration updated successfully"
+}
+```
+
+## 📡 Telegram Integration
 
 ### Start Telegram Stream
 Start streaming to Telegram via PM2 daemon.
@@ -356,20 +153,12 @@ POST /api/stream/telegram/start
 ```json
 {
   "success": true,
-  "message": "Telegram stream started successfully via PM2"
-}
-```
-
-**Error Response:**
-```json
-{
-  "success": false,
-  "message": "Cannot start Telegram stream: RTMP server is not running. Please start the RTMP server first."
+  "message": "Telegram stream started successfully"
 }
 ```
 
 ### Stop Telegram Stream
-Stop streaming to Telegram.
+Stop the Telegram stream.
 
 ```http
 POST /api/stream/telegram/stop
@@ -379,12 +168,27 @@ POST /api/stream/telegram/stop
 ```json
 {
   "success": true,
-  "message": "Telegram stream stopped successfully via PM2"
+  "message": "Telegram stream stopped successfully"
+}
+```
+
+### Restart Telegram Stream
+Restart the Telegram stream.
+
+```http
+POST /api/stream/telegram/restart
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Telegram stream restarted successfully"
 }
 ```
 
 ### Get Telegram Configuration
-Get the current Telegram stream configuration.
+Get the current Telegram streaming configuration.
 
 ```http
 GET /api/stream/telegram/config
@@ -396,177 +200,301 @@ GET /api/stream/telegram/config
   "success": true,
   "config": {
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
-    "streamKey": "2560136036:m6Xk01Qa3dDMq3Rs7cic-Q",
+    "streamKey": "your-telegram-stream-key",
     "inputUrl": "rtmp://localhost:1935/live/test"
   }
 }
 ```
 
 ### Update Telegram Configuration
-Update the Telegram stream configuration.
+Update the Telegram streaming configuration.
 
 ```http
 PUT /api/stream/telegram/config
-Content-Type: application/json
-
-{
-  "streamKey": "new-stream-key"
-}
 ```
 
 **Request Body:**
-- `rtmpUrl` (string, optional): Telegram RTMP URL
-- `streamKey` (string, optional): Telegram stream key  
-- `inputUrl` (string, optional): Input stream URL (default: rtmp://localhost:1935/live/test)
+```json
+{
+  "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
+  "streamKey": "new-telegram-stream-key",
+  "inputUrl": "rtmp://localhost:1935/live/test"
+}
+```
 
 **Response:**
 ```json
 {
   "success": true,
-  "message": "Telegram configuration updated successfully",
-  "config": {
-    "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
-    "streamKey": "2560136036:m6Xk01Qa3dDMq3Rs7cic-Q",
-    "inputUrl": "rtmp://localhost:1935/live/test"
-  }
+  "message": "Telegram configuration updated successfully"
 }
 ```
 
-## 🏥 Health & Monitoring
+## 📊 Monitoring Endpoints
 
-### Health Check
-Check the health status of the API server.
+### Get All Monitoring Data
+Get comprehensive monitoring data for all services.
 
 ```http
-GET /health
+GET /api/monitoring/
 ```
 
 **Response:**
 ```json
 {
-  "status": "healthy",
-  "timestamp": "2024-01-01T12:00:00.000Z"
-}
-```
-
-## 🔌 WebSocket API
-
-### Connection
-Connect to the WebSocket server for real-time updates.
-
-```javascript
-const ws = new WebSocket('ws://localhost:6971');
-
-ws.onopen = () => {
-  console.log('Connected to WebSocket');
-};
-
-ws.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  console.log('Received:', data);
-};
-```
-
-### Message Types
-
-#### Status Update
-```json
-{
-  "type": "status_update",
+  "success": true,
   "data": {
-    "isActive": true,
-    "mode": "radio",
-    "listeners": 42
-  }
-}
-```
-
-#### Track Change
-```json
-{
-  "type": "track_change",
-  "data": {
-    "track": {
-      "id": "track-1",
-      "title": "New Track",
-      "artist": "Artist Name"
+    "system": {
+      "uptime": 3600,
+      "memory": { "used": 512, "total": 1024 },
+      "cpu": { "usage": 25.5 }
+    },
+    "telegram": {
+      "status": "running",
+      "uptime": 1800,
+      "lastError": null
+    },
+    "rtmp": {
+      "status": "running",
+      "uptime": 3600,
+      "connections": 5
     }
   }
 }
 ```
 
-#### Error Notification
+### Get System Health
+Get system health overview.
+
+```http
+GET /api/monitoring/health
+```
+
+**Response:**
 ```json
 {
-  "type": "error",
+  "success": true,
   "data": {
-    "message": "Stream connection lost",
-    "code": "STREAM_ERROR"
+    "status": "healthy",
+    "uptime": 3600,
+    "memory": { "used": 512, "total": 1024 },
+    "cpu": { "usage": 25.5 }
   }
 }
 ```
 
-## 🚨 Error Codes
+### Get Telegram Service Statistics
+Get detailed statistics for the Telegram service.
 
-### HTTP Status Codes
-- `200` - Success
-- `400` - Bad Request
-- `404` - Not Found
-- `500` - Internal Server Error
-
-### Error Types
-- `INVALID_MODE` - Invalid streaming mode
-- `TRACK_NOT_FOUND` - Track not found
-- `STREAM_ERROR` - Streaming error
-- `RTMP_ERROR` - RTMP server error
-- `TELEGRAM_ERROR` - Telegram stream error
-
-## 📝 Examples
-
-### Complete Streaming Workflow
-
-1. **Check Status**
-```bash
-curl http://localhost:6970/api/streaming/status
+```http
+GET /api/monitoring/telegram
 ```
 
-2. **Set Mode to Radio**
-```bash
-curl -X POST http://localhost:6970/api/streaming/mode \
-  -H "Content-Type: application/json" \
-  -d '{"mode": "radio"}'
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "running",
+    "uptime": 1800,
+    "lastError": null,
+    "restartCount": 0
+  }
+}
 ```
 
-3. **Add a Track**
+### Get RTMP Service Statistics
+Get detailed statistics for the RTMP service.
+
+```http
+GET /api/monitoring/rtmp
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "running",
+    "uptime": 3600,
+    "connections": 5,
+    "lastError": null
+  }
+}
+```
+
+### Get Metrics for Specific Service
+Get metrics for a specific service.
+
+```http
+GET /api/monitoring/metrics/{service}
+```
+
+**Parameters:**
+- `service`: Either `telegram` or `rtmp`
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "status": "running",
+    "uptime": 1800,
+    "lastError": null
+  }
+}
+```
+
+### Get System Logs
+Get system logs from all services.
+
+```http
+GET /api/monitoring/logs?source=all&lines=100
+```
+
+**Query Parameters:**
+- `source`: Log source (`all`, `telegram`, `rtmp`, `wave`)
+- `lines`: Number of lines to return (default: 100)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "logs": [
+      {
+        "timestamp": "2024-01-01T12:00:00.000Z",
+        "level": "info",
+        "service": "wave",
+        "message": "Server started successfully"
+      }
+    ]
+  }
+}
+```
+
+### Get Service-Specific Logs
+Get logs for a specific service.
+
+```http
+GET /api/monitoring/logs/{service}?lines=100
+```
+
+**Parameters:**
+- `service`: Service name (`telegram`, `rtmp`, `wave`)
+
+**Query Parameters:**
+- `lines`: Number of lines to return (default: 100)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "logs": [
+      {
+        "timestamp": "2024-01-01T12:00:00.000Z",
+        "level": "info",
+        "message": "Service started successfully"
+      }
+    ]
+  }
+}
+```
+
+## 🔄 WebSocket Events
+
+The WebSocket server runs on port 6971 and provides real-time updates.
+
+### Connection
+```javascript
+const ws = new WebSocket('ws://localhost:6971');
+```
+
+### Event Types
+- **status_update**: Service status changes
+- **error**: Error notifications
+- **log**: New log entries
+
+### Example Usage
+```javascript
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  
+  switch (data.type) {
+    case 'status_update':
+      console.log('Status update:', data.payload);
+      break;
+    case 'error':
+      console.error('Error:', data.payload);
+      break;
+    case 'log':
+      console.log('Log:', data.payload);
+      break;
+  }
+};
+```
+
+## 🚨 Error Handling
+
+### Common Error Codes
+- `SERVICE_NOT_FOUND`: Service not found
+- `CONFIGURATION_ERROR`: Configuration error
+- `SERVICE_ERROR`: Service-specific error
+- `VALIDATION_ERROR`: Request validation error
+
+### Error Response Format
+```json
+{
+  "success": false,
+  "error": "Service not found",
+  "code": "SERVICE_NOT_FOUND"
+}
+```
+
+## 🔧 Usage Examples
+
+### cURL Examples
+
+#### Start RTMP Server
 ```bash
-curl -X POST http://localhost:6970/api/streaming/tracks \
+curl -X POST http://localhost:6970/api/stream/rtmp/start
+```
+
+#### Start Telegram Stream
+```bash
+curl -X POST http://localhost:6970/api/stream/telegram/start
+```
+
+#### Get Monitoring Data
+```bash
+curl http://localhost:6970/api/monitoring/
+```
+
+#### Get System Health
+```bash
+curl http://localhost:6970/api/monitoring/health
+```
+
+#### Update Telegram Configuration
+```bash
+curl -X PUT http://localhost:6970/api/stream/telegram/config \
   -H "Content-Type: application/json" \
   -d '{
-    "url": "https://example.com/track.mp3",
-    "title": "My Track",
-    "duration": 180
+    "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
+    "streamKey": "your-new-stream-key",
+    "inputUrl": "rtmp://localhost:1935/live/test"
   }'
 ```
 
-4. **Start Streaming**
-```bash
-curl -X POST http://localhost:6970/api/streaming/start
-```
-
-5. **Check Now Playing**
-```bash
-curl http://localhost:6970/api/streaming/now-playing
-```
-
-### JavaScript Client Example
-
-```javascript
+### JavaScript/TypeScript Example
+```typescript
 class StreamingAPI {
   constructor(baseURL = 'http://localhost:6970') {
     this.baseURL = baseURL;
   }
 
-  async request(endpoint, options = {}) {
+  private async request(endpoint: string, options: RequestInit = {}) {
     const response = await fetch(`${this.baseURL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
@@ -582,63 +510,43 @@ class StreamingAPI {
     return response.json();
   }
 
-  async getStatus() {
-    return this.request('/api/streaming/status');
+  // RTMP operations
+  async startRtmpServer() {
+    return this.request('/api/stream/rtmp/start', { method: 'POST' });
   }
 
-  async setMode(mode) {
-    return this.request('/api/streaming/mode', {
-      method: 'POST',
-      body: JSON.stringify({ mode }),
-    });
+  async stopRtmpServer() {
+    return this.request('/api/stream/rtmp/stop', { method: 'POST' });
   }
 
-  async startStreaming() {
-    return this.request('/api/streaming/start', {
-      method: 'POST',
-    });
+  async getRtmpConfig() {
+    return this.request('/api/stream/rtmp/config');
   }
 
-  async addTrack(track) {
-    return this.request('/api/streaming/tracks', {
-      method: 'POST',
-      body: JSON.stringify(track),
-    });
+  // Telegram operations
+  async startTelegramStream() {
+    return this.request('/api/stream/telegram/start', { method: 'POST' });
+  }
+
+  async stopTelegramStream() {
+    return this.request('/api/stream/telegram/stop', { method: 'POST' });
+  }
+
+  async getTelegramConfig() {
+    return this.request('/api/stream/telegram/config');
+  }
+
+  // Monitoring operations
+  async getMonitoringData() {
+    return this.request('/api/monitoring/');
+  }
+
+  async getSystemHealth() {
+    return this.request('/api/monitoring/health');
   }
 }
-
-// Usage
-const api = new StreamingAPI();
-
-// Get status
-const status = await api.getStatus();
-console.log('Status:', status);
-
-// Start streaming
-await api.startStreaming();
-console.log('Streaming started');
 ```
-
-## 🔧 Rate Limiting
-
-Currently, there are no rate limits implemented. All endpoints are accessible without restrictions.
-
-## 📊 Monitoring
-
-### Metrics
-- **Response Time**: Average response time per endpoint
-- **Error Rate**: Error rate per endpoint
-- **Request Count**: Total requests per endpoint
-- **Active Connections**: Number of active WebSocket connections
-
-### Logging
-All API requests are logged with:
-- Timestamp
-- HTTP method and endpoint
-- Response status
-- Response time
-- Error details (if any)
 
 ---
 
-**Next**: [WebSocket API](websocket.md) | [Status Endpoints](status.md)
+**Next**: [WebSocket API](#websocket-events) | [Status Endpoints](#monitoring-endpoints)

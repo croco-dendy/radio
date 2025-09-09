@@ -16,26 +16,30 @@ The Wave backend is the core streaming server built with Bun and Hono, providing
 ```
 src/
 ├── services/
-│   ├── streamingService.ts      # Main streaming orchestration
-│   ├── audioTrackService.ts     # Audio track management
-│   ├── telegramStreamService.ts # Telegram streaming
-│   ├── rtmpService.ts          # RTMP server management
-│   └── types/streaming.ts      # Shared type definitions
+│   ├── stream/
+│   │   ├── streamService.ts        # Main stream orchestration
+│   │   ├── telegramStreamService.ts # Telegram streaming
+│   │   ├── rtmpService.ts          # RTMP server management
+│   │   └── rtmpConfigService.ts    # RTMP configuration
+│   ├── monitoring/
+│   │   ├── monitoringService.ts    # System monitoring
+│   │   └── types.ts               # Monitoring types
+│   └── types/streaming.ts         # Shared type definitions
 ├── routes/
-│   └── stream.ts               # API endpoints
+│   ├── stream.ts                  # Stream API endpoints
+│   └── monitoring.ts              # Monitoring API endpoints
 ├── scripts/
-│   └── telegramStreamProcess.ts # Telegram stream process
-└── index.ts                    # Main server entry point
+│   └── telegramStreamDaemon.ts    # Telegram stream daemon
+└── index.ts                       # Main server entry point
 ```
 
 ## 🚀 Features
 
-### Streaming Management
-- **Dual Mode Operation**: Live and radio streaming modes
-- **Real-time Status**: Live streaming status monitoring
-- **Track Management**: Add, edit, delete audio tracks
-- **Playlist Control**: Skip tracks, manage playlists
-- **Now Playing**: Real-time track information
+### Stream Management
+- **RTMP Server Control**: Start, stop, restart RTMP streaming server
+- **Telegram Integration**: Stream to Telegram channels via PM2 daemon
+- **Configuration Management**: Update RTMP and Telegram stream settings
+- **Real-time Monitoring**: System health and service status monitoring
 
 ### Server Management
 - **RTMP Server**: Docker-based RTMP server control
@@ -77,47 +81,23 @@ LOG_DIR=./logs              # Log directory
 
 ## 📡 API Endpoints
 
-### Streaming Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/streaming/status` | Get streaming status |
-| `GET` | `/api/streaming/mode` | Get current mode |
-| `POST` | `/api/streaming/mode` | Set streaming mode |
-| `POST` | `/api/streaming/start` | Start streaming |
-| `POST` | `/api/streaming/stop` | Stop streaming |
-| `GET` | `/api/streaming/now-playing` | Get current track |
-| `POST` | `/api/streaming/skip` | Skip to next track |
-
-### Track Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/streaming/tracks` | Get all tracks |
-| `POST` | `/api/streaming/tracks` | Add new track |
-| `PUT` | `/api/streaming/tracks/:id` | Update track |
-| `DELETE` | `/api/streaming/tracks/:id` | Delete track |
-
-### RTMP Server Management
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/streaming/rtmp/status` | Get RTMP status |
-| `POST` | `/api/streaming/rtmp/start` | Start RTMP server |
-| `POST` | `/api/streaming/rtmp/stop` | Stop RTMP server |
-| `POST` | `/api/streaming/rtmp/restart` | Restart RTMP server |
-
-### Telegram Integration
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/stream/telegram/start` | Start Telegram stream via PM2 |
-| `POST` | `/api/stream/telegram/stop` | Stop Telegram stream |
-| `GET` | `/api/stream/telegram/config` | Get Telegram config |
-| `PUT` | `/api/stream/telegram/config` | Update Telegram config |
-
 ### RTMP Server Management
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/api/stream/rtmp/start` | Start RTMP Docker container |
 | `POST` | `/api/stream/rtmp/stop` | Stop RTMP server |
 | `POST` | `/api/stream/rtmp/restart` | Restart RTMP server |
+| `GET` | `/api/stream/rtmp/config` | Get RTMP configuration |
+| `PUT` | `/api/stream/rtmp/config` | Update RTMP configuration |
+
+### Telegram Integration
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/stream/telegram/start` | Start Telegram stream via PM2 |
+| `POST` | `/api/stream/telegram/stop` | Stop Telegram stream |
+| `POST` | `/api/stream/telegram/restart` | Restart Telegram stream |
+| `GET` | `/api/stream/telegram/config` | Get Telegram config |
+| `PUT` | `/api/stream/telegram/config` | Update Telegram config |
 
 ### Health & Monitoring
 | Method | Endpoint | Description |
@@ -230,19 +210,12 @@ pm2 restart all
 
 ## 🔧 Service Architecture
 
-### StreamingService
+### StreamService
 The main orchestrator that coordinates all streaming operations:
-- **Status Management**: Tracks streaming state
-- **Mode Switching**: Handles live/radio mode transitions
 - **Service Coordination**: Manages RTMP and Telegram services
+- **Configuration Management**: Handles stream configuration updates
 - **Error Handling**: Centralized error management
-
-### AudioTrackService
-Manages audio track data and playlist operations:
-- **Track Storage**: JSON-based track storage
-- **Playlist Management**: Track ordering and selection
-- **Now Playing**: Current track tracking
-- **Duration Management**: Track timing and progress
+- **Status Tracking**: Monitors service states
 
 ### TelegramStreamService
 Handles Telegram streaming via PM2:
@@ -257,6 +230,20 @@ Manages Docker-based RTMP server:
 - **Status Monitoring**: Container health checks
 - **Port Management**: RTMP port configuration
 - **Error Handling**: Container error management
+
+### RtmpConfigService
+Manages RTMP server configuration:
+- **Configuration Storage**: JSON-based config storage
+- **Validation**: Configuration validation
+- **Updates**: Configuration update handling
+- **Defaults**: Default configuration management
+
+### MonitoringService
+Provides comprehensive system monitoring:
+- **System Health**: CPU, memory, uptime monitoring
+- **Service Status**: RTMP and Telegram service monitoring
+- **Log Management**: System and service log aggregation
+- **Metrics Collection**: Performance metrics gathering
 
 ## 📊 Monitoring & Logging
 

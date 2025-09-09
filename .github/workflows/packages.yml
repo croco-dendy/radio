@@ -1,4 +1,4 @@
-name: Shared Packages
+name: 📦 Shared Packages
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
 
 jobs:
   build-and-lint:
-    name: Build & Lint Packages
+    name: 🔨 Build & Lint Packages
     runs-on: ubuntu-latest
     
     steps:
@@ -51,7 +51,7 @@ jobs:
           echo "✅ Packages linting passed!"
 
   summary:
-    name: Packages CI Summary
+    name: 📋 Packages CI Summary
     runs-on: ubuntu-latest
     needs: [build-and-lint]
     if: always()

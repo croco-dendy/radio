@@ -1,4 +1,4 @@
-name: Admin Frontend
+name: 🎛️ Admin Frontend
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   build-and-lint:
-    name: Build & Lint Admin
+    name: 🔨 Build & Lint Admin
     runs-on: ubuntu-latest
     
     steps:
@@ -59,7 +59,7 @@ jobs:
           echo "✅ Admin build passed!"
 
   summary:
-    name: Admin CI Summary
+    name: 📋 Admin CI Summary
     runs-on: ubuntu-latest
     needs: [build-and-lint]
     if: always()

@@ -1,4 +1,4 @@
-name: Wave Backend
+name: 🌊 Wave Backend
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build, Lint & Test Wave
+    name: 🔨 Build, Lint & Test Wave
     runs-on: ubuntu-latest
     
     steps:
@@ -59,7 +59,7 @@ jobs:
           echo "✅ Wave tests passed!"
 
   summary:
-    name: Wave CI Summary
+    name: 📋 Wave CI Summary
     runs-on: ubuntu-latest
     needs: [build-and-test]
     if: always()

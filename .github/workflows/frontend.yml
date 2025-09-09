@@ -1,4 +1,4 @@
-name: Frontend App
+name: 📱 Frontend App
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
 
 jobs:
   build-and-lint:
-    name: Build & Lint Frontend
+    name: 🔨 Build & Lint Frontend
     runs-on: ubuntu-latest
     
     steps:
@@ -59,7 +59,7 @@ jobs:
           echo "✅ Frontend build passed!"
 
   summary:
-    name: Frontend CI Summary
+    name: 📋 Frontend CI Summary
     runs-on: ubuntu-latest
     needs: [build-and-lint]
     if: always()

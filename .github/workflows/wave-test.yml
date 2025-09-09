@@ -1,0 +1,29 @@
+name: Wave Test
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/wave/**'
+      - 'packages/types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'apps/wave/**'
+      - 'packages/types/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'turbo.json'
+
+jobs:
+  test:
+    name: Test Wave
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test
+        run: echo "Wave test workflow is working!"

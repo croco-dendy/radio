@@ -35,13 +35,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Type check
         run: |
@@ -60,3 +60,4 @@ jobs:
           echo "🧪 Running Wave tests..."
           pnpm turbo run test --filter=@radio/wave
           echo "✅ Wave tests passed!"
+

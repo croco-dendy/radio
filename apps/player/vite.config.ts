@@ -7,7 +7,7 @@ import tsPaths from 'vite-tsconfig-paths';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: './',
+  base: '/',
   server: {
     port: 3030,
   },

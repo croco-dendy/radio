@@ -1,5 +1,9 @@
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
+import {
+  ServiceResponseHelper,
+  type ServiceResponse,
+} from '../../utils/serviceResponse';
 
 const execAsync = promisify(exec);
 
@@ -18,15 +22,12 @@ export class RtmpService {
     }
   }
 
-  async startRtmpServer(): Promise<{ success: boolean; message: string }> {
+  async startRtmpServer(): Promise<ServiceResponse> {
     try {
       const isRunning = await this.isRtmpServerRunning();
 
       if (isRunning) {
-        return {
-          success: true,
-          message: 'RTMP server is already running',
-        };
+        return ServiceResponseHelper.stream.rtmp.alreadyRunning();
       }
 
       // Start the RTMP server using the existing script
@@ -34,49 +35,34 @@ export class RtmpService {
         maxBuffer: 1024 * 1024, // 1MB buffer
       });
 
-      return {
-        success: true,
-        message: 'RTMP server started successfully',
-      };
+      return ServiceResponseHelper.stream.rtmp.startSuccess();
     } catch (error) {
       console.error('Error starting RTMP server:', error);
-      return {
-        success: false,
-        message: `Failed to start RTMP server: ${error}`,
-      };
+      return ServiceResponseHelper.stream.rtmp.startFailed(String(error));
     }
   }
 
   // Stop RTMP server
-  async stopRtmpServer(): Promise<{ success: boolean; message: string }> {
+  async stopRtmpServer(): Promise<ServiceResponse> {
     try {
       const isRunning = await this.isRtmpServerRunning();
 
       if (!isRunning) {
-        return {
-          success: true,
-          message: 'RTMP server is not running',
-        };
+        return ServiceResponseHelper.stream.rtmp.alreadyStopped();
       }
 
       // Stop the RTMP server container
       await execAsync(`docker stop ${this.containerName}`);
 
-      return {
-        success: true,
-        message: 'RTMP server stopped successfully',
-      };
+      return ServiceResponseHelper.stream.rtmp.stopSuccess();
     } catch (error) {
       console.error('Error stopping RTMP server:', error);
-      return {
-        success: false,
-        message: `Failed to stop RTMP server: ${error}`,
-      };
+      return ServiceResponseHelper.stream.rtmp.stopFailed(String(error));
     }
   }
 
   // Restart RTMP server
-  async restartRtmpServer(): Promise<{ success: boolean; message: string }> {
+  async restartRtmpServer(): Promise<ServiceResponse> {
     try {
       await this.stopRtmpServer();
       // Wait a moment for the container to fully stop

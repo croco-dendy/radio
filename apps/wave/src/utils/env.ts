@@ -19,4 +19,5 @@ export const env = {
   socketPort: Number.parseInt(process.env.SOCKET_PORT || '6871'),
   environment: isProduction ? 'production' : 'development',
   chatHistoryFile: getChatHistoryFile(),
+  dbFileName: process.env.DB_FILE_NAME || 'data/wave.sqlite',
 };

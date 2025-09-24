@@ -19,22 +19,76 @@ export interface StreamInfo {
   format: string;
 }
 
-export interface AudioFile {
-  id: string;
-  name: string;
-  path: string;
-  duration: number;
-  size: number;
-  format: string;
-  uploadedAt: Date;
-}
-
 export interface User {
   id: string;
   username: string;
   email: string;
   role: 'admin' | 'user';
   createdAt: Date;
+}
+
+// Database Types (following polissya pattern)
+export interface Account {
+  id: number;
+  username: string;
+  email: string;
+  passwordHash: string;
+  role: string;
+  isActive: number;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Collection {
+  id: number;
+  name: string;
+  description: string | null;
+  isPublic: number;
+  ownerId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CollectionItem {
+  id: number;
+  collectionId: number;
+  audioFileId: number;
+  order: number;
+  addedAt: string;
+}
+
+export interface AudioFile {
+  id: number;
+  name: string;
+  path: string;
+  duration: string;
+  size: number;
+  format: string;
+  uploadedBy: number;
+  uploadedAt: string;
+  metadata: string | null;
+}
+
+export interface Session {
+  id: number;
+  accountId: number;
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+  lastUsedAt: string;
+}
+
+export interface StreamConfig {
+  id: number;
+  name: string;
+  rtmpUrl: string;
+  streamKey: string;
+  inputUrl: string;
+  isActive: number;
+  createdBy: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PaginatedResponse<T> {

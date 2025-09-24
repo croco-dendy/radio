@@ -1,9 +1,13 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { env } from '@/utils/env';
+import {
+  accountsRoutes,
+  collectionsRoutes,
+  monitoringRoutes,
+  streamRoutes,
+} from '@/api';
 import { startWsServer } from './ws/server';
-import { streamRoutes } from './routes/stream';
-import { monitoringRoutes } from './routes/monitoring';
 
 const app = new Hono();
 
@@ -29,6 +33,8 @@ app.get('/health', (c) => {
 
 app.route('/api/stream', streamRoutes);
 app.route('/api/monitoring', monitoringRoutes);
+app.route('/api/accounts', accountsRoutes);
+app.route('/api/collections', collectionsRoutes);
 
 Bun.serve({
   fetch: app.fetch,

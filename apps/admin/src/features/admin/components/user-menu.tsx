@@ -36,6 +36,8 @@ export const UserMenu = () => {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          role="img"
+          aria-label="Toggle menu"
         >
           <path
             strokeLinecap="round"
@@ -76,7 +78,18 @@ export const UserMenu = () => {
 
       {/* Click outside to close */}
       {isOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsOpen(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close menu"
+        />
       )}
     </div>
   );

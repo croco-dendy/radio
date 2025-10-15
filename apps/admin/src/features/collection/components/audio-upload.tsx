@@ -115,6 +115,7 @@ export const AudioUpload = ({ onUploadSuccess }: AudioUploadProps) => {
                 className="w-12 h-12 mx-auto animate-spin"
                 fill="none"
                 viewBox="0 0 24 24"
+                role="img"
                 aria-label="Uploading"
               >
                 <circle
@@ -152,6 +153,7 @@ export const AudioUpload = ({ onUploadSuccess }: AudioUploadProps) => {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                role="img"
                 aria-label="Upload audio"
               >
                 <path

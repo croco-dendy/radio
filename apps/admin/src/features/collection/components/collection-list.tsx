@@ -34,9 +34,9 @@ export const CollectionList = ({
   if (isLoading) {
     return (
       <div className="space-y-3">
-        {Array.from({ length: 3 }).map((_, i) => (
+        {Array.from({ length: 3 }, (_, i) => (
           <div
-            key={`skeleton-${i}`}
+            key={`skeleton-${Math.random().toString(36).substr(2, 9)}`}
             className="h-16 bg-stone-100 rounded-lg animate-pulse"
           />
         ))}

@@ -83,6 +83,7 @@ export const CollectionPage = () => {
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  role="img"
                   aria-label="Select collection"
                 >
                   <path

@@ -58,20 +58,20 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
     return duration;
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
-  };
+  // const formatFileSize = (bytes: number) => {
+  //   if (bytes === 0) return '0 Bytes';
+  //   const k = 1024;
+  //   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  //   const i = Math.floor(Math.log(bytes) / Math.log(k));
+  //   return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
+  // };
 
   if (isLoading) {
     return (
       <div className="space-y-4">
         <div className="h-8 bg-gray-100 rounded animate-pulse" />
         <div className="space-y-3">
-          {Array.from({ length: 3 }, (_, i) => (
+          {Array.from({ length: 3 }, () => (
             <div
               key={`detail-skeleton-${Math.random().toString(36).substr(2, 9)}`}
               className="h-16 bg-gray-100 rounded animate-pulse"

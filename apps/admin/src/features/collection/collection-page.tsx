@@ -16,12 +16,8 @@ export const CollectionPage = () => {
     useState<Collection | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const totalTracks =
-    collections?.reduce((sum, collection) => {
-      // Note: We'd need to fetch collection details to get actual track counts
-      // For now, showing collection count
-      return sum + 1;
-    }, 0) || 0;
+  // Note: We'd need to fetch collection details to get actual track counts
+  // const totalTracks = collections?.reduce((sum) => sum + 1, 0) || 0;
 
   const publicCollections = collections?.filter((c) => c.isPublic).length || 0;
 

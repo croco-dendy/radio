@@ -21,6 +21,8 @@ const Layout = ({
           alt={backgroundAlt}
           className={clsx(styles.background)}
         />
+        {/* Dark overlay for better contrast */}
+        <div className={clsx(styles.overlay)} />
         <main className={clsx(styles.main)}>{children}</main>
         <Footer />
       </div>
@@ -34,6 +36,7 @@ const styles = {
     'p-0',
   ],
   background: ['absolute w-full h-full object-cover mb-4 z-0'],
+  overlay: ['absolute w-full h-full bg-black/60 z-5'],
   main: ['flex h-full overflow-hidden z-10'],
 } as const;
 

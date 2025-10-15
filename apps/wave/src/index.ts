@@ -4,6 +4,7 @@ import { env } from '@/utils/env';
 import {
   accountsRoutes,
   collectionsRoutes,
+  audioFilesRoutes,
   monitoringRoutes,
   streamRoutes,
 } from '@/api';
@@ -35,6 +36,7 @@ app.route('/api/stream', streamRoutes);
 app.route('/api/monitoring', monitoringRoutes);
 app.route('/api/accounts', accountsRoutes);
 app.route('/api/collections', collectionsRoutes);
+app.route('/api/audio-files', audioFilesRoutes);
 
 Bun.serve({
   fetch: app.fetch,

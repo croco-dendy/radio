@@ -15,8 +15,8 @@ export const accountHandlers = {
 
   get loginHandler() {
     return withErrorHandling(async (c: Context) => {
-      const { email, password } = await c.req.json();
-      const result = await accountService.login(email, password);
+      const { username, password } = await c.req.json();
+      const result = await accountService.loginByUsername(username, password);
       return ResponseHelper.success(c, result);
     });
   },

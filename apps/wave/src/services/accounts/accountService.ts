@@ -78,6 +78,42 @@ export class AccountService {
     };
   }
 
+  async loginByUsername(username: string, password: string) {
+    const account = await findAccountByUsername(username);
+    if (!account) {
+      throw new Error(getErrorMessage.auth('INVALID_CREDENTIALS'));
+    }
+
+    const isValidPassword = await bcrypt.compare(
+      password,
+      account.passwordHash,
+    );
+    if (!isValidPassword) {
+      throw new Error(getErrorMessage.auth('INVALID_CREDENTIALS'));
+    }
+
+    const token = crypto.randomUUID();
+    const expiresAt = new Date(
+      Date.now() + 7 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+
+    await createSession({
+      accountId: account.id,
+      token,
+      expiresAt,
+    });
+
+    return {
+      token,
+      account: {
+        id: account.id,
+        username: account.username,
+        email: account.email,
+        role: account.role,
+      },
+    };
+  }
+
   async getCurrentAccount(accountId: number) {
     const account = await findAccountById(accountId);
     if (!account) {

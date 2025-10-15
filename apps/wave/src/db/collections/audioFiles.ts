@@ -32,7 +32,11 @@ const findAudioFilesByUploader = async (
 };
 
 const createAudioFile = async (data: NewAudioFileData) => {
-  await db.insert(audioFiles).values(data);
+  const result = await db
+    .insert(audioFiles)
+    .values(data)
+    .returning({ id: audioFiles.id });
+  return result[0].id;
 };
 
 const updateAudioFile = async (

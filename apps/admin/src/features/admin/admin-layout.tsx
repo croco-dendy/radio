@@ -25,7 +25,7 @@ export const AdminLayout: React.FC = () => {
 const styles = {
   container: ['w-full h-screen bg-coal flex flex-col overflow-hidden relative'],
   backgroundOverlay: [
-    'absolute inset-0 bg-[url("/bg-1.jpg")] bg-cover bg-center bg-no-repeat',
+    'absolute inset-0 bg-[url("/login-bg.jpg")] bg-cover bg-center bg-no-repeat',
   ],
   dimOverlay: ['absolute inset-0 bg-coal-relic/80'],
   gradientOverlay: [

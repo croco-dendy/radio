@@ -1,8 +1,8 @@
 import { db } from '@/db';
 import { createAccount, findAccountByEmail } from '@/db/accounts';
 import { createCollection, findCollectionsByOwner } from '@/db/collections';
-import { createAudioFile, findAudioFilesByUploader } from '@/db/audioFiles';
-import { addToCollection, getCollectionItems } from '@/db/collectionItems';
+import { createAudioFile, findAudioFilesByUploader } from '@/db/collections/audioFiles';
+import { addToCollection, getCollectionItems } from '@/db/collections/collectionItems';
 
 const testDatabase = async () => {
   try {

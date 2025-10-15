@@ -101,7 +101,7 @@ export class AudioFileService {
   async getAudioFileById(id: number) {
     const audioFile = await findAudioFileById(id);
     if (!audioFile) {
-      throw new Error(getErrorMessage.generic('NOT_FOUND', 'Audio file'));
+      throw new Error(getErrorMessage.resource('NOT_FOUND'));
     }
     return audioFile;
   }
@@ -111,7 +111,7 @@ export class AudioFileService {
 
     if (!existsSync(audioFile.path)) {
       throw new Error(
-        getErrorMessage.generic('NOT_FOUND', 'Audio file on disk'),
+        getErrorMessage.file('NOT_FOUND', 'Audio file on disk'),
       );
     }
 

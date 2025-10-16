@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { PageLayout, StatsCard, ActionButton } from '@/components/shared';
+import { PageLayout, StatsCard, Button } from '@radio/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
 import { useUserCollections } from '@/services/api';
 import {
@@ -38,18 +38,18 @@ export const CollectionPage = () => {
       <div className={clsx(sharedStyles.actionsSection)}>
         <h2 className={clsx(sharedStyles.actionsTitle)}>Collection Actions</h2>
         <div className={clsx(sharedStyles.actionsGrid)}>
-          <ActionButton
-            variant="primary"
+          <Button
+            variant="green"
+            size="medium"
+            title="Create Collection"
             onClick={() => setShowCreateModal(true)}
-          >
-            Create Collection
-          </ActionButton>
-          <ActionButton
-            variant="secondary"
+          />
+          <Button
+            variant="yellow"
+            size="medium"
+            title="View All Collections"
             onClick={() => setSelectedCollection(null)}
-          >
-            View All Collections
-          </ActionButton>
+          />
         </div>
       </div>
 

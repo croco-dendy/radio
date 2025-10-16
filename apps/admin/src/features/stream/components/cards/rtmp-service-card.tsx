@@ -199,7 +199,7 @@ export const RtmpServiceCard: React.FC<RtmpServiceCardProps> = ({ stats }) => {
   const actions = [
     {
       label: isRunning ? 'Stop' : 'Start',
-      variant: isRunning ? ('secondary' as const) : ('primary' as const),
+      variant: isRunning ? ('yellow' as const) : ('green' as const),
       onClick: () => {
         if (isRunning) {
           stopMutation.mutate();
@@ -208,14 +208,12 @@ export const RtmpServiceCard: React.FC<RtmpServiceCardProps> = ({ stats }) => {
         }
       },
       disabled: isLoading,
-      loading: isRunning ? stopMutation.isPending : startMutation.isPending,
     },
     {
       label: 'Restart',
-      variant: 'accent' as const,
+      variant: 'gray' as const,
       onClick: () => restartMutation.mutate(),
       disabled: isLoading,
-      loading: restartMutation.isPending,
     },
   ];
 

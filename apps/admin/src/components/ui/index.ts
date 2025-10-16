@@ -4,7 +4,6 @@ export { FormCheckbox } from './form-checkbox';
 export { FormSelect } from './form-select';
 export { NavButton } from './nav-button';
 export { NotificationToast } from './notification-toast';
-export { NotificationTestButton } from './notification-test-button';
 export { NotificationContainer } from './notification-container';
 export { GlobalLoadingIndicator } from './global-loading-indicator';
 export { ConnectionStatus } from './connection-status';

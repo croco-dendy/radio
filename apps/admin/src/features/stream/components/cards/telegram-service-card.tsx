@@ -224,7 +224,7 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
   const actions = [
     {
       label: isRunning ? 'Stop' : 'Start',
-      variant: isRunning ? ('secondary' as const) : ('primary' as const),
+      variant: isRunning ? ('yellow' as const) : ('green' as const),
       onClick: () => {
         if (isRunning) {
           mutations.stop.mutate(undefined);
@@ -233,14 +233,12 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
         }
       },
       disabled: isLoading,
-      loading: isRunning ? mutations.stop.isPending : mutations.start.isPending,
     },
     {
       label: 'Restart',
-      variant: 'secondary' as const,
+      variant: 'yellow' as const,
       onClick: () => mutations.restart.mutate(undefined),
       disabled: isLoading || !isRunning,
-      loading: mutations.restart.isPending,
     },
   ];
 

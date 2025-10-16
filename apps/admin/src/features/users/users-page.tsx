@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { PageLayout, StatsCard, ActionButton } from '@/components/shared';
+import { PageLayout, StatsCard, Button } from '@radio/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
 import { useUsers } from '@/services/api/hooks/use-user-management';
 import { UserList, CreateUserModal } from './components';
@@ -26,14 +26,14 @@ export const UsersPage = () => {
       <div className={clsx(sharedStyles.actionsSection)}>
         <h2 className={clsx(sharedStyles.actionsTitle)}>User Actions</h2>
         <div className={clsx(sharedStyles.actionsGrid)}>
-          <ActionButton
-            variant="primary"
+          <Button
+            variant="green"
+            size="medium"
+            title="Create User"
             onClick={() => setShowCreateModal(true)}
-          >
-            Create User
-          </ActionButton>
-          <ActionButton variant="secondary">Export Users</ActionButton>
-          <ActionButton variant="accent">User Activity</ActionButton>
+          />
+          <Button variant="yellow" size="medium" title="Export Users" />
+          <Button variant="gray" size="medium" title="User Activity" />
         </div>
       </div>
 

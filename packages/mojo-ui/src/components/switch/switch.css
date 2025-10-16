@@ -1,0 +1,183 @@
+@import '../../shared/styles/base-layer.css';
+@import '../../shared/styles/glow-effects.css';
+@import '../../shared/styles/gradients.css';
+
+.switch-container {
+  position: relative;
+  display: inline-block;
+}
+
+.switch-input {
+  display: none;
+}
+
+.switch-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #6e6e6e 0%, #414d3d 24%, #373633 50%, #1f1f1d 80%, #1f1f1d 100%);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.switch-lamp-base {
+  position: absolute;
+  inset: 5.8px;
+  border-radius: 9999px;
+  background-color: #1a1a1a;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2), 3px 3px 2px rgba(0, 0, 0, 0.05), 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.switch-background {
+  position: absolute;
+  inset: 5.8px;
+  border-radius: 9999px;
+  transition: all 100ms ease-out;
+  opacity: 0;
+}
+
+.switch-green-bg {
+  @apply gradient-green;
+  opacity: 0;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.switch-yellow-bg {
+  @apply gradient-yellow;
+  opacity: 0;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.switch-gray-bg {
+  @apply gradient-gray;
+  opacity: 0;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.switch-red-bg {
+  @apply gradient-red;
+  opacity: 0;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.switch-toggle {
+  position: absolute;
+  inset: 5.8px;
+  transition: all 150ms ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+  @apply gradient-gray;
+}
+
+
+.switch-green-surface {
+  @apply gradient-green;
+}
+
+.switch-yellow-surface {
+  @apply gradient-yellow;
+}
+
+.switch-gray-surface {
+  @apply gradient-gray;
+}
+
+.switch-red-surface {
+  @apply gradient-red;
+}
+
+.switch-container:has(.switch-input:not(:checked)) .switch-toggle {
+  @apply gradient-disabled;
+}
+
+.switch-container:has(.switch-input:checked) .switch-green-surface {
+  @apply gradient-green;
+}
+
+.switch-container:has(.switch-input:checked) .switch-yellow-surface {
+  @apply gradient-yellow;
+}
+
+.switch-container:has(.switch-input:checked) .switch-gray-surface {
+  @apply gradient-gray;
+}
+
+.switch-container:has(.switch-input:checked) .switch-red-surface {
+  @apply gradient-red;
+}
+
+.switch-labels {
+  position: absolute;
+  inset: 5.8px;
+  margin: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  pointer-events: none;
+  border-radius: 9999px;
+}
+
+.switch-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.68);
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
+  letter-spacing: 0.5px;
+}
+
+.switch-label-off {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.switch-label-on {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.switch-container:has(.switch-input:checked) .switch-label-off {
+  transform: translateX(2px);
+  scale: 1.1;
+  opacity: 0.2;
+}
+
+.switch-container:has(.switch-input:not(:checked)) .switch-label-on {
+  transform: translateX(-2px);
+  scale: 1.1;
+  opacity: 0.2;
+}
+
+.switch-divider {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 60%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.switch-container:has(.switch-input:checked) .switch-background {
+  opacity: 0.6;
+}
+
+.switch-container:has(.switch-input:checked):hover .switch-green-surface {
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(71, 245, 125, 0.4), 0 0 20px 0px rgba(71, 245, 125, 0.6);
+}
+
+.switch-container:has(.switch-input:checked):hover .switch-yellow-surface {
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(254, 182, 28, 0.4), 0 0 20px 0px rgba(254, 182, 28, 0.6);
+}
+
+.switch-container:has(.switch-input:checked):hover .switch-gray-surface {
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(242, 242, 242, 0.4), 0 0 20px 0px rgba(242, 242, 242, 0.6);
+}
+
+.switch-container:has(.switch-input:checked):hover .switch-red-surface {
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(255, 80, 80, 0.4), 0 0 20px 0px rgba(255, 80, 80, 0.6);
+}

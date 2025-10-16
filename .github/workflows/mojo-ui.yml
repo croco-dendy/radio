@@ -39,7 +39,7 @@ jobs:
       - name: Type check
         run: |
           echo "🔍 Type checking Mojo UI..."
-          pnpm turbo run type-check --filter=@radio/mojo-ui
+          pnpm turbo run check-types --filter=@radio/mojo-ui
           echo "✅ Mojo UI type check passed!"
 
       - name: Lint

@@ -44,7 +44,7 @@ jobs:
 
       - name: Lint
         run: |
-          echo "🔍 Linting packages..."
-          pnpm run lint
-          echo "✅ Packages linting passed!"
+          echo "🔍 Linting types package..."
+          pnpm turbo run lint --filter=@radio/types
+          echo "✅ Types linting passed!"
 

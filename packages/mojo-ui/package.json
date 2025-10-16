@@ -16,7 +16,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "type-check": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
     "lint": "biome check ./src",
     "lint:fix": "biome check ./src --write"
   },

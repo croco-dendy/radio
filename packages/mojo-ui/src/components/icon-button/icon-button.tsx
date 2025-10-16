@@ -1,5 +1,5 @@
-import type { FC, ReactNode, ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
+import type { ButtonHTMLAttributes, FC, ReactNode } from 'react';
 import '../../globals.css';
 import './icon-button.css';
 

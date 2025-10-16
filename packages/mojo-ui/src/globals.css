@@ -1,6 +1,6 @@
-@import './shared/styles/base-layer.css';
-@import './shared/styles/glow-effects.css';
-@import './shared/styles/gradients.css';
+@import "./shared/styles/base-layer.css";
+@import "./shared/styles/glow-effects.css";
+@import "./shared/styles/gradients.css";
 
 @tailwind base;
 @tailwind components;
@@ -8,42 +8,48 @@
 
 @font-face {
   font-family: "KyivType Serif";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800") format("woff2");
+  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800")
+    format("woff2");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Serif";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800") format("woff2");
+  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800")
+    format("woff2");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Serif";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800") format("woff2");
+  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800")
+    format("woff2");
   font-weight: 800;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Sans";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800") format("woff2");
+  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800")
+    format("woff2");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Sans";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800") format("woff2");
+  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800")
+    format("woff2");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Sans";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800") format("woff2");
+  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800")
+    format("woff2");
   font-weight: 800;
   font-style: normal;
 }

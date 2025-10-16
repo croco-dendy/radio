@@ -2,14 +2,14 @@ import { useState } from 'react';
 import type { FC } from 'react';
 import { Button } from './components/button';
 import { IconButton } from './components/icon-button';
-import { Switch } from './components/switch';
 import {
   PageLayout,
   PanelCard,
   StatsCard,
-  StatusIndicator,
   StatsGrid,
+  StatusIndicator,
 } from './components/layout';
+import { Switch } from './components/switch';
 import { CheckIcon, PlusIcon } from './icons';
 import './globals.css';
 

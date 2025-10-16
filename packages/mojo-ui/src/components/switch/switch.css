@@ -1,6 +1,6 @@
-@import '../../shared/styles/base-layer.css';
-@import '../../shared/styles/glow-effects.css';
-@import '../../shared/styles/gradients.css';
+@import "../../shared/styles/base-layer.css";
+@import "../../shared/styles/glow-effects.css";
+@import "../../shared/styles/gradients.css";
 
 .switch-container {
   position: relative;
@@ -15,7 +15,14 @@
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: linear-gradient(135deg, #6e6e6e 0%, #414d3d 24%, #373633 50%, #1f1f1d 80%, #1f1f1d 100%);
+  background: linear-gradient(
+    135deg,
+    #6e6e6e 0%,
+    #414d3d 24%,
+    #373633 50%,
+    #1f1f1d 80%,
+    #1f1f1d 100%
+  );
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
@@ -24,7 +31,8 @@
   inset: 5.8px;
   border-radius: 9999px;
   background-color: #1a1a1a;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2), 3px 3px 2px rgba(0, 0, 0, 0.05), 2px 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2), 3px 3px 2px rgba(0, 0, 0, 0.05),
+    2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .switch-background,
@@ -37,7 +45,8 @@
   border-radius: 9999px;
   transition: all 100ms ease-out;
   opacity: 0;
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px
+    rgba(255, 255, 255, 0.6);
 }
 
 .switch-green-bg {
@@ -64,7 +73,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px
+    rgba(255, 255, 255, 0.6);
   @apply gradient-gray;
 }
 
@@ -72,7 +82,8 @@
 .switch-yellow-surface,
 .switch-gray-surface,
 .switch-red-surface {
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px
+    rgba(255, 255, 255, 0.6);
 }
 
 .switch-green-surface {
@@ -150,17 +161,56 @@
 }
 
 .switch-container:has(.switch-input:checked):hover .switch-green-surface {
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(71, 245, 125, 0.4), 0 0 20px 0px rgba(71, 245, 125, 0.6);
+  box-shadow:
+    inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(
+      255,
+      255,
+      255,
+      0.6
+    ), 0 0 10px 2px rgba(71, 245, 125, 0.4), 0 0 20px 0px rgba(
+      71,
+      245,
+      125,
+      0.6
+    );
 }
 
 .switch-container:has(.switch-input:checked):hover .switch-yellow-surface {
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(254, 182, 28, 0.4), 0 0 20px 0px rgba(254, 182, 28, 0.6);
+  box-shadow:
+    inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(
+      255,
+      255,
+      255,
+      0.6
+    ), 0 0 10px 2px rgba(254, 182, 28, 0.4), 0 0 20px 0px rgba(
+      254,
+      182,
+      28,
+      0.6
+    );
 }
 
 .switch-container:has(.switch-input:checked):hover .switch-gray-surface {
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(242, 242, 242, 0.4), 0 0 20px 0px rgba(242, 242, 242, 0.6);
+  box-shadow:
+    inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(
+      255,
+      255,
+      255,
+      0.6
+    ), 0 0 10px 2px rgba(242, 242, 242, 0.4), 0 0 20px 0px rgba(
+      242,
+      242,
+      242,
+      0.6
+    );
 }
 
 .switch-container:has(.switch-input:checked):hover .switch-red-surface {
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6), 0 0 10px 2px rgba(255, 80, 80, 0.4), 0 0 20px 0px rgba(255, 80, 80, 0.6);
+  box-shadow:
+    inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(
+      255,
+      255,
+      255,
+      0.6
+    ), 0 0 10px 2px rgba(255, 80, 80, 0.4), 0 0 20px 0px rgba(255, 80, 80, 0.6);
 }

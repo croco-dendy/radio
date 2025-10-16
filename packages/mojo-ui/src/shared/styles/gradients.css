@@ -18,5 +18,9 @@
 
 /* Disabled state gradient (dark biege) */
 .gradient-disabled {
-  background: radial-gradient(circle at 50% 50%, rgb(97, 103, 95) 0%, #36302b 100%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgb(97, 103, 95) 0%,
+    #36302b 100%
+  );
 }

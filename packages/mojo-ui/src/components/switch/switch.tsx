@@ -1,5 +1,5 @@
-import type { FC, ChangeEvent } from 'react';
 import clsx from 'clsx';
+import type { ChangeEvent, FC } from 'react';
 import '../../globals.css';
 import './switch.css';
 

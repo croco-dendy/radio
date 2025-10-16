@@ -1,5 +1,5 @@
-import type { FC } from 'react';
 import clsx from 'clsx';
+import type { FC } from 'react';
 
 type Status = 'running' | 'stopped' | 'error' | 'initializing';
 

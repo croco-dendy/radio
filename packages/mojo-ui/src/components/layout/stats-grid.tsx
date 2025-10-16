@@ -1,14 +1,14 @@
-import type { FC } from 'react';
 import clsx from 'clsx';
+import type { FC } from 'react';
 
-interface StatItem {
+export interface StatItem {
   label: string;
   value: string | number;
   suffix?: string;
   highlight?: boolean;
 }
 
-interface StatsGridProps {
+export interface StatsGridProps {
   stats: StatItem[];
   columns?: 2 | 3 | 4;
 }

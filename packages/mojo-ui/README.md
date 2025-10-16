@@ -129,14 +129,23 @@ import { CheckIcon, PlusIcon, SearchIcon, MenuIcon, SettingsIcon, CloseIcon } fr
 
 ## Showcase / Demo Website
 
-The showcase is a **separate development website** (not included in the library build) for previewing all components.
+The showcase is a **temporary development website** included in this package for previewing all components during development.
+
+> **⚠️ Future Migration:** This showcase will be moved to a **separate repository** when the mojo-ui library is eventually extracted as a standalone package. For now, it's included here for convenience.
 
 ### Running the Showcase
 
 ```bash
+# From root of the monorepo
+pnpm mojo:dev
+# Open http://localhost:3010
+```
+
+Or directly:
+```bash
 cd packages/mojo-ui
-npm run dev
-# Open http://localhost:5173
+pnpm dev
+# Open http://localhost:3010
 ```
 
 Features:
@@ -146,7 +155,7 @@ Features:
 - Layout component examples
 - Design system reference
 
-**Build Note:** The showcase is excluded from the library bundle. Only components exported from `src/index.ts` are included in the built package.
+**Build Note:** The showcase (`src/main.tsx` and `index.html`) is excluded from the library bundle. Only components exported from `src/index.ts` are included in the built package.
 
 ## Installation
 

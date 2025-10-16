@@ -126,6 +126,8 @@ pnpm player:dev
 - [🧪 Testing](apps/admin.md#testing)
 - [🎛️ Mojo UI Component Library](../packages/mojo-ui/README.md)
 
+> **📦 Future Plan:** The Mojo UI component library will be extracted to a **separate open-source repository** for broader reusability. For now, it's included in this monorepo.
+
 ## 🎛️ Usage
 
 ### Admin Panel Access

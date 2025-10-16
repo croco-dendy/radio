@@ -14,6 +14,7 @@
     "wave:dev": "pnpm --filter @radio/wave dev",
     "player:dev": "pnpm --filter @radio/player dev",
     "admin:dev": "pnpm --filter @radio/admin dev",
+    "mojo:dev": "pnpm --filter @radio/mojo-ui dev",
     "wave:start": "pnpm --filter @radio/wave pm2:start",
     "wave:stop": "pnpm --filter @radio/wave pm2:stop",
     "wave:restart": "pnpm --filter @radio/wave pm2:restart",

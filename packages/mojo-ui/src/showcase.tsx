@@ -2,6 +2,13 @@ import type { FC, useState } from 'react';
 import { Button } from './components/button';
 import { IconButton } from './components/icon-button';
 import { Switch } from './components/switch';
+import {
+  PageLayout,
+  PanelCard,
+  StatsCard,
+  StatusIndicator,
+  StatsGrid,
+} from './components/layout';
 import { CheckIcon, ChevronRightIcon } from './icons';
 import './globals.css';
 
@@ -38,7 +45,7 @@ export const Showcase: FC = () => {
         {/* Buttons Section */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold text-white mb-8">Buttons</h2>
-          
+
           {/* By Variant */}
           <div className="space-y-8">
             {variants.map((variant) => (
@@ -70,7 +77,7 @@ export const Showcase: FC = () => {
         {/* Icon Buttons Section */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold text-white mb-8">Icon Buttons</h2>
-          
+
           <div className="space-y-8">
             {variants.map((variant) => (
               <div key={`icon-${variant}`}>
@@ -101,9 +108,9 @@ export const Showcase: FC = () => {
         </section>
 
         {/* Switches Section */}
-        <section>
+        <section className="mb-16">
           <h2 className="text-2xl font-semibold text-white mb-8">Switches</h2>
-          
+
           <div className="space-y-8">
             {variants.map((variant) => (
               <div key={`switch-${variant}`}>
@@ -113,7 +120,10 @@ export const Showcase: FC = () => {
                 <div className="p-6 bg-slate-800/50 rounded-lg border border-slate-700">
                   <div className="flex items-center gap-12">
                     {sizes.map((size) => (
-                      <div key={`switch-${variant}-${size}`} className="flex flex-col items-center gap-3">
+                      <div
+                        key={`switch-${variant}-${size}`}
+                        className="flex flex-col items-center gap-3"
+                      >
                         <Switch
                           variant={variant}
                           size={size}
@@ -138,6 +148,75 @@ export const Showcase: FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Layout Components Section */}
+        <section className="mb-16">
+          <h2 className="text-2xl font-semibold text-white mb-8">Layout Components</h2>
+
+          {/* Stats Cards */}
+          <div className="mb-12">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+              Stats Cards
+            </h3>
+            <div className="grid grid-cols-4 gap-4">
+              <StatsCard title="Active Users" value={2543} />
+              <StatsCard title="CPU Usage" value={45.2} isHighlight={false} />
+              <StatsCard title="Memory" value={78.9} isHighlight />
+              <StatsCard title="Uptime" value="99.9%" />
+            </div>
+          </div>
+
+          {/* Status Indicators */}
+          <div className="mb-12">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+              Status Indicators
+            </h3>
+            <div className="flex flex-wrap gap-12 p-6 bg-slate-800/50 rounded-lg border border-slate-700">
+              <StatusIndicator status="running" />
+              <StatusIndicator status="stopped" />
+              <StatusIndicator status="initializing" />
+              <StatusIndicator status="error" />
+            </div>
+          </div>
+
+          {/* Panel Cards */}
+          <div className="mb-12">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+              Panel Cards
+            </h3>
+            <div className="grid grid-cols-2 gap-6">
+              <PanelCard title="Service Status">
+                <div className="space-y-4">
+                  <StatsGrid
+                    stats={[
+                      { label: 'CPU', value: 45, suffix: '%' },
+                      { label: 'Memory', value: 2048, suffix: 'MB' },
+                      { label: 'Requests', value: 1250 },
+                      { label: 'Errors', value: 12, highlight: true },
+                    ]}
+                    columns={2}
+                  />
+                </div>
+                <div className="mt-4 flex gap-2 justify-center">
+                  <Button variant="green" size="small" title="Restart" />
+                  <Button variant="red" size="small" title="Stop" />
+                </div>
+              </PanelCard>
+
+              <PanelCard title="System Info" footer={<StatusIndicator status="running" />}>
+                <StatsGrid
+                  stats={[
+                    { label: 'Uptime', value: '45 days' },
+                    { label: 'Version', value: '2.1.0' },
+                    { label: 'Workers', value: 8 },
+                    { label: 'Status', value: 'Healthy' },
+                  ]}
+                  columns={2}
+                />
+              </PanelCard>
+            </div>
           </div>
         </section>
 

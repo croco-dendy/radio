@@ -1,4 +1,5 @@
-import type { FC, useState } from 'react';
+import { useState } from 'react';
+import type { FC } from 'react';
 import { Button } from './components/button';
 import { IconButton } from './components/icon-button';
 import { Switch } from './components/switch';
@@ -9,7 +10,7 @@ import {
   StatusIndicator,
   StatsGrid,
 } from './components/layout';
-import { CheckIcon, ChevronRightIcon } from './icons';
+import { CheckIcon, PlusIcon } from './icons';
 import './globals.css';
 
 type Variant = 'green' | 'yellow' | 'gray' | 'red';
@@ -38,8 +39,12 @@ export const Showcase: FC = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-16">
-          <h1 className="text-4xl font-bold text-white mb-2">Mojo UI Showcase</h1>
-          <p className="text-gray-400 text-lg">All components with variants and states</p>
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Mojo UI Showcase
+          </h1>
+          <p className="text-gray-400 text-lg">
+            All components with variants and states
+          </p>
         </div>
 
         {/* Buttons Section */}
@@ -76,7 +81,9 @@ export const Showcase: FC = () => {
 
         {/* Icon Buttons Section */}
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-8">Icon Buttons</h2>
+          <h2 className="text-2xl font-semibold text-white mb-8">
+            Icon Buttons
+          </h2>
 
           <div className="space-y-8">
             {variants.map((variant) => (
@@ -94,12 +101,8 @@ export const Showcase: FC = () => {
                       <CheckIcon />
                     </IconButton>
                   ))}
-                  <IconButton
-                    variant={variant}
-                    size="medium"
-                    disabled
-                  >
-                    <ChevronRightIcon />
+                  <IconButton variant={variant} size="medium" disabled>
+                    <PlusIcon />
                   </IconButton>
                 </div>
               </div>
@@ -132,7 +135,9 @@ export const Showcase: FC = () => {
                             handleSwitchChange(`${variant}-${size}`, checked)
                           }
                         />
-                        <span className="text-xs text-gray-400 capitalize">{size}</span>
+                        <span className="text-xs text-gray-400 capitalize">
+                          {size}
+                        </span>
                       </div>
                     ))}
                     <div className="flex flex-col items-center gap-3">
@@ -153,7 +158,9 @@ export const Showcase: FC = () => {
 
         {/* Layout Components Section */}
         <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-8">Layout Components</h2>
+          <h2 className="text-2xl font-semibold text-white mb-8">
+            Layout Components
+          </h2>
 
           {/* Stats Cards */}
           <div className="mb-12">
@@ -205,7 +212,10 @@ export const Showcase: FC = () => {
                 </div>
               </PanelCard>
 
-              <PanelCard title="System Info" footer={<StatusIndicator status="running" />}>
+              <PanelCard
+                title="System Info"
+                footer={<StatusIndicator status="running" />}
+              >
                 <StatsGrid
                   stats={[
                     { label: 'Uptime', value: '45 days' },

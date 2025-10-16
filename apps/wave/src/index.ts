@@ -22,6 +22,7 @@ app.use(
       'http://deimos:3001',
       'https://stream.adoo.one',
       'https://wave.adoo.one',
+      'https://pan.adoo.one',
     ],
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],

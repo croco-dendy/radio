@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ButtonHTMLAttributes, FC, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, FC } from 'react';
 import '../../globals.css';
 import './button.css';
 
@@ -16,7 +16,6 @@ export const Button: FC<ButtonProps> = ({
   size = 'medium',
   title,
   className,
-  disabled,
   ...props
 }) => {
   return (
@@ -28,7 +27,6 @@ export const Button: FC<ButtonProps> = ({
         getSizeStyles(size),
         className,
       )}
-      disabled={disabled}
       {...props}
     >
       {/* Steel Base */}
@@ -41,11 +39,11 @@ export const Button: FC<ButtonProps> = ({
       <div
         className={clsx(
           'lamp-surface',
-          getGradientClass(variant, disabled),
-          getHoverShadowClass(variant, disabled),
+          getGradientClass(variant, props.disabled),
+          getHoverShadowClass(variant, props.disabled),
         )}
         style={{
-          ...getShadowStyle(variant, disabled),
+          ...getShadowStyle(variant, props.disabled),
         }}
       />
 
@@ -76,12 +74,12 @@ const getSizeStyles = (size: ButtonSize) => {
   }
 };
 
-const getShadowStyle = (variant: ButtonVariant, disabled?: boolean) => {
+const getShadowStyle = (_variant: ButtonVariant, _disabled?: boolean) => {
   return {};
 };
 
-const getGradientClass = (variant: ButtonVariant, disabled?: boolean) => {
-  if (disabled) {
+const getGradientClass = (variant: ButtonVariant, _disabled?: boolean) => {
+  if (_disabled) {
     return 'button-disabled-gradient';
   }
 
@@ -97,12 +95,12 @@ const getGradientClass = (variant: ButtonVariant, disabled?: boolean) => {
   }
 };
 
-const getHoverShadowClass = (variant: ButtonVariant, disabled?: boolean) => {
-  if (disabled) {
+const getHoverShadowClass = (_variant: ButtonVariant, _disabled?: boolean) => {
+  if (_disabled) {
     return '';
   }
 
-  switch (variant) {
+  switch (_variant) {
     case 'green':
       return 'button-green-glow';
     case 'yellow':

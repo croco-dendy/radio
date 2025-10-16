@@ -1,4 +1,4 @@
-name: 📦 Shared Packages
+name: 📦 Types Package
 
 on:
   push:

@@ -98,7 +98,7 @@ export const MonitoringTab: React.FC<MonitoringTabProps> = ({
               key={stat.title}
               title={stat.title}
               value={stat.value}
-              isOnline={stat.isOnline}
+              isHighlight={stat.isOnline}
             />
           ))}
         </div>

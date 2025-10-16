@@ -3,7 +3,6 @@ import type { FC } from 'react';
 import { Button } from './components/button';
 import { IconButton } from './components/icon-button';
 import {
-  PageLayout,
   PanelCard,
   StatsCard,
   StatsGrid,

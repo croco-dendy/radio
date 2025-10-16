@@ -27,36 +27,33 @@
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2), 3px 3px 2px rgba(0, 0, 0, 0.05), 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.switch-background {
+.switch-background,
+.switch-green-bg,
+.switch-yellow-bg,
+.switch-gray-bg,
+.switch-red-bg {
   position: absolute;
   inset: 5.8px;
   border-radius: 9999px;
   transition: all 100ms ease-out;
   opacity: 0;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
 }
 
 .switch-green-bg {
   @apply gradient-green;
-  opacity: 0;
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
 }
 
 .switch-yellow-bg {
   @apply gradient-yellow;
-  opacity: 0;
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
 }
 
 .switch-gray-bg {
   @apply gradient-gray;
-  opacity: 0;
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
 }
 
 .switch-red-bg {
   @apply gradient-red;
-  opacity: 0;
-  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
 }
 
 .switch-toggle {
@@ -71,6 +68,12 @@
   @apply gradient-gray;
 }
 
+.switch-green-surface,
+.switch-yellow-surface,
+.switch-gray-surface,
+.switch-red-surface {
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
 
 .switch-green-surface {
   @apply gradient-green;
@@ -85,26 +88,6 @@
 }
 
 .switch-red-surface {
-  @apply gradient-red;
-}
-
-.switch-container:has(.switch-input:not(:checked)) .switch-toggle {
-  @apply gradient-disabled;
-}
-
-.switch-container:has(.switch-input:checked) .switch-green-surface {
-  @apply gradient-green;
-}
-
-.switch-container:has(.switch-input:checked) .switch-yellow-surface {
-  @apply gradient-yellow;
-}
-
-.switch-container:has(.switch-input:checked) .switch-gray-surface {
-  @apply gradient-gray;
-}
-
-.switch-container:has(.switch-input:checked) .switch-red-surface {
   @apply gradient-red;
 }
 
@@ -128,26 +111,10 @@
   letter-spacing: 0.5px;
 }
 
-.switch-label-off {
-  opacity: 1;
-  transform: translateX(0);
-}
-
+.switch-label-off,
 .switch-label-on {
   opacity: 1;
   transform: translateX(0);
-}
-
-.switch-container:has(.switch-input:checked) .switch-label-off {
-  transform: translateX(2px);
-  scale: 1.1;
-  opacity: 0.2;
-}
-
-.switch-container:has(.switch-input:not(:checked)) .switch-label-on {
-  transform: translateX(-2px);
-  scale: 1.1;
-  opacity: 0.2;
 }
 
 .switch-divider {
@@ -162,8 +129,24 @@
   pointer-events: none;
 }
 
+.switch-container:has(.switch-input:not(:checked)) .switch-toggle {
+  @apply gradient-disabled;
+}
+
 .switch-container:has(.switch-input:checked) .switch-background {
   opacity: 0.6;
+}
+
+.switch-container:has(.switch-input:checked) .switch-label-off {
+  transform: translateX(2px);
+  scale: 1.1;
+  opacity: 0.2;
+}
+
+.switch-container:has(.switch-input:not(:checked)) .switch-label-on {
+  transform: translateX(-2px);
+  scale: 1.1;
+  opacity: 0.2;
 }
 
 .switch-container:has(.switch-input:checked):hover .switch-green-surface {

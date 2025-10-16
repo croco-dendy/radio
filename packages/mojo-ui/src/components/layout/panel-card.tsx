@@ -30,11 +30,15 @@ export const PanelCard: FC<PanelCardProps> = ({
         </div>
       )}
 
-      <div className={clsx(title ? 'flex-1 flex flex-col justify-between' : '')}>
+      <div
+        className={clsx(title ? 'flex-1 flex flex-col justify-between' : '')}
+      >
         {children}
       </div>
 
-      {footer && <div className="mt-auto pt-3 border-t border-white/10">{footer}</div>}
+      {footer && (
+        <div className="mt-auto pt-3 border-t border-white/10">{footer}</div>
+      )}
     </div>
   );
 };

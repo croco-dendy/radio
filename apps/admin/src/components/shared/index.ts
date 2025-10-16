@@ -9,4 +9,3 @@ export type { StatItem, StatsGridProps } from '@radio/mojo-ui';
 export { ActionButton } from './action-button';
 export { RecentActivityItem } from './recent-activity-item';
 export { ServiceControlCard } from './service-control-card';
-export { ServiceStatsGrid } from './service-stats-grid';

@@ -15,6 +15,7 @@ import {
 import './styles/index';
 import '@fontsource/tiny5';
 import '@fontsource/ponomar';
+import '@fontsource/jetbrains-mono/800.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');

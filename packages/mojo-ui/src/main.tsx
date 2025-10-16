@@ -3,8 +3,13 @@ import ReactDOM from 'react-dom/client';
 import { Showcase } from './showcase';
 import './globals.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Showcase />
-  </React.StrictMode>,
-);
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <Showcase />
+    </React.StrictMode>,
+  );
+} else {
+  throw new Error("Root element with id 'root' not found");
+}

@@ -1,0 +1,22 @@
+/* Gradient variants for lamp surfaces */
+
+.gradient-green {
+  background: radial-gradient(circle at 50% 50%, #47f57d 7%, #6fce8c 74%);
+}
+
+.gradient-yellow {
+  background: radial-gradient(circle at 50% 50%, #ffbd30 21%, #bea571 79%);
+}
+
+.gradient-gray {
+  background: linear-gradient(180deg, #f2f2f2 0%, #bbae90 100%);
+}
+
+.gradient-red {
+  background: radial-gradient(circle at 50% 50%, #ff5050 39%, #f99696 100%);
+}
+
+/* Disabled state gradient (dark biege) */
+.gradient-disabled {
+  background: radial-gradient(circle at 50% 50%, rgb(97, 103, 95) 0%, #36302b 100%);
+}

@@ -45,7 +45,9 @@ export const StatsGrid: FC<StatsGridProps> = ({ stats, columns = 2 }) => {
           >
             {formatValue(stat.value, stat.suffix)}
             {stat.suffix && !['%', 'MB', 'KB'].includes(stat.suffix) && (
-              <span className="ml-1 text-amber-400/50 text-xs">{stat.suffix}</span>
+              <span className="ml-1 text-amber-400/50 text-xs">
+                {stat.suffix}
+              </span>
             )}
           </span>
         </div>

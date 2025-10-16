@@ -1,6 +1,6 @@
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { TelegramServiceStats, RtmpServiceStats } from '@radio/types';
-import { ServiceControlCard, ServiceStatsGrid } from '@/components/shared';
+import { ServiceControlCard, StatsGrid } from '@/components/shared';
 import { InlineServiceAlert } from './inline-service-alert';
 
 interface StatItem {
@@ -251,7 +251,7 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
       status={daemonStatus}
       actions={actions}
     >
-      <ServiceStatsGrid stats={getServiceStats()} />
+      <StatsGrid stats={getServiceStats()} columns={2} />
       {dependencyAlert && (
         <div className="mt-3">
           <InlineServiceAlert

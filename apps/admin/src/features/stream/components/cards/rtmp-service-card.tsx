@@ -1,5 +1,5 @@
 import type { RtmpServiceStats } from '@radio/types';
-import { ServiceControlCard, ServiceStatsGrid } from '@/components/shared';
+import { ServiceControlCard, StatsGrid } from '@/components/shared';
 import { InlineServiceAlert } from './inline-service-alert';
 
 interface StatItem {
@@ -228,7 +228,7 @@ export const RtmpServiceCard: React.FC<RtmpServiceCardProps> = ({ stats }) => {
       }
       actions={actions}
     >
-      <ServiceStatsGrid stats={getServiceStats()} />
+      <StatsGrid stats={getServiceStats()} columns={2} />
       {serviceAlert && (
         <div className="mt-3">
           <InlineServiceAlert

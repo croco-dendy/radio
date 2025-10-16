@@ -1,0 +1,43 @@
+@import '../../shared/styles/base-layer.css';
+@import '../../shared/styles/glow-effects.css';
+@import '../../shared/styles/gradients.css';
+
+.button-green-gradient {
+  @apply gradient-green;
+}
+
+.button-yellow-gradient {
+  @apply gradient-yellow;
+}
+
+.button-gray-gradient {
+  @apply gradient-gray;
+}
+
+.button-red-gradient {
+  @apply gradient-red;
+}
+
+.button-disabled-gradient {
+  @apply gradient-disabled;
+}
+
+.button-green-glow {
+  @apply glow-green;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.button-yellow-glow {
+  @apply glow-yellow;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.button-gray-glow {
+  @apply glow-gray;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}
+
+.button-red-glow {
+  @apply glow-red;
+  box-shadow: inset 5px 2px 5px 2px rgba(0, 0, 0, 0.2), inset -1px 3px 6px 1px rgba(255, 255, 255, 0.6);
+}

@@ -23,7 +23,8 @@ radio/
 │   ├── admin/         # Admin panel (React + TypeScript)
 │   └── player/        # Public player (React + Vite)
 ├── packages/
-│   └── types/         # Shared TypeScript types
+│   ├── types/         # Shared TypeScript types
+│   └── mojo-ui/       # Component library (React + Tailwind)
 ├── docs/              # Documentation (this folder)
 │   ├── docs/          # Technical documentation
 │   ├── apps/          # App-specific documentation
@@ -62,6 +63,7 @@ radio/
 - **Type Safety**: Full TypeScript coverage with shared types package
 - **Process Management**: PM2 for production deployment
 - **Real-time**: WebSocket connections for live updates
+- **Component Library**: Mojo UI - retro-styled components with 3D effects and glow animations
 
 ## 🚀 Quick Start
 
@@ -122,6 +124,9 @@ pnpm player:dev
 - [📡 Streaming Setup Guide](docs/streaming-setup.md)
 - [🎨 Design System](apps/admin.md#design-system)
 - [🧪 Testing](apps/admin.md#testing)
+- [🎛️ Mojo UI Component Library](../packages/mojo-ui/README.md)
+
+> **📦 Future Plan:** The Mojo UI component library will be extracted to a **separate open-source repository** for broader reusability. For now, it's included in this monorepo.
 
 ## 🎛️ Usage
 

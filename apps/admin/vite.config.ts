@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { VitePWA } from 'vite-plugin-pwa';
+import { resolve } from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -36,6 +37,18 @@ export default defineConfig({
   server: {
     host: true,
     port: 3001,
+    fs: {
+      allow: ['..', '../..'],
+    },
+    watch: {
+      usePolling: true,
+      ignored: ['!**/node_modules/**'],
+    },
+  },
+  resolve: {
+    alias: {
+      '@radio/mojo-ui': resolve(__dirname, '../../packages/mojo-ui/src'),
+    },
   },
   preview: {
     port: 3001,

@@ -1,0 +1,40 @@
+name: 📦 Types Package
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-lint:
+    name: 🔨 Build & Lint Packages
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.15.0'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check packages
+        run: |
+          echo "🔍 Type checking shared packages..."
+          pnpm turbo run check-types --filter=@radio/types
+          echo "✅ Packages type check passed!"
+
+      - name: Lint
+        run: |
+          echo "🔍 Linting types package..."
+          pnpm turbo run lint --filter=@radio/types
+          echo "✅ Types linting passed!"
+

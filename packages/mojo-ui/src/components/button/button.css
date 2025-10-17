@@ -2,6 +2,22 @@
 @import "../../shared/styles/glow-effects.css";
 @import "../../shared/styles/gradients.css";
 
+/* Size-specific inset adjustments */
+.button-small .lamp-base,
+.button-small .lamp-surface {
+  inset: 3.5px;
+}
+
+.button-medium .lamp-base,
+.button-medium .lamp-surface {
+  inset: 5.8px;
+}
+
+.button-large .lamp-base,
+.button-large .lamp-surface {
+  inset: 6px;
+}
+
 .button-green-gradient {
   @apply gradient-green;
 }

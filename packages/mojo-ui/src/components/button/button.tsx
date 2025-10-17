@@ -25,6 +25,7 @@ export const Button: FC<ButtonProps> = ({
         'focus:outline-none focus:ring-4 focus:ring-white/40',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
         getSizeStyles(size),
+        getSizeClass(size),
         className,
       )}
       {...props}
@@ -51,9 +52,10 @@ export const Button: FC<ButtonProps> = ({
       <span
         className={clsx(
           'pointer-events-none relative z-10 flex items-center justify-center h-full',
-          'font-semibold font-serif text-xl leading-8',
+          'font-semibold font-serif leading-none',
           'text-shadow-[0_0_1px_rgba(255,255,255,0.9),_0_2px_4px_rgba(0,0,0,0.5),_0_0_8px_rgba(0,0,0,0.3)]',
           'drop-shadow-md',
+          getSizeTextClass(size),
           variant === 'gray' ? 'text-stone-800' : 'text-white',
         )}
       >
@@ -66,11 +68,33 @@ export const Button: FC<ButtonProps> = ({
 const getSizeStyles = (size: ButtonSize) => {
   switch (size) {
     case 'small':
-      return ['px-6 py-2 text-sm', 'rounded-3xl', 'min-w-[80px] h-[32px]'];
+      return ['px-5 py-2', 'rounded-3xl', 'min-w-[72px] h-[36px]'];
     case 'medium':
-      return ['px-8 py-3 text-base', 'rounded-3xl', 'min-w-[104px] h-[48px]'];
+      return ['px-8 py-3', 'rounded-3xl', 'min-w-[104px] h-[48px]'];
     case 'large':
-      return ['px-10 py-4 text-lg', 'rounded-3xl', 'min-w-[120px] h-[56px]'];
+      return ['px-10 py-4', 'rounded-3xl', 'min-w-[120px] h-[56px]'];
+  }
+};
+
+const getSizeClass = (size: ButtonSize) => {
+  switch (size) {
+    case 'small':
+      return 'button-small';
+    case 'medium':
+      return 'button-medium';
+    case 'large':
+      return 'button-large';
+  }
+};
+
+const getSizeTextClass = (size: ButtonSize) => {
+  switch (size) {
+    case 'small':
+      return 'text-sm';
+    case 'medium':
+      return 'text-base';
+    case 'large':
+      return 'text-lg';
   }
 };
 

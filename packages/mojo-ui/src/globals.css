@@ -8,48 +8,55 @@
 
 @font-face {
   font-family: "KyivType Serif";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800")
-    format("woff2");
+  src: url("/fonts/KyivTypeSerif-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Serif";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800")
-    format("woff2");
+  src: url("/fonts/KyivTypeSerif-Bold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Serif";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSerif:wght@500;600;800")
-    format("woff2");
+  src: url("/fonts/KyivTypeSerif-Heavy.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Sans";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800")
-    format("woff2");
+  src: url("/fonts/KyivTypeSans-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Sans";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800")
-    format("woff2");
+  src: url("/fonts/KyivTypeSans-Bold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: "KyivType Sans";
-  src: url("https://fonts.googleapis.com/css2?family=KyivTypeSans:wght@500;600;800")
-    format("woff2");
+  src: url("/fonts/KyivTypeSans-Heavy.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
+}
+
+/* Font stacks matching admin app */
+body {
+  font-family: "KyivType Serif", Georgia, serif;
+}
+
+button, input, select, textarea {
+  font-family: "KyivType Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+code, pre {
+  font-family: "JetBrains Mono", monospace;
 }

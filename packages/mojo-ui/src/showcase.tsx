@@ -34,139 +34,132 @@ export const Showcase: FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-12">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-16">
-          <h1 className="text-4xl font-bold text-white mb-2">
-            Mojo UI Showcase
-          </h1>
-          <p className="text-gray-400 text-lg">
-            All components with variants and states
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Hero Section */}
+      <div className="pt-32 pb-24 px-8 text-center">
+        <h1 className="text-6xl font-bold text-white mb-4 tracking-tight">
+          Mojo UI
+        </h1>
+        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          Retro-styled component library with 3D depth, elegant gradients, and
+          glowing effects
+        </p>
+      </div>
 
-        {/* Buttons Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-8">Buttons</h2>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-8 pb-24">
+        {/* Buttons & Controls Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-24">
+          {/* Buttons by Size */}
+          <section>
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold text-white mb-2">Buttons</h2>
+              <p className="text-gray-500 text-sm">4 colors × 3 sizes</p>
+            </div>
 
-          {/* By Variant */}
-          <div className="space-y-8">
-            {variants.map((variant) => (
-              <div key={variant}>
-                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
-                  {variant} Variant
-                </h3>
-                <div className="flex flex-wrap gap-6 p-6 bg-slate-800/50 rounded-lg border border-slate-700">
-                  {sizes.map((size) => (
-                    <Button
-                      key={`btn-${variant}-${size}`}
-                      variant={variant}
-                      size={size}
-                      title={size.charAt(0).toUpperCase() + size.slice(1)}
-                    />
-                  ))}
-                  <Button
-                    variant={variant}
-                    size="medium"
-                    title="Disabled"
-                    disabled
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Icon Buttons Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-8">
-            Icon Buttons
-          </h2>
-
-          <div className="space-y-8">
-            {variants.map((variant) => (
-              <div key={`icon-${variant}`}>
-                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
-                  {variant} Variant
-                </h3>
-                <div className="flex flex-wrap gap-6 p-6 bg-slate-800/50 rounded-lg border border-slate-700">
-                  {sizes.map((size) => (
-                    <IconButton
-                      key={`icon-btn-${variant}-${size}`}
-                      variant={variant}
-                      size={size}
-                    >
-                      <CheckIcon />
-                    </IconButton>
-                  ))}
-                  <IconButton variant={variant} size="medium" disabled>
-                    <PlusIcon />
-                  </IconButton>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Switches Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-8">Switches</h2>
-
-          <div className="space-y-8">
-            {variants.map((variant) => (
-              <div key={`switch-${variant}`}>
-                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
-                  {variant} Variant
-                </h3>
-                <div className="p-6 bg-slate-800/50 rounded-lg border border-slate-700">
-                  <div className="flex items-center gap-12">
-                    {sizes.map((size) => (
-                      <div
-                        key={`switch-${variant}-${size}`}
-                        className="flex flex-col items-center gap-3"
-                      >
-                        <Switch
-                          variant={variant}
-                          size={size}
-                          checked={switchStates[`${variant}-${size}`] || false}
-                          onChange={(checked) =>
-                            handleSwitchChange(`${variant}-${size}`, checked)
-                          }
-                        />
-                        <span className="text-xs text-gray-400 capitalize">
-                          {size}
-                        </span>
-                      </div>
-                    ))}
-                    <div className="flex flex-col items-center gap-3">
-                      <Switch
+            <div className="space-y-8">
+              {sizes.map((size) => (
+                <div key={`btn-size-${size}`}>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+                    {size}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {variants.map((variant) => (
+                      <Button
+                        key={`btn-${variant}-${size}`}
                         variant={variant}
-                        size="medium"
-                        disabled
-                        checked={false}
+                        size={size}
+                        title={
+                          variant.charAt(0).toUpperCase() + variant.slice(1)
+                        }
                       />
-                      <span className="text-xs text-gray-400">Disabled</span>
-                    </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
 
-        {/* Layout Components Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-semibold text-white mb-8">
-            Layout Components
-          </h2>
+          {/* Switches by Size */}
+          <section>
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold text-white mb-2">Switches</h2>
+              <p className="text-gray-500 text-sm">Interactive toggles</p>
+            </div>
+
+            <div className="space-y-8">
+              {sizes.map((size) => (
+                <div key={`switch-size-${size}`}>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+                    {size}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    {variants.map((variant) => (
+                      <Switch
+                        key={`switch-${variant}-${size}`}
+                        variant={variant}
+                        size={size}
+                        checked={switchStates[`${variant}-${size}`] || false}
+                        onChange={(checked) =>
+                          handleSwitchChange(`${variant}-${size}`, checked)
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Icon Buttons by Size */}
+          <section>
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold text-white mb-2">
+                Icon Buttons
+              </h2>
+              <p className="text-gray-500 text-sm">Compact controls</p>
+            </div>
+
+            <div className="space-y-8">
+              {sizes.map((size) => (
+                <div key={`icon-size-${size}`}>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
+                    {size}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    {variants.map((variant) => (
+                      <IconButton
+                        key={`icon-btn-${variant}-${size}`}
+                        variant={variant}
+                        size={size}
+                      >
+                        {size === 'small' ? <CheckIcon /> : <PlusIcon />}
+                      </IconButton>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* Layout Components */}
+        <section className="mb-24">
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-white mb-2">
+              Layout Components
+            </h2>
+            <p className="text-gray-500 text-sm">
+              Reusable containers for building dashboards and UIs
+            </p>
+          </div>
 
           {/* Stats Cards */}
-          <div className="mb-12">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+          <div className="mb-16">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
               Stats Cards
-            </h3>
-            <div className="grid grid-cols-4 gap-4">
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <StatsCard title="Active Users" value={2543} />
               <StatsCard title="CPU Usage" value={45.2} isHighlight={false} />
               <StatsCard title="Memory" value={78.9} isHighlight />
@@ -175,11 +168,11 @@ export const Showcase: FC = () => {
           </div>
 
           {/* Status Indicators */}
-          <div className="mb-12">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+          <div className="mb-16">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
               Status Indicators
-            </h3>
-            <div className="flex flex-wrap gap-12 p-6 bg-slate-800/50 rounded-lg border border-slate-700">
+            </p>
+            <div className="flex flex-wrap gap-8">
               <StatusIndicator status="running" />
               <StatusIndicator status="stopped" />
               <StatusIndicator status="initializing" />
@@ -188,50 +181,53 @@ export const Showcase: FC = () => {
           </div>
 
           {/* Panel Cards */}
-          <div className="mb-12">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
-              Panel Cards
-            </h3>
-            <div className="grid grid-cols-2 gap-6">
-              <PanelCard title="Service Status">
-                <div className="space-y-4">
-                  <StatsGrid
-                    stats={[
-                      { label: 'CPU', value: 45, suffix: '%' },
-                      { label: 'Memory', value: 2048, suffix: 'MB' },
-                      { label: 'Requests', value: 1250 },
-                      { label: 'Errors', value: 12, highlight: true },
-                    ]}
-                    columns={2}
-                  />
-                </div>
-                <div className="mt-4 flex gap-2 justify-center">
-                  <Button variant="green" size="small" title="Restart" />
-                  <Button variant="red" size="small" title="Stop" />
-                </div>
-              </PanelCard>
-
-              <PanelCard
-                title="System Info"
-                footer={<StatusIndicator status="running" />}
-              >
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
+            Panel Cards
+          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <PanelCard title="Service Status">
+              <div className="space-y-6">
                 <StatsGrid
                   stats={[
-                    { label: 'Uptime', value: '45 days' },
-                    { label: 'Version', value: '2.1.0' },
-                    { label: 'Workers', value: 8 },
-                    { label: 'Status', value: 'Healthy' },
+                    { label: 'CPU', value: 45, suffix: '%' },
+                    { label: 'Memory', value: 2048, suffix: 'MB' },
+                    { label: 'Requests', value: 1250 },
+                    { label: 'Errors', value: 12, highlight: true },
                   ]}
                   columns={2}
                 />
-              </PanelCard>
-            </div>
+              </div>
+              <div className="mt-6 flex gap-3 justify-center">
+                <Button variant="green" size="small" title="Restart" />
+                <Button variant="red" size="small" title="Stop" />
+              </div>
+            </PanelCard>
+
+            <PanelCard
+              title="System Info"
+              footer={<StatusIndicator status="running" />}
+            >
+              <StatsGrid
+                stats={[
+                  { label: 'Uptime', value: '45 days' },
+                  { label: 'Version', value: '2.1.0' },
+                  { label: 'Workers', value: 8 },
+                  { label: 'Status', value: 'Healthy' },
+                ]}
+                columns={2}
+              />
+            </PanelCard>
           </div>
         </section>
 
         {/* Footer */}
-        <div className="mt-16 text-center text-gray-500 text-sm">
-          <p>Mojo UI Component Library</p>
+        <div className="pt-16 border-t border-slate-800 text-center">
+          <p className="text-gray-500 text-sm mb-2">
+            Retro-Styled Component Library
+          </p>
+          <p className="text-gray-600 text-xs">
+            Built with React, TypeScript, and Tailwind CSS
+          </p>
         </div>
       </div>
     </div>

@@ -38,6 +38,7 @@ export const Switch: FC<SwitchProps> = ({
         opacity: disabled ? 0.5 : 1,
         cursor: disabled ? 'not-allowed' : 'pointer',
       }}
+      data-size={size}
     >
       <input
         type="checkbox"

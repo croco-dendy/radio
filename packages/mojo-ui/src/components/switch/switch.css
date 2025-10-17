@@ -11,6 +11,67 @@
   display: none;
 }
 
+/* Size-specific inset adjustments */
+.switch-container[data-size="small"] .switch-lamp-base,
+.switch-container[data-size="small"] .switch-background,
+.switch-container[data-size="small"] .switch-green-bg,
+.switch-container[data-size="small"] .switch-yellow-bg,
+.switch-container[data-size="small"] .switch-gray-bg,
+.switch-container[data-size="small"] .switch-red-bg,
+.switch-container[data-size="small"] .switch-toggle,
+.switch-container[data-size="small"] .switch-labels {
+  inset: 3px;
+}
+
+.switch-container[data-size="small"] .switch-label {
+  font-size: 9px;
+}
+
+.switch-container[data-size="small"] .switch-labels {
+  margin: 0 4px;
+  padding: 0 5px;
+}
+
+.switch-container[data-size="medium"] .switch-lamp-base,
+.switch-container[data-size="medium"] .switch-background,
+.switch-container[data-size="medium"] .switch-green-bg,
+.switch-container[data-size="medium"] .switch-yellow-bg,
+.switch-container[data-size="medium"] .switch-gray-bg,
+.switch-container[data-size="medium"] .switch-red-bg,
+.switch-container[data-size="medium"] .switch-toggle,
+.switch-container[data-size="medium"] .switch-labels {
+  inset: 5.8px;
+}
+
+.switch-container[data-size="medium"] .switch-label {
+  font-size: 12px;
+}
+
+.switch-container[data-size="medium"] .switch-labels {
+  margin: 0 4px;
+  padding: 0 6px;
+}
+
+.switch-container[data-size="large"] .switch-lamp-base,
+.switch-container[data-size="large"] .switch-background,
+.switch-container[data-size="large"] .switch-green-bg,
+.switch-container[data-size="large"] .switch-yellow-bg,
+.switch-container[data-size="large"] .switch-gray-bg,
+.switch-container[data-size="large"] .switch-red-bg,
+.switch-container[data-size="large"] .switch-toggle,
+.switch-container[data-size="large"] .switch-labels {
+  inset: 6px;
+}
+
+.switch-container[data-size="large"] .switch-label {
+  font-size: 16px;
+}
+
+.switch-container[data-size="large"] .switch-labels {
+  margin: 0 5px;
+  padding: 0 8px;
+}
+
 .switch-base {
   position: absolute;
   inset: 0;
@@ -28,7 +89,6 @@
 
 .switch-lamp-base {
   position: absolute;
-  inset: 5.8px;
   border-radius: 9999px;
   background-color: #1a1a1a;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2), 3px 3px 2px rgba(0, 0, 0, 0.05),
@@ -41,7 +101,6 @@
 .switch-gray-bg,
 .switch-red-bg {
   position: absolute;
-  inset: 5.8px;
   border-radius: 9999px;
   transition: all 100ms ease-out;
   opacity: 0;
@@ -67,7 +126,6 @@
 
 .switch-toggle {
   position: absolute;
-  inset: 5.8px;
   transition: all 150ms ease-out;
   display: flex;
   align-items: center;
@@ -104,18 +162,14 @@
 
 .switch-labels {
   position: absolute;
-  inset: 5.8px;
-  margin: 0 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;
   pointer-events: none;
   border-radius: 9999px;
 }
 
 .switch-label {
-  font-size: 16px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.68);
   transition: opacity 150ms ease-out, transform 150ms ease-out;

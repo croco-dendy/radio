@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { PageLayout } from '@/components/shared';
+import { PageLayout } from '@radio/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
 import { useMonitoringData } from '@/services/api/hooks';
 import { useWebSocket } from '@/hooks/use-websocket';

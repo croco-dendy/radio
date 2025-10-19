@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { StatsCard } from '@/components/shared';
+import { StatsCard } from '@radio/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
 import { TelegramServiceCard, RtmpServiceCard } from '../cards';
 import type { MonitoringData } from '@radio/types';
@@ -98,7 +98,7 @@ export const MonitoringTab: React.FC<MonitoringTabProps> = ({
               key={stat.title}
               title={stat.title}
               value={stat.value}
-              isOnline={stat.isOnline}
+              isHighlight={stat.isOnline}
             />
           ))}
         </div>

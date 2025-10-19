@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$fonts: (
+  'KyivType Serif': (
+    500: 'KyivTypeSerif-Medium',
+    600: 'KyivTypeSerif-Bold',
+    800: 'KyivTypeSerif-Heavy',
+  ),
+  'KyivType Sans': (
+    500: 'KyivTypeSans-Medium',
+    600: 'KyivTypeSans-Bold',
+    800: 'KyivTypeSans-Heavy',
+  ),
+);
+
+@each $family, $weights in $fonts {
+  @each $weight, $filename in $weights {
+    @font-face {
+      font-family: $family;
+      src: url('/fonts/#{$filename}.woff2') format('woff2');
+      font-weight: $weight;
+      font-style: normal;
+    }
+  }
+}
+
+body {
+  font-family: 'KyivType Serif', Georgia, serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: 'KyivType Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+}
+
+code,
+pre {
+  font-family: 'JetBrains Mono', monospace;
+}
+

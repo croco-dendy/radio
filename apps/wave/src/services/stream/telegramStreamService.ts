@@ -4,6 +4,10 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { promisify } from 'node:util';
 import type { TelegramStreamConfig } from '../../types/streaming';
+import {
+  ServiceResponseHelper,
+  type ServiceResponse,
+} from '../../utils/serviceResponse';
 
 const execAsync = promisify(exec);
 
@@ -169,24 +173,17 @@ export class TelegramStreamService {
   }
 
   // Start Telegram stream using PM2
-  async startTelegramStream(): Promise<{ success: boolean; message: string }> {
+  async startTelegramStream(): Promise<ServiceResponse> {
     try {
       const isRunning = await this.isTelegramStreamRunning();
       if (isRunning) {
-        return {
-          success: false,
-          message: 'Telegram stream is already running',
-        };
+        return ServiceResponseHelper.stream.telegram.alreadyRunning();
       }
 
       // Check if RTMP server is running first
       const rtmpStatus = await this.checkRtmpServerStatus();
       if (!rtmpStatus.isRunning) {
-        return {
-          success: false,
-          message:
-            'Cannot start Telegram stream: RTMP server is not running. Please start the RTMP server first.',
-        };
+        return ServiceResponseHelper.stream.telegram.rtmpDependency();
       }
 
       console.log('Starting Telegram stream with PM2...');
@@ -198,10 +195,7 @@ export class TelegramStreamService {
 
       if (stderr && !stderr.includes('already exists')) {
         console.error('PM2 error:', stderr);
-        return {
-          success: false,
-          message: `Failed to start Telegram stream: ${stderr}`,
-        };
+        return ServiceResponseHelper.stream.telegram.startFailed(stderr);
       }
 
       // Wait a moment for the process to start and check status
@@ -210,10 +204,7 @@ export class TelegramStreamService {
       // Check if it's actually running with FFmpeg
       const isNowRunning = await this.isTelegramStreamRunning();
       if (isNowRunning) {
-        return {
-          success: true,
-          message: 'Telegram stream started successfully via PM2',
-        };
+        return ServiceResponseHelper.stream.telegram.startSuccess();
       }
 
       // If not running, check if daemon is waiting for RTMP
@@ -222,23 +213,15 @@ export class TelegramStreamService {
         daemonStatus?.status === 'error' &&
         (daemonStatus.details as { waiting?: boolean })?.waiting
       ) {
-        return {
-          success: false,
-          message:
-            'Telegram stream daemon started but is waiting for RTMP server to become available',
-        };
+        return ServiceResponseHelper.stream.telegram.daemonWaiting();
       }
 
-      return {
-        success: false,
-        message: 'Telegram stream failed to start',
-      };
+      return ServiceResponseHelper.stream.telegram.startFailed(
+        'failed to start',
+      );
     } catch (error) {
       console.error('Error starting Telegram stream:', error);
-      return {
-        success: false,
-        message: `Failed to start Telegram stream: ${error}`,
-      };
+      return ServiceResponseHelper.stream.telegram.startFailed(String(error));
     }
   }
 
@@ -258,11 +241,11 @@ export class TelegramStreamService {
   }
 
   // Stop Telegram stream using PM2
-  async stopTelegramStream(): Promise<{ success: boolean; message: string }> {
+  async stopTelegramStream(): Promise<ServiceResponse> {
     try {
       const isRunning = await this.isTelegramStreamRunning();
       if (!isRunning) {
-        return { success: false, message: 'Telegram stream is not running' };
+        return ServiceResponseHelper.stream.telegram.notRunning();
       }
 
       console.log('Stopping Telegram stream via PM2...');
@@ -272,30 +255,18 @@ export class TelegramStreamService {
 
       if (stderr) {
         console.error('PM2 error:', stderr);
-        return {
-          success: false,
-          message: `Failed to stop Telegram stream: ${stderr}`,
-        };
+        return ServiceResponseHelper.stream.telegram.stopFailed(stderr);
       }
 
-      return {
-        success: true,
-        message: 'Telegram stream stopped successfully via PM2',
-      };
+      return ServiceResponseHelper.stream.telegram.stopSuccess();
     } catch (error) {
       console.error('Error stopping Telegram stream:', error);
-      return {
-        success: false,
-        message: `Failed to stop Telegram stream: ${error}`,
-      };
+      return ServiceResponseHelper.stream.telegram.stopFailed(String(error));
     }
   }
 
   // Restart Telegram stream using PM2
-  async restartTelegramStream(): Promise<{
-    success: boolean;
-    message: string;
-  }> {
+  async restartTelegramStream(): Promise<ServiceResponse> {
     try {
       console.log('Restarting Telegram stream via PM2...');
 
@@ -304,10 +275,7 @@ export class TelegramStreamService {
 
       if (stderr && !stderr.includes('Process successfully restarted')) {
         console.error('PM2 restart stderr:', stderr);
-        return {
-          success: false,
-          message: `Failed to restart Telegram stream: ${stderr}`,
-        };
+        return ServiceResponseHelper.stream.telegram.restartFailed(stderr);
       }
 
       console.log('PM2 restart stdout:', stdout);
@@ -317,46 +285,33 @@ export class TelegramStreamService {
 
       const isRunning = await this.isTelegramStreamRunning();
       if (!isRunning) {
-        return {
-          success: false,
-          message: 'Telegram stream failed to start after restart',
-        };
+        return ServiceResponseHelper.stream.telegram.restartFailed(
+          'failed to start after restart',
+        );
       }
 
-      return {
-        success: true,
-        message: 'Telegram stream restarted successfully via PM2',
-      };
+      return ServiceResponseHelper.stream.telegram.restartSuccess();
     } catch (error) {
       console.error('Error restarting Telegram stream:', error);
-      return {
-        success: false,
-        message: `Failed to restart Telegram stream: ${error}`,
-      };
+      return ServiceResponseHelper.stream.telegram.restartFailed(String(error));
     }
   }
 
-  async updateTelegramConfig(updates: Partial<TelegramStreamConfig>): Promise<{
-    success: boolean;
-    message: string;
-    config: TelegramStreamConfig;
-  }> {
+  async updateTelegramConfig(
+    updates: Partial<TelegramStreamConfig>,
+  ): Promise<ServiceResponse<TelegramStreamConfig>> {
     try {
       this.telegramConfig = { ...this.telegramConfig, ...updates };
       await this.saveTelegramConfig();
 
-      return {
-        success: true,
-        message: 'Telegram configuration updated successfully',
-        config: this.telegramConfig,
-      };
+      return ServiceResponseHelper.stream.telegram.configUpdated(
+        this.telegramConfig,
+      );
     } catch (error) {
       console.error('Error updating Telegram config:', error);
-      return {
-        success: false,
-        message: `Failed to update Telegram config: ${error}`,
-        config: this.telegramConfig,
-      };
+      return ServiceResponseHelper.stream.telegram.configUpdateFailed(
+        String(error),
+      );
     }
   }
 

@@ -10,6 +10,7 @@ import type {
   SystemHealth,
 } from './types';
 import type { LogData, LogEntry } from '@radio/types';
+import { getErrorMessage } from '../../utils/errorMessages';
 
 const execAsync = promisify(exec);
 
@@ -481,7 +482,9 @@ export class MonitoringService {
           logEntries = await this.getWaveLogs(lines);
           break;
         default:
-          throw new Error(`Unknown service: ${service}`);
+          throw new Error(
+            getErrorMessage.monitoring('UNKNOWN_SERVICE', service),
+          );
       }
 
       return {

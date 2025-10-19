@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{css,ts,tsx}'],
+  content: [
+    './index.html', 
+    './src/**/*.{css,ts,tsx}',
+    '../../packages/mojo-ui/src/**/*.{ts,tsx}'
+  ],
   theme: {
     extend: {
       fontWeight: {
@@ -11,6 +15,7 @@ export default {
         display: ['Tiny5', 'sans-serif'],
         sans: ['KyivType Sans', 'sans'],
         serif: ['KyivType Serif', 'serif'],
+        mono: ['JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', 'monospace'],
       },
       colors: {
         moss: {
@@ -87,6 +92,9 @@ export default {
         DEFAULT: '1px 1px 2px rgba(0, 0, 0, 0.6)',
         strong: '1px 1px 2px rgba(0, 0, 0, 0.8)',
         light: '1px 1px 2px rgba(255, 255, 255, 0.8)',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(ellipse at center, var(--tw-gradient-stops))',
       },
     },
   },

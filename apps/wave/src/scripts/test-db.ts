@@ -76,3 +76,4 @@ const testDatabase = async () => {
 };
 
 testDatabase();
+

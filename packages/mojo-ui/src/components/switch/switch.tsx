@@ -1,14 +1,11 @@
 import clsx from 'clsx';
 import type { ChangeEvent, FC } from 'react';
-import '../../globals.css';
-import './switch.css';
-
-type SwitchVariant = 'green' | 'yellow' | 'gray' | 'red';
-type SwitchSize = 'small' | 'medium' | 'large';
+import type { Size, Variant } from '../../utils';
+import styles from './switch.module.scss';
 
 interface SwitchProps {
-  variant: SwitchVariant;
-  size?: SwitchSize;
+  variant: Variant;
+  size?: Size;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   disabled?: boolean;
@@ -27,77 +24,47 @@ export const Switch: FC<SwitchProps> = ({
     }
   };
 
-  const sizeStyles = getSizeStyles(size);
+  const toggleClass = checked ? 'checked' : 'unchecked';
 
   return (
     <label
-      className="switch-container"
-      style={{
-        width: `${sizeStyles.width}px`,
-        height: `${sizeStyles.height}px`,
-        opacity: disabled ? 0.5 : 1,
-        cursor: disabled ? 'not-allowed' : 'pointer',
-      }}
-      data-size={size}
+      className={clsx(
+        styles.container,
+        styles[size],
+        checked && styles.checked,
+        disabled && styles.disabled,
+      )}
     >
       <input
         type="checkbox"
-        className="switch-input"
+        className={styles.input}
         checked={checked}
         onChange={handleChange}
         disabled={disabled}
       />
-      <div className="base-layer switch-base" />
-      <div className="lamp-base switch-lamp-base" />
-      <div className={clsx('switch-background', getBackgroundClass(variant))} />
+      <div className={styles.base} />
+      <div className={styles.lampBase} />
+      <div className={clsx(styles.background, styles[variant])} />
       <div
-        className={clsx('switch-toggle', getToggleSurfaceClass(variant))}
-        style={{
-          ...(checked ? { marginLeft: '8px' } : { marginRight: '8px' }),
-        }}
+        className={clsx(styles.toggle, styles[toggleClass], styles[variant])}
       />
-      <div className="switch-labels">
-        <span className="switch-label switch-label-off">O</span>
-        <span className="switch-label switch-label-on">I</span>
+      <div className={styles.labels}>
+        <span
+          className={clsx(styles.label, styles.off, checked && styles.checked)}
+        >
+          O
+        </span>
+        <span
+          className={clsx(
+            styles.label,
+            styles.on,
+            !checked && styles.unchecked,
+          )}
+        >
+          I
+        </span>
       </div>
-      <div className="switch-divider" />
+      <div className={styles.divider} />
     </label>
   );
-};
-
-const getSizeStyles = (size: SwitchSize) => {
-  switch (size) {
-    case 'small':
-      return { width: 56, height: 28 };
-    case 'medium':
-      return { width: 72, height: 36 };
-    case 'large':
-      return { width: 88, height: 44 };
-  }
-};
-
-const getBackgroundClass = (variant: SwitchVariant) => {
-  switch (variant) {
-    case 'green':
-      return 'switch-green-bg';
-    case 'yellow':
-      return 'switch-yellow-bg';
-    case 'gray':
-      return 'switch-gray-bg';
-    case 'red':
-      return 'switch-red-bg';
-  }
-};
-
-const getToggleSurfaceClass = (variant: SwitchVariant) => {
-  switch (variant) {
-    case 'green':
-      return 'switch-green-surface';
-    case 'yellow':
-      return 'switch-yellow-surface';
-    case 'gray':
-      return 'switch-gray-surface';
-    case 'red':
-      return 'switch-red-surface';
-  }
 };

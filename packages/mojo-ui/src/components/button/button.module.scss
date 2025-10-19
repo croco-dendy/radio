@@ -1,0 +1,143 @@
+@use '../../styles' as *;
+@use 'sass:map';
+
+.button {
+  position: relative;
+  transition: $transition-smooth;
+  border-radius: $border-radius-full;
+
+  &:focus {
+    outline: none;
+    ring: 4px solid rgba(255, 255, 255, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &.small {
+    min-width: 72px;
+    height: map.get($sizes, small, 'height');
+    border-radius: 24px;
+  }
+
+  &.medium {
+    min-width: 104px;
+    height: map.get($sizes, medium, 'height');
+    border-radius: 24px;
+  }
+
+  &.large {
+    min-width: 120px;
+    height: map.get($sizes, large, 'height');
+    border-radius: 24px;
+  }
+}
+
+.baseLayer {
+  @include base-layer;
+}
+
+.lampBase {
+  @include lamp-base;
+
+  .small & {
+    inset: map.get($sizes, small, 'inset');
+  }
+
+  .medium & {
+    inset: map.get($sizes, medium, 'inset');
+  }
+
+  .large & {
+    inset: map.get($sizes, large, 'inset');
+  }
+}
+
+.lampSurface {
+  @include lamp-surface;
+
+  .small & {
+    inset: map.get($sizes, small, 'inset');
+  }
+
+  .medium & {
+    inset: map.get($sizes, medium, 'inset');
+  }
+
+  .large & {
+    inset: map.get($sizes, large, 'inset');
+  }
+
+  &.green {
+    @include apply-variant(green);
+    @include apply-glow(green);
+  }
+
+  &.yellow {
+    @include apply-variant(yellow);
+    @include apply-glow(yellow);
+  }
+
+  &.gray {
+    @include apply-variant(gray);
+    @include apply-glow(gray);
+  }
+
+  &.red {
+    @include apply-variant(red);
+    @include apply-glow(red);
+  }
+
+  &.disabled {
+    @include apply-variant(disabled);
+    @include frosted-inner;
+  }
+}
+
+.text {
+  pointer-events: none;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.9))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 8px rgba(0, 0, 0, 0.3));
+
+  .small & {
+    font-size: 10px;
+  }
+
+  .medium & {
+    font-size: 12px;
+  }
+
+  .large & {
+    font-size: 14px;
+  }
+
+  &.gray {
+    color: rgb(41 37 36);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5))
+      drop-shadow(0 0 8px rgba(0, 0, 0, 0.3));
+  }
+
+  &.colored {
+    color: white;
+  }
+}
+
+
+
+
+
+

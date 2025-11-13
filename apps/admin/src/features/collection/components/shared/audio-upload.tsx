@@ -92,14 +92,12 @@ export const AudioUpload = ({ onUploadSuccess }: AudioUploadProps) => {
       />
 
       <motion.div
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
         className={`
           relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all
           ${
             isDragging
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+              ? 'border-amber-400/50 bg-amber-400/10'
+              : 'border-gray-600/50 hover:border-gray-500 hover:bg-gray-800/30'
           }
           ${uploadProgress !== null ? 'pointer-events-none' : ''}
         `}
@@ -110,7 +108,7 @@ export const AudioUpload = ({ onUploadSuccess }: AudioUploadProps) => {
       >
         {uploadProgress !== null ? (
           <div className="space-y-4">
-            <div className="text-blue-600">
+            <div className="text-amber-400">
               <svg
                 className="w-12 h-12 mx-auto animate-spin"
                 fill="none"
@@ -134,12 +132,12 @@ export const AudioUpload = ({ onUploadSuccess }: AudioUploadProps) => {
               </svg>
             </div>
             <div>
-              <div className="text-sm text-gray-600 mb-2">
+              <div className="text-sm text-gray-300 mb-2">
                 Uploading... {uploadProgress}%
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-700/50 rounded-full h-2">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  className="bg-amber-400 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -165,10 +163,10 @@ export const AudioUpload = ({ onUploadSuccess }: AudioUploadProps) => {
               </svg>
             </div>
             <div>
-              <p className="text-lg font-medium text-gray-900">
+              <p className="text-lg font-medium text-gray-200">
                 {isDragging ? 'Drop your audio file here' : 'Upload Audio File'}
               </p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-400 mt-1">
                 Drag & drop or click to select • MP3, WAV, OGG, AAC, FLAC, M4A •
                 Max 50MB
               </p>

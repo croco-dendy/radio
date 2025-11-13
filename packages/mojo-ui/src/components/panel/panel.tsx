@@ -15,6 +15,7 @@ interface PanelProps {
   maxColumns?: number;
   title?: string;
   subtitle?: string;
+  decorated?: boolean;
 }
 
 export const Panel: FC<PanelProps> = ({
@@ -25,15 +26,31 @@ export const Panel: FC<PanelProps> = ({
   maxColumns = 4,
   title,
   subtitle,
+  decorated = true,
 }) => {
-  const contentClassName = responsive
-    ? `${styles.content} ${styles[`maxColumns${maxColumns}`]}`
-    : styles.contentSingleColumn;
+  const isSingleSection = sections.length === 1;
+  const shouldUseFlexLayout =
+    !decorated && isSingleSection ? true : !responsive;
+  const contentClassName = shouldUseFlexLayout
+    ? styles.contentSingleColumn
+    : `${styles.content} ${styles[`maxColumns${maxColumns}`]}`;
 
   return (
-    <div className={clsx(styles.panel, minHeight, className)}>
-      <div className={styles.baseLayer} />
-      <div className={styles.innerField} />
+    <div
+      className={clsx(
+        styles.panel,
+        !decorated && styles.panelPlain,
+        isSingleSection && styles.panelSingleSection,
+        minHeight,
+        className,
+      )}
+    >
+      {decorated && (
+        <>
+          <div className={styles.baseLayer} />
+          <div className={styles.innerField} />
+        </>
+      )}
 
       {(title || subtitle) && (
         <div className={styles.header}>
@@ -41,14 +58,48 @@ export const Panel: FC<PanelProps> = ({
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>
       )}
-      <div className={contentClassName}>
+      <div
+        className={clsx(
+          contentClassName,
+          isSingleSection && styles.contentSingleSection,
+        )}
+      >
         {sections.map((section) => (
-          <div key={section.title} className={styles.section}>
-            <div className={styles.sectionBorder}>
-              <div className={styles.sectionTitle}>
-                <span className={styles.sectionTitleText}>{section.title}</span>
+          <div
+            key={section.title}
+            className={clsx(
+              styles.section,
+              isSingleSection && styles.sectionFullWidth,
+            )}
+          >
+            <div
+              className={clsx(
+                styles.sectionBorder,
+                !decorated && styles.sectionBorderPlain,
+              )}
+            >
+              {!decorated && isSingleSection && (
+                <div className={styles.sectionTitlePlain}>
+                  <span className={styles.sectionTitleTextPlain}>
+                    {section.title}
+                  </span>
+                </div>
+              )}
+              {decorated && (
+                <div className={styles.sectionTitle}>
+                  <span className={styles.sectionTitleText}>
+                    {section.title}
+                  </span>
+                </div>
+              )}
+              <div
+                className={clsx(
+                  styles.sectionContent,
+                  !decorated && styles.sectionContentPlain,
+                )}
+              >
+                {section.content}
               </div>
-              <div className={styles.sectionContent}>{section.content}</div>
             </div>
           </div>
         ))}

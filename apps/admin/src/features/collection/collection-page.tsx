@@ -1,114 +1,163 @@
 import { useState } from 'react';
-import clsx from 'clsx';
-import { PageLayout, StatsCard, Button } from '@radio/mojo-ui';
-import { sharedStyles } from '@/styles/shared-styles';
-import { useUserCollections } from '@/services/api';
+import { PageLayout, VinylTabs } from '@radio/mojo-ui';
+import { useUserCollections, useUserAlbums } from '@/services/api';
 import {
-  CollectionList,
   CreateCollectionModal,
   CollectionDetail,
+  CollectionContentArea,
+  CollectionSidebar,
+  DetailModal,
+  CreateAlbumModal,
+  AlbumDetail,
 } from './components';
 import type { Collection } from '@radio/types';
+import { useCollectionStore } from './store/collection-store';
+import { useCollectionStats } from './hooks';
 
 export const CollectionPage = () => {
-  const { data: collections } = useUserCollections();
   const [selectedCollection, setSelectedCollection] =
     useState<Collection | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  // Note: We'd need to fetch collection details to get actual track counts
-  // const totalTracks = collections?.reduce((sum) => sum + 1, 0) || 0;
+  const { data: collections } = useUserCollections();
+  const { data: albums, refetch: refetchAlbums } = useUserAlbums();
+
+  const {
+    activeTab,
+    searchQuery,
+    filters,
+    sortBy,
+    sortOrder,
+    selectedAlbum,
+    showCreateAlbumModal,
+    showEditAlbumModal,
+    showCreateCollectionModal,
+    setActiveTab,
+    setSelectedAlbum,
+    setShowCreateAlbumModal,
+    setShowEditAlbumModal,
+    setShowCreateCollectionModal,
+  } = useCollectionStore();
+
+  const {
+    genreCounts,
+    overallCompleteness,
+    lastUpdated,
+    publicCount: publicAlbums,
+    totalCount: totalAlbums,
+    getCompletenessVariant,
+  } = useCollectionStats(activeTab === 'albums' ? albums : undefined);
 
   const publicCollections = collections?.filter((c) => c.isPublic).length || 0;
 
+  const tabs = [
+    { id: 'albums' as const, label: 'Альбоми' },
+    { id: 'playlists' as const, label: 'Плейлисти' },
+  ];
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId as 'playlists' | 'albums');
+    setSelectedCollection(null);
+  };
+
+  const statsData =
+    activeTab === 'playlists'
+      ? {
+          total: collections?.length || 0,
+          public: publicCollections,
+        }
+      : {
+          total: totalAlbums,
+          public: publicAlbums,
+        };
+
   return (
-    <PageLayout title="Audio Collection">
-      <div className={clsx(sharedStyles.statsGrid)}>
-        <StatsCard
-          title="Collections"
-          value={collections?.length?.toString() || '0'}
-        />
-        <StatsCard
-          title="Public Collections"
-          value={publicCollections.toString()}
-        />
-        <StatsCard title="Total Items" value="Loading..." />
-      </div>
-
-      <div className={clsx(sharedStyles.actionsSection)}>
-        <h2 className={clsx(sharedStyles.actionsTitle)}>Collection Actions</h2>
-        <div className={clsx(sharedStyles.actionsGrid)}>
-          <Button
-            variant="green"
-            size="medium"
-            title="Create Collection"
-            onClick={() => setShowCreateModal(true)}
+    <>
+      <PageLayout
+        title="Колекція"
+        headerRight={
+          <VinylTabs
+            tabs={tabs}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
           />
-          <Button
-            variant="yellow"
-            size="medium"
-            title="View All Collections"
-            onClick={() => setSelectedCollection(null)}
+        }
+      >
+        <div className="flex gap-6 h-[calc(100vh-12rem)] pb-28">
+          <CollectionSidebar
+            albums={albums || []}
+            genreCounts={genreCounts}
+            totalCount={statsData.total}
+            publicCount={statsData.public}
+            lastUpdated={lastUpdated}
+            overallCompleteness={overallCompleteness}
+            getCompletenessVariant={getCompletenessVariant}
+          />
+
+          <CollectionContentArea
+            activeTab={activeTab}
+            onCollectionClick={setSelectedCollection}
+            onAlbumClick={setSelectedAlbum}
+            onAlbumEdit={(album) => {
+              setSelectedAlbum(album);
+              setShowEditAlbumModal(true);
+            }}
+            onAlbumDelete={() => {
+              refetchAlbums();
+            }}
+            searchQuery={searchQuery}
+            filters={filters}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
           />
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        {/* Collections List */}
-        <div className="lg:col-span-1">
-          <div className="rounded-2xl bg-gray-900/30 backdrop-blur-2xl border border-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-300 hover:bg-gray-900/40 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/3 before:to-transparent before:pointer-events-none">
-            <h3 className="text-lg font-display font-semibold text-gray-200 uppercase tracking-wide mb-4">
-              Your Collections
-            </h3>
-            <CollectionList
-              onSelectCollection={setSelectedCollection}
-              selectedCollectionId={selectedCollection?.id}
-            />
-          </div>
-        </div>
-
-        {/* Collection Detail */}
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl bg-gray-900/30 backdrop-blur-2xl border border-white/5 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)] transition-all duration-300 hover:bg-gray-900/40 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-br before:from-white/3 before:to-transparent before:pointer-events-none">
-            {selectedCollection ? (
+        {activeTab === 'playlists' && (
+          <DetailModal
+            title={selectedCollection?.name || ''}
+            onClose={() => setSelectedCollection(null)}
+            isOpen={!!selectedCollection}
+          >
+            {selectedCollection && (
               <CollectionDetail collection={selectedCollection} />
-            ) : (
-              <div className="text-center py-12 text-gray-400">
-                <svg
-                  className="w-16 h-16 mx-auto mb-4 text-gray-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  role="img"
-                  aria-label="Select collection"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                  />
-                </svg>
-                <h3 className="text-lg font-medium text-gray-200 mb-2">
-                  Select a Collection
-                </h3>
-                <p className="text-gray-400">
-                  Choose a collection from the left to view and manage its audio
-                  files.
-                </p>
-              </div>
             )}
-          </div>
-        </div>
-      </div>
+          </DetailModal>
+        )}
 
-      <CreateCollectionModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSuccess={() => {
-          // Optionally select the newly created collection
-        }}
-      />
-    </PageLayout>
+        {activeTab === 'albums' && selectedAlbum && !showEditAlbumModal && (
+          <DetailModal
+            title={selectedAlbum.title}
+            onClose={() => setSelectedAlbum(null)}
+            isOpen={!!selectedAlbum}
+          >
+            <AlbumDetail album={selectedAlbum} />
+          </DetailModal>
+        )}
+
+        <CreateCollectionModal
+          isOpen={showCreateCollectionModal}
+          onClose={() => setShowCreateCollectionModal(false)}
+          onSuccess={() => setShowCreateCollectionModal(false)}
+        />
+
+        <CreateAlbumModal
+          isOpen={showCreateAlbumModal}
+          onClose={() => setShowCreateAlbumModal(false)}
+          onSuccess={() => setShowCreateAlbumModal(false)}
+        />
+
+        {showEditAlbumModal && selectedAlbum && (
+          <DetailModal
+            title={`Редагувати: ${selectedAlbum.title}`}
+            onClose={() => {
+              setShowEditAlbumModal(false);
+              setSelectedAlbum(null);
+            }}
+            isOpen={showEditAlbumModal}
+          >
+            <AlbumDetail album={selectedAlbum} />
+          </DetailModal>
+        )}
+      </PageLayout>
+    </>
   );
 };

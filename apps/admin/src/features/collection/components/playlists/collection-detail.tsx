@@ -6,7 +6,7 @@ import {
   useRemoveItemFromCollection,
   collectionApi,
 } from '@/services/api';
-import { AudioUpload } from './audio-upload';
+import { AudioUpload } from '../shared';
 import type { Collection } from '@radio/types';
 
 type CollectionDetailProps = {
@@ -69,12 +69,12 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 bg-gray-100 rounded animate-pulse" />
+        <div className="h-8 bg-gray-800/30 rounded animate-pulse" />
         <div className="space-y-3">
           {Array.from({ length: 3 }, () => (
             <div
               key={`detail-skeleton-${Math.random().toString(36).substr(2, 9)}`}
-              className="h-16 bg-gray-100 rounded animate-pulse"
+              className="h-16 bg-gray-800/30 rounded animate-pulse"
             />
           ))}
         </div>
@@ -83,18 +83,18 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
   }
 
   if (!collectionWithItems) {
-    return <div className="text-gray-500">Collection not found</div>;
+    return <div className="text-gray-400">Collection not found</div>;
   }
 
   return (
     <div className="space-y-6">
       {/* Collection Header */}
-      <div className="border-b pb-4">
-        <h2 className="text-2xl font-bold text-gray-900">
+      <div className="border-b border-gray-700/50 pb-4">
+        <h2 className="text-2xl font-bold text-gray-200">
           {collectionWithItems.name}
         </h2>
         {collectionWithItems.description && (
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-400 mt-2">
             {collectionWithItems.description}
           </p>
         )}
@@ -102,8 +102,8 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
           <span
             className={`px-2 py-1 rounded-full text-xs ${
               collectionWithItems.isPublic
-                ? 'bg-green-100 text-green-800'
-                : 'bg-gray-100 text-gray-800'
+                ? 'bg-green-900/30 text-green-400'
+                : 'bg-gray-700/50 text-gray-400'
             }`}
           >
             {collectionWithItems.isPublic ? 'Public' : 'Private'}
@@ -119,11 +119,11 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
       {/* Upload Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Audio Files</h3>
+          <h3 className="text-lg font-semibold text-gray-200">Audio Files</h3>
           <button
             type="button"
             onClick={() => setShowUpload(!showUpload)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors"
           >
             {showUpload ? 'Cancel Upload' : 'Add Audio'}
           </button>
@@ -143,7 +143,7 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
       {/* Audio Files List */}
       <div className="space-y-3">
         {collectionWithItems.items?.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-400">
             No audio files in this collection yet.
           </div>
         ) : (
@@ -153,11 +153,11 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="flex items-center gap-4 p-4 bg-white border rounded-lg hover:shadow-sm transition-shadow"
+              className="flex items-center gap-4 p-4 bg-gray-800/30 border border-gray-700/50 rounded-lg hover:bg-gray-800/50 transition-colors"
             >
-              <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <div className="flex-shrink-0 w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-gray-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -174,7 +174,7 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
               </div>
 
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-gray-900 truncate">
+                <h4 className="font-medium text-gray-200 truncate">
                   {item.name}
                 </h4>
                 <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
@@ -195,7 +195,7 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
                     );
                     window.open(url, '_blank');
                   }}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                  className="p-2 text-gray-400 hover:text-gray-300 hover:bg-gray-700/50 rounded transition-colors"
                   title="Play/Download"
                 >
                   ▶️
@@ -203,7 +203,7 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
                 <button
                   type="button"
                   onClick={() => handleRemoveItem(item.audioFileId, item.name)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                  className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-900/20 rounded transition-colors"
                   title="Remove from collection"
                 >
                   🗑️

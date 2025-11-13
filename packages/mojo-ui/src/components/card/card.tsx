@@ -38,9 +38,12 @@ export const Card: FC<CardProps> = ({
 
         <div className={styles.content}>{children}</div>
 
-        {actions && <div className={styles.actions}>{actions}</div>}
-
-        {footer && <div className={styles.footer}>{footer}</div>}
+        {(actions || footer) && (
+          <div className={styles.footerActions}>
+            {footer && <div className={styles.footer}>{footer}</div>}
+            {actions && <div className={styles.actions}>{actions}</div>}
+          </div>
+        )}
 
         {(actions || footer) && (
           <div className={styles.ventilation}>

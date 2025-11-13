@@ -38,7 +38,9 @@ export class AuthService {
 
   async requireOwnership(accountId: number, resourceOwnerId: number) {
     if (accountId !== resourceOwnerId) {
-      throw new Error('Forbidden');
+      const error = new Error('Access denied: You do not own this resource');
+      (error as Error & { statusCode: number }).statusCode = 403;
+      throw error;
     }
   }
 }

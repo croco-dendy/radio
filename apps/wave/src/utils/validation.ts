@@ -56,3 +56,54 @@ export const collectionSchemas = {
     ),
   }),
 };
+
+export const albumSchemas = {
+  create: z.object({
+    title: z.string().min(1).max(200),
+    artist: z.string().min(1).max(200),
+    year: z.number().int().min(1900).max(2100).optional(),
+    description: z.string().max(1000).optional(),
+    tags: z.string().optional(),
+    isPublic: z.boolean().optional().default(false),
+  }),
+
+  update: z.object({
+    title: z.string().min(1).max(200).optional(),
+    artist: z.string().min(1).max(200).optional(),
+    year: z.number().int().min(1900).max(2100).optional(),
+    description: z.string().max(1000).optional(),
+    tags: z.string().optional(),
+    isPublic: z.boolean().optional(),
+  }),
+
+  filter: z.object({
+    artist: z.string().optional(),
+    year: z.coerce.number().int().optional(),
+    tags: z.string().optional(),
+    search: z.string().optional(),
+  }),
+};
+
+export const songSchemas = {
+  addToAlbum: z.object({
+    audioFileId: z.number().int().positive(),
+    trackNumber: z.number().int().min(1),
+    title: z.string().min(1).max(200),
+    artist: z.string().max(200).optional(),
+  }),
+
+  update: z.object({
+    trackNumber: z.number().int().min(1).optional(),
+    title: z.string().min(1).max(200).optional(),
+    artist: z.string().max(200).optional(),
+  }),
+
+  reorder: z.object({
+    songs: z.array(
+      z.object({
+        id: z.number().int().positive(),
+        trackNumber: z.number().int().min(1),
+      }),
+    ),
+  }),
+};

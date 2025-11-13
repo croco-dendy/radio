@@ -1,6 +1,6 @@
 import type { UseMutationResult } from '@tanstack/react-query';
 import type { TelegramServiceStats, RtmpServiceStats } from '@radio/types';
-import { ServiceControlCard, StatsGrid } from '@/components/shared';
+import { Card, Button, StatusIndicator, StatsGrid } from '@radio/mojo-ui';
 import { InlineServiceAlert } from './inline-service-alert';
 
 interface StatItem {
@@ -221,33 +221,47 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
 
   const dependencyAlert = getDependencyAlert();
 
-  const actions = [
-    {
-      label: isRunning ? 'Stop' : 'Start',
-      variant: isRunning ? ('yellow' as const) : ('green' as const),
-      onClick: () => {
-        if (isRunning) {
-          mutations.stop.mutate(undefined);
-        } else {
-          mutations.start.mutate(undefined);
-        }
-      },
-      disabled: isLoading,
-    },
-    {
-      label: 'Restart',
-      variant: 'yellow' as const,
-      onClick: () => mutations.restart.mutate(undefined),
-      disabled: isLoading || !isRunning,
-    },
-  ];
+  const statusValue =
+    daemonStatus === 'error'
+      ? 'error'
+      : daemonStatus === 'initializing'
+        ? 'initializing'
+        : isRunning
+          ? 'running'
+          : 'stopped';
 
   return (
-    <ServiceControlCard
+    <Card
       title="Telegram Stream"
-      isRunning={isRunning}
-      status={daemonStatus}
-      actions={actions}
+      footer={<StatusIndicator status={statusValue} />}
+      actions={[
+        {
+          label: isRunning ? 'Stop' : 'Start',
+          variant: isRunning ? ('yellow' as const) : ('green' as const),
+          onClick: () => {
+            if (isRunning) {
+              mutations.stop.mutate(undefined);
+            } else {
+              mutations.start.mutate(undefined);
+            }
+          },
+          disabled: isLoading,
+        },
+        {
+          label: 'Restart',
+          variant: 'yellow' as const,
+          onClick: () => mutations.restart.mutate(undefined),
+          disabled: isLoading || !isRunning,
+        },
+      ].map((action) => (
+        <Button
+          key={action.label}
+          variant={action.variant}
+          title={action.label}
+          onClick={action.onClick}
+          disabled={action.disabled}
+        />
+      ))}
     >
       <StatsGrid stats={getServiceStats()} columns={2} />
       {dependencyAlert && (
@@ -259,6 +273,6 @@ export const TelegramServiceCard: React.FC<TelegramServiceCardProps> = ({
           />
         </div>
       )}
-    </ServiceControlCard>
+    </Card>
   );
 };

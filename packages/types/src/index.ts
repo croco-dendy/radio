@@ -91,6 +91,33 @@ export interface StreamConfig {
   updatedAt: string;
 }
 
+export interface Album {
+  id: number;
+  title: string;
+  artist: string;
+  year: number | null;
+  coverArtPath: string | null;
+  description: string | null;
+  tags: string | null;
+  isPublic: number;
+  ownerId: number;
+  createdAt: string;
+  updatedAt: string;
+  songCount?: number;
+}
+
+export interface Song {
+  id: number;
+  albumId: number;
+  audioFileId: number;
+  trackNumber: number;
+  title: string;
+  artist: string | null;
+  duration: string;
+  format: string;
+  createdAt: string;
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;

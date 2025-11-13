@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 $fonts: (
-  'KyivType Serif': (
-    500: 'KyivTypeSerif-Medium',
+  'KyivType Serif': (500: 'KyivTypeSerif-Medium',
     600: 'KyivTypeSerif-Bold',
     800: 'KyivTypeSerif-Heavy',
   ),
-  'KyivType Sans': (
-    500: 'KyivTypeSans-Medium',
+  'KyivType Sans': (500: 'KyivTypeSans-Medium',
     600: 'KyivTypeSans-Bold',
     800: 'KyivTypeSans-Heavy',
+  ),
+  'Tiny5': (400: 'tiny5-latin-400-normal',
   ),
 );
 
@@ -43,3 +43,6 @@ pre {
   font-family: 'JetBrains Mono', monospace;
 }
 
+// Tiny5 font is loaded via @fontsource/tiny5 in consuming apps
+// The @fontsource package automatically injects @font-face declarations
+// Font-family name: 'Tiny5'

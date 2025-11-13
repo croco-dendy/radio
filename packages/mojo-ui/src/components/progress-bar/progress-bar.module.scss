@@ -3,6 +3,11 @@
 
 .container {
   width: fit-content;
+  max-width: 100%;
+
+  &:global(.w-full) {
+    width: 100%;
+  }
 }
 
 .header {
@@ -11,6 +16,7 @@
   align-items: center;
   margin-bottom: 0.5rem;
   min-width: 100px;
+  width: 100%;
 }
 
 .labelText {
@@ -27,6 +33,10 @@
 .wrapper {
   position: relative;
   border-radius: $border-radius-full;
+
+  .container:global(.w-full) & {
+    width: 100%;
+  }
 
   &.small {
     height: 12px;
@@ -81,6 +91,11 @@
   justify-content: flex-start;
   padding: 0 8px;
   gap: 8px;
+
+  .container:global(.w-full) & {
+    justify-content: space-between;
+    gap: 0;
+  }
 
   .small & {
     gap: 6px;

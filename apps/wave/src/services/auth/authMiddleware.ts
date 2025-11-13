@@ -11,12 +11,19 @@ export const authMiddleware = async (
 ) => {
   const authHeader = c.req.header('Authorization');
   if (!authHeader?.startsWith('Bearer ')) {
-    return c.json({ error: 'Unauthorized' }, 401);
+    return c.json({ success: false, error: 'Unauthorized' }, 401);
   }
 
   const token = authHeader.substring(7);
-  const accountId = await accountService.validateSession(token);
-
-  c.set('accountId', accountId);
-  await next();
+  
+  try {
+    const accountId = await accountService.validateSession(token);
+    c.set('accountId', accountId);
+    await next();
+  } catch (error) {
+    return c.json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Invalid or expired token' 
+    }, 401);
+  }
 };

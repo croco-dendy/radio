@@ -76,6 +76,34 @@ export const streamConfigs = sqliteTable('stream_configs', {
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
+export const albums = sqliteTable('albums', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  artist: text('artist').notNull(),
+  year: integer('year'),
+  coverArtPath: text('cover_art_path'),
+  description: text('description'),
+  tags: text('tags'),
+  isPublic: integer('is_public').default(0),
+  ownerId: integer('owner_id')
+    .notNull()
+    .references(() => accounts.id, { onDelete: 'cascade' }),
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+});
 
-
-
+export const songs = sqliteTable('songs', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  albumId: integer('album_id')
+    .notNull()
+    .references(() => albums.id, { onDelete: 'cascade' }),
+  audioFileId: integer('audio_file_id')
+    .notNull()
+    .references(() => audioFiles.id, { onDelete: 'cascade' }),
+  trackNumber: integer('track_number').notNull(),
+  title: text('title').notNull(),
+  artist: text('artist'),
+  duration: text('duration').notNull(),
+  format: text('format').notNull(),
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+});

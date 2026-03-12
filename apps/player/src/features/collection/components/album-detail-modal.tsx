@@ -26,14 +26,18 @@ export const AlbumDetailModal = ({ album, onClose }: AlbumDetailModalProps) => {
     <div
       className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
+      onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+      role="presentation"
     >
       <div className="bg-neutral-900 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-neutral-700">
         <div className="relative">
           <button
+            type="button"
             onClick={onClose}
             className="absolute top-4 right-4 z-10 p-2 bg-neutral-800/90 rounded-full hover:bg-neutral-700 transition-colors"
           >
             <svg
+              aria-hidden="true"
               className="w-6 h-6 text-neutral-200"
               fill="none"
               stroke="currentColor"
@@ -63,6 +67,7 @@ export const AlbumDetailModal = ({ album, onClose }: AlbumDetailModalProps) => {
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
                     <svg
+                      aria-hidden="true"
                       className="w-24 h-24 text-neutral-500"
                       fill="none"
                       stroke="currentColor"
@@ -138,6 +143,7 @@ export const AlbumDetailModal = ({ album, onClose }: AlbumDetailModalProps) => {
                           {song.duration}
                         </div>
                         <button
+                          type="button"
                           onClick={() => {
                             const url = albumApi.getAudioStreamUrl(
                               song.audioFileId,
@@ -148,6 +154,7 @@ export const AlbumDetailModal = ({ album, onClose }: AlbumDetailModalProps) => {
                           title="Play"
                         >
                           <svg
+                            aria-hidden="true"
                             className="w-5 h-5"
                             fill="currentColor"
                             viewBox="0 0 24 24"

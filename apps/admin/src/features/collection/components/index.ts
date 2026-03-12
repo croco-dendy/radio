@@ -1,4 +1,4 @@
-export * from './albums';
-export * from './playlists';
+export * from './content';
+export * from './modals';
 export * from './shared';
-export * from './ui';
+export * from './sidebar';

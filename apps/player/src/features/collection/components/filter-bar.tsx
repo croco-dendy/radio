@@ -60,6 +60,7 @@ export const FilterBar = ({
         />
 
         <button
+          type="button"
           onClick={() => setShowFilters(!showFilters)}
           className="px-6 py-3 bg-neutral-700 text-neutral-200 rounded-lg hover:bg-neutral-600 transition-colors font-medium"
         >
@@ -87,10 +88,11 @@ export const FilterBar = ({
         <div className="mt-6 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label htmlFor="filter-artist" className="block text-sm font-medium text-neutral-300 mb-2">
                 Artist
               </label>
               <select
+                id="filter-artist"
                 value={filters.artist}
                 onChange={(e) =>
                   onFiltersChange({ ...filters, artist: e.target.value })
@@ -107,10 +109,11 @@ export const FilterBar = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label htmlFor="filter-year" className="block text-sm font-medium text-neutral-300 mb-2">
                 Year
               </label>
               <select
+                id="filter-year"
                 value={filters.year || ''}
                 onChange={(e) =>
                   onFiltersChange({
@@ -131,12 +134,13 @@ export const FilterBar = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-300 mb-2">
+            <span className="block text-sm font-medium text-neutral-300 mb-2">
               Genres
-            </label>
+            </span>
             <div className="flex flex-wrap gap-2">
               {PREDEFINED_TAGS.map((tag) => (
                 <button
+                  type="button"
                   key={tag}
                   onClick={() => toggleTag(tag)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
@@ -156,6 +160,7 @@ export const FilterBar = ({
             filters.year ||
             filters.tags.length > 0) && (
             <button
+              type="button"
               onClick={() =>
                 onFiltersChange({
                   search: '',

@@ -3,7 +3,7 @@ import type { Album } from '@radio/types';
 import {
   extractGenresFromAlbums,
   calculateOverallCompleteness,
-} from '../utils/album-helpers';
+} from '@/features/collection/utils/album-helpers';
 
 export const useCollectionStats = (albums: Album[] | undefined) => {
   const genreCounts = useMemo(() => {

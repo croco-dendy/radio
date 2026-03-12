@@ -4,12 +4,12 @@ Retro styled components library for Radio project.
 
 ## Features
 
-- 🎨 **Retro Design** - Beautiful 3D buttons with chunky bases and glowing effects
-- 🎯 **TypeScript** - Full TypeScript support with strict typing
-- 🎭 **Accessible** - ARIA labels and keyboard navigation
-- 🎪 **Customizable** - Multiple variants and sizes
-- 🎬 **Animated** - Smooth hover and press animations with glow effects
-- 📐 **Layout Components** - Reusable containers and panels
+- **Retro Design** - 3D buttons with chunky bases and glowing effects
+- **TypeScript** - Full TypeScript support with strict typing
+- **Accessible** - ARIA labels and keyboard navigation
+- **Customizable** - Multiple variants and sizes
+- **Animated** - Smooth hover and press animations with glow effects
+- **SCSS Modules** - Scoped styling with SCSS modules
 
 ## Components
 
@@ -38,26 +38,23 @@ import { IconButton, CheckIcon } from '@radio/mojo-ui';
 </IconButton>
 ```
 
+#### Input
+Text input with retro styling.
+
+```tsx
+import { Input } from '@radio/mojo-ui';
+
+<Input placeholder="Search..." />
+```
+
 #### Switch
-Toggle switches with animated state transitions and state-based coloring.
+Toggle switches with animated state transitions.
 
 ```tsx
 import { Switch } from '@radio/mojo-ui';
 
-<Switch 
-  variant="green"
-  size="medium"
-  checked={isOn}
-  onChange={setIsOn}
-/>
+<Switch variant="green" size="medium" checked={isOn} onChange={setIsOn} />
 ```
-
-Features:
-- Color activates only in ON position
-- Gray/disabled state when OFF
-- Smooth animations and hover glow
-- O/I labels with center divider
-- All 4 variants with color-coded states
 
 ### Layout Components
 
@@ -72,16 +69,49 @@ import { PageLayout } from '@radio/mojo-ui';
 </PageLayout>
 ```
 
-#### PanelCard
+#### Panel
 Flexible container for organizing content sections.
 
 ```tsx
-import { PanelCard } from '@radio/mojo-ui';
+import { Panel } from '@radio/mojo-ui';
 
-<PanelCard title="Service Status" footer={<StatusIndicator />}>
+<Panel title="Service Status">
   {/* Content */}
-</PanelCard>
+</Panel>
 ```
+
+#### Card
+Basic card container.
+
+```tsx
+import { Card } from '@radio/mojo-ui';
+
+<Card>{/* Content */}</Card>
+```
+
+#### Modal
+Animated modal dialog with backdrop.
+
+```tsx
+import { Modal } from '@radio/mojo-ui';
+
+<Modal isOpen={isOpen} onClose={handleClose} title="Edit Item">
+  {/* Content */}
+</Modal>
+```
+
+#### Popup & PopupItem
+Dropdown popup menu.
+
+```tsx
+import { Popup, PopupItem } from '@radio/mojo-ui';
+
+<Popup trigger={<Button title="Menu" />}>
+  <PopupItem onClick={handleAction}>Action</PopupItem>
+</Popup>
+```
+
+### Data Display
 
 #### StatsCard
 Display individual statistics with title and value.
@@ -90,6 +120,21 @@ Display individual statistics with title and value.
 import { StatsCard } from '@radio/mojo-ui';
 
 <StatsCard title="Active Users" value={2543} />
+```
+
+#### StatsGrid
+Display multiple statistics in a configurable grid.
+
+```tsx
+import { StatsGrid } from '@radio/mojo-ui';
+
+<StatsGrid
+  columns={3}
+  stats={[
+    { label: 'CPU', value: 45, suffix: '%' },
+    { label: 'Memory', value: 2048, suffix: 'MB' },
+  ]}
+/>
 ```
 
 #### StatusIndicator
@@ -103,37 +148,51 @@ import { StatusIndicator } from '@radio/mojo-ui';
 
 **Statuses:** `running`, `stopped`, `error`, `initializing`
 
-#### StatsGrid
-Display multiple statistics in a configurable grid.
+#### ProgressBar
+Visual progress indicator.
 
 ```tsx
-import { StatsGrid } from '@radio/mojo-ui';
+import { ProgressBar } from '@radio/mojo-ui';
 
-<StatsGrid 
-  columns={3}
-  stats={[
-    { label: 'CPU', value: 45, suffix: '%' },
-    { label: 'Memory', value: 2048, suffix: 'MB' },
-    { label: 'Uptime', value: '45 days' },
-  ]}
-/>
+<ProgressBar value={75} />
+```
+
+### Navigation
+
+#### Tabs
+Standard tab navigation.
+
+```tsx
+import { Tabs } from '@radio/mojo-ui';
+```
+
+#### VinylTabs
+Themed tab navigation with vinyl record styling.
+
+```tsx
+import { VinylTabs } from '@radio/mojo-ui';
 ```
 
 ### Icons
 
-Pre-built SVG icons available:
-
 ```tsx
-import { CheckIcon, PlusIcon, SearchIcon, MenuIcon, SettingsIcon, CloseIcon } from '@radio/mojo-ui';
+import {
+  CheckIcon,
+  CloseIcon,
+  PlusIcon,
+  SearchIcon,
+  MenuIcon,
+  SettingsIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  SortIcon,
+  FilterIcon,
+} from '@radio/mojo-ui';
 ```
 
-## Showcase / Demo Website
+## Showcase
 
-The showcase is a **temporary development website** included in this package for previewing all components during development.
-
-> **⚠️ Future Migration:** This showcase will be moved to a **separate repository** when the mojo-ui library is eventually extracted as a standalone package. For now, it's included here for convenience.
-
-### Running the Showcase
+The package includes a development showcase for previewing all components.
 
 ```bash
 # From root of the monorepo
@@ -141,57 +200,18 @@ pnpm mojo:dev
 # Open http://localhost:3010
 ```
 
-Or directly:
-```bash
-cd packages/mojo-ui
-pnpm dev
-# Open http://localhost:3010
-```
-
-Features:
-- Interactive component preview
-- All variants and sizes displayed
-- Live state management for switches
-- Layout component examples
-- Design system reference
-
-**Build Note:** The showcase (`src/main.tsx` and `index.html`) is excluded from the library bundle. Only components exported from `src/index.ts` are included in the built package.
-
 ## Installation
 
-This package is part of the Radio monorepo and should be installed as a workspace dependency.
+This package is part of the Radio monorepo and is used as a workspace dependency.
 
-```bash
-pnpm add @radio/mojo-ui
-```
-
-## Usage in Projects
-
-```tsx
-import { Button, Switch, PageLayout, StatsCard } from '@radio/mojo-ui';
-
-export const MyPage = () => (
-  <PageLayout title="Dashboard">
-    <div className="grid grid-cols-4 gap-4">
-      <StatsCard title="Users" value={150} />
-      <StatsCard title="Active" value={89} />
-    </div>
-    
-    <Button 
-      variant="green" 
-      size="medium" 
-      title="Start" 
-      onClick={() => alert('Started!')} 
-    />
-  </PageLayout>
-);
+```json
+"@radio/mojo-ui": "workspace:*"
 ```
 
 ## Styling Requirements
 
-The components require Tailwind CSS. Make sure your project has tailwind configured.
+Components use SCSS modules internally and require Tailwind CSS in the consuming project.
 
 ## License
 
 MIT
-

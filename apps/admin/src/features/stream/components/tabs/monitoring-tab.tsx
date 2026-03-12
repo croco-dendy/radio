@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Card, StatsCard, StatsGrid, StatusIndicator } from '@radio/mojo-ui';
+import { StatsCard } from '@radio/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
 import { TelegramServiceCard, RtmpServiceCard } from '../cards';
 import type { MonitoringData } from '@radio/types';

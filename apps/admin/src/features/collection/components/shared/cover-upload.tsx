@@ -67,6 +67,7 @@ export const CoverUpload = ({ albumId, onSuccess }: CoverUploadProps) => {
 
   return (
     <div className="w-full">
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: drop zone delegates click to hidden file input */}
       <div
         className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
           isDragging
@@ -101,6 +102,7 @@ export const CoverUpload = ({ albumId, onSuccess }: CoverUploadProps) => {
         ) : (
           <>
             <svg
+              aria-hidden="true"
               className="w-12 h-12 mx-auto mb-4 text-gray-400"
               fill="none"
               stroke="currentColor"

@@ -6,6 +6,7 @@ export { IconButton } from './components/icon-button';
 export { Modal } from './components/modal';
 export type { ModalProps } from './components/modal';
 export { Panel } from './components/panel';
+export { Popup, PopupItem } from './components/popup';
 export { Input } from './components/input';
 export { ProgressBar } from './components/progress-bar';
 export { StatsCard } from './components/stats-card';

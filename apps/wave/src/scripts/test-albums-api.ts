@@ -45,7 +45,7 @@ const testAlbumsAPI = async () => {
     if (albumByIdResponse.status === 404) {
       log.warn('Album with ID 1 not found (expected if no albums exist yet)');
     } else if (albumByIdResponse.ok) {
-      log.success(`Album fetched successfully`);
+      log.success('Album fetched successfully');
     } else {
       log.warn(`Status ${albumByIdResponse.status}`);
     }

@@ -7,8 +7,8 @@ This guide covers all environment configuration for the Radio Streaming Platform
 ### Wave Backend (`apps/wave/.env`)
 ```env
 # Server Configuration
-PORT=6970
-SOCKET_PORT=6971
+PORT=6870
+SOCKET_PORT=6871
 NODE_ENV=development
 
 # Optional: Custom paths
@@ -22,8 +22,8 @@ EXTERNAL_API_URL=https://api.example.com
 ### Admin Panel (`apps/admin/.env`)
 ```env
 # API Configuration
-VITE_API_URL=http://localhost:6970
-VITE_SOCKET_URL=ws://localhost:6971
+VITE_API_URL=http://localhost:6870
+VITE_SOCKET_URL=ws://localhost:6871
 
 # Development
 VITE_APP_ENV=development
@@ -36,8 +36,8 @@ VITE_APP_VERSION=1.0.0
 ### Player (`apps/player/.env`)
 ```env
 # API Configuration
-VITE_API_URL=http://localhost:6970
-VITE_SOCKET_URL=ws://localhost:6971
+VITE_API_URL=http://localhost:6870
+VITE_SOCKET_URL=ws://localhost:6871
 
 # Stream Configuration
 VITE_HLS_URL=http://localhost:8069/hls/stream.m3u8
@@ -205,10 +205,10 @@ LOG_MAX_FILES=5
 ### Port Configuration
 ```env
 # Port allocation
-WAVE_API_PORT=6970
-WAVE_SOCKET_PORT=6971
+WAVE_API_PORT=6870
+WAVE_SOCKET_PORT=6871
 ADMIN_PORT=3001
-FRONTEND_PORT=5173
+PLAYER_PORT=3030
 RTMP_PORT=1935
 HLS_PORT=8069
 ```
@@ -216,8 +216,8 @@ HLS_PORT=8069
 ### Firewall Configuration
 ```bash
 # UFW firewall rules
-sudo ufw allow 6970/tcp  # Wave API
-sudo ufw allow 6971/tcp  # WebSocket
+sudo ufw allow 6870/tcp  # Wave API
+sudo ufw allow 6871/tcp  # WebSocket
 sudo ufw allow 3001/tcp  # Admin Panel
 sudo ufw allow 1935/tcp  # RTMP
 sudo ufw allow 8069/tcp  # HLS
@@ -284,7 +284,7 @@ requiredEnvVars.forEach(envVar => {
 #### Port Conflicts
 ```bash
 # Check port usage
-sudo lsof -i :6970
+sudo lsof -i :6870
 sudo lsof -i :3001
 
 # Kill conflicting processes
@@ -308,7 +308,7 @@ curl -H "Origin: http://localhost:3001" \
      -H "Access-Control-Request-Method: GET" \
      -H "Access-Control-Request-Headers: X-Requested-With" \
      -X OPTIONS \
-     http://localhost:6970/api/streaming/status
+     http://localhost:6870/api/monitoring/
 ```
 
 ### Environment Debugging

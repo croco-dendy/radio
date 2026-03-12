@@ -15,7 +15,7 @@ export const albumHandlers = {
 
       const filters = {
         artist: c.req.query('artist'),
-        year: c.req.query('year') ? Number.parseInt(c.req.query('year')!) : undefined,
+        year: c.req.query('year') ? Number.parseInt(c.req.query('year') as string) : undefined,
         tags: c.req.query('tags')?.split(','),
         search: c.req.query('search'),
       };

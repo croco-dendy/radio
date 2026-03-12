@@ -10,9 +10,10 @@ export const AlbumCard = ({ album, onClick }: AlbumCardProps) => {
   const tags = album.tags ? JSON.parse(album.tags) : [];
 
   return (
-    <div
+    <button
+      type="button"
       onClick={onClick}
-      className="group cursor-pointer transition-all duration-300 hover:scale-105"
+      className="group cursor-pointer transition-all duration-300 hover:scale-105 text-left w-full"
     >
       <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow bg-neutral-800/80 backdrop-blur-sm border border-neutral-700/50">
         {album.coverArtPath ? (
@@ -27,6 +28,7 @@ export const AlbumCard = ({ album, onClick }: AlbumCardProps) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-700 to-neutral-800">
             <svg
+              aria-hidden="true"
               className="w-20 h-20 text-neutral-500"
               fill="none"
               stroke="currentColor"
@@ -75,6 +77,6 @@ export const AlbumCard = ({ album, onClick }: AlbumCardProps) => {
           </div>
         )}
       </div>
-    </div>
+    </button>
   );
 };

@@ -3,12 +3,16 @@ import type { FC, ReactNode } from 'react';
 import styles from './panel.module.scss';
 
 export interface PanelSection {
-  title: string;
+  title?: string;
+  header?: ReactNode;
   content: ReactNode;
 }
 
 interface PanelProps {
-  sections: PanelSection[];
+  sections?: PanelSection[];
+  content?: ReactNode;
+  header?: ReactNode;
+  sectionTitle?: string;
   className?: string;
   minHeight?: string;
   responsive?: boolean;
@@ -19,7 +23,10 @@ interface PanelProps {
 }
 
 export const Panel: FC<PanelProps> = ({
-  sections,
+  sections: propSections,
+  content,
+  header,
+  sectionTitle,
   className,
   minHeight = 'min-h-[400px]',
   responsive = true,
@@ -28,9 +35,13 @@ export const Panel: FC<PanelProps> = ({
   subtitle,
   decorated = true,
 }) => {
+  const sections =
+    propSections || (content ? [{ content, header, title: sectionTitle }] : []);
   const isSingleSection = sections.length === 1;
+
   const shouldUseFlexLayout =
     !decorated && isSingleSection ? true : !responsive;
+
   const contentClassName = shouldUseFlexLayout
     ? styles.contentSingleColumn
     : `${styles.content} ${styles[`maxColumns${maxColumns}`]}`;
@@ -78,14 +89,17 @@ export const Panel: FC<PanelProps> = ({
                 !decorated && styles.sectionBorderPlain,
               )}
             >
-              {!decorated && isSingleSection && (
+              {section.header && (
+                <div className={styles.sectionHeader}>{section.header}</div>
+              )}
+              {!section.header && !decorated && isSingleSection && (
                 <div className={styles.sectionTitlePlain}>
                   <span className={styles.sectionTitleTextPlain}>
                     {section.title}
                   </span>
                 </div>
               )}
-              {decorated && (
+              {!section.header && decorated && (
                 <div className={styles.sectionTitle}>
                   <span className={styles.sectionTitleText}>
                     {section.title}

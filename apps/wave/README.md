@@ -1,186 +1,135 @@
-# Wave Radio Backend
+# @radio/wave
 
-Real-time radio streaming platform with WebSocket chat, audio file management, and admin panel.
+Backend server for the Radio streaming platform. Built with Bun, Hono, and SQLite via Drizzle ORM.
 
-## 🚀 Quick Start
+## Quick Start
 
-### Development
 ```bash
-bun install
+# Install dependencies (from monorepo root)
+pnpm install
+
+# Setup database
+bun run db:migrate
+
+# Create admin user
+bun run admin
+
+# Start development server
 bun run dev
 ```
 
-### Database Setup
-```bash
-bun run db:migrate
-```
-
-### Create Admin User
-```bash
-bun run admin
-```
-Interactive script to create or promote admin users. See [Admin Setup Guide](../../docs/setup/admin-setup.md) for details.
-
-## 📋 Available Scripts
+## Scripts
 
 ### Development
-- `bun run dev` - Start development server
-- `bun run build` - Build for production
-- `bun run start` - Start production server
+
+| Script | Description |
+|--------|-------------|
+| `bun run dev` | Start dev server with hot reload |
+| `bun test` | Run tests |
+| `bun test --watch` | Run tests in watch mode |
 
 ### Database
-- `bun run db:migrate` - Run database migrations
-- `bun run db:generate` - Generate new migration
-- `bun run db:push` - Push schema changes
-- `bun run db:studio` - Open database browser
-- `bun run db:test` - Test database connection
 
-### Admin Management
-- `bun run admin` - Interactive admin creation (recommended)
-- `bun run check-users` - List all users
-- `bun run promote-admin` - Promote existing user to admin
-- `bun run create-admin` - Create new admin user
+| Script | Description |
+|--------|-------------|
+| `bun run db:migrate` | Run database migrations |
+| `bun run db:generate` | Generate new migration |
+| `bun run db:push` | Push schema changes |
+| `bun run db:studio` | Open Drizzle Studio |
+| `bun run db:test` | Test database connection |
+
+### User Management
+
+| Script | Description |
+|--------|-------------|
+| `bun run admin` | Interactive admin creation |
+| `bun run check-users` | List all users |
+| `bun run promote-admin` | Promote user to admin |
+| `bun run create-admin` | Create new admin user |
+| `bun run reset-password` | Reset user password |
+| `bun run cleanup-users` | Clean up users |
+| `bun run backup-db` | Backup database |
 
 ### Services
-- `bun run rtmp` - Start RTMP streaming server
-- `bun run telegram` - Start Telegram stream service
 
-## 🏗️ Architecture
+| Script | Description |
+|--------|-------------|
+| `bun run rtmp` | Start RTMP Docker container |
+| `bun run telegram` | Start Telegram stream daemon |
 
-### Core Features
-- **WebSocket Server**: Real-time chat and streaming
-- **REST API**: Collection and user management
-- **File Upload**: Audio file handling with metadata
-- **Authentication**: JWT-based auth with roles
-- **Database**: SQLite with Drizzle ORM
+### PM2 (Production)
 
-### Key Components
-- **Chat System**: WebSocket-based real-time chat
-- **Collection Management**: Audio file organization
-- **User Management**: Role-based access control
-- **Admin Panel**: Web-based administration interface
+| Script | Description |
+|--------|-------------|
+| `bun run pm2:start` | Start all services (production) |
+| `bun run pm2:stop` | Stop all services |
+| `bun run pm2:restart` | Restart all services |
+| `bun run pm2:logs` | View PM2 logs |
+| `bun run telegram:start` | Start Telegram daemon via PM2 |
+| `bun run telegram:stop` | Stop Telegram daemon |
 
-## 🗄️ Database Schema
+PM2 process names: `radio.wave`, `radio.telegram`
 
-### Tables
-- **accounts**: User accounts with roles
-- **collections**: Audio file collections
-- **audio_files**: Uploaded audio files with metadata
-- **collection_items**: Many-to-many collection/audio relationships
-- **sessions**: User authentication sessions
+## Architecture
 
-## 🔐 Authentication
+### Core
 
-### User Roles
-- **user**: Basic user permissions
-- **admin**: Full admin panel access
+- **Hono** - HTTP framework
+- **Drizzle ORM** - Database layer (SQLite via better-sqlite3)
+- **WebSocket (ws)** - Real-time chat and status updates
+- **Zod** - Request validation
 
-### Admin Setup
-1. Run `bun run admin` for interactive setup
-2. Choose to create new admin or promote existing user
-3. Login to admin panel at `/admin`
-
-See [Admin Setup Guide](../../docs/setup/admin-setup.md) for detailed instructions.
-
-## 🌐 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-
-### Collections
-- `GET /api/collections` - List collections
-- `POST /api/collections` - Create collection
-- `PUT /api/collections/:id` - Update collection
-- `DELETE /api/collections/:id` - Delete collection
-
-### Audio Files
-- `POST /api/audio-files/upload` - Upload audio file
-- `GET /api/audio-files/:id` - Get audio file info
-- `GET /api/audio-files/:id/stream` - Stream audio file
-- `DELETE /api/audio-files/:id` - Delete audio file
-
-### User Management (Admin only)
-- `GET /api/accounts` - List users
-- `POST /api/accounts` - Create user
-- `PUT /api/accounts/:id` - Update user
-- `DELETE /api/accounts/:id` - Delete user
-
-## 🔧 Configuration
-
-### Environment Variables
-```bash
-PORT=6870                    # Server port
-DATABASE_URL=data/wave.sqlite # Database path
-JWT_SECRET=your-secret-key   # JWT signing key
-```
-
-### File Storage
-- Audio files: `data/uploads/`
-- Database: `data/wave.sqlite`
-- Logs: `logs/`
-
-## 📁 Project Structure
+### Project Structure
 
 ```
 src/
-├── api/           # REST API routes and handlers
-├── db/            # Database schema and queries
-├── services/      # Business logic services
-├── utils/         # Utility functions
-├── ws/            # WebSocket server and handlers
-└── scripts/       # Database and admin scripts
+├── api/
+│   ├── handlers/     # Request handlers
+│   ├── routes/       # Route definitions
+│   ├── schemas/      # Zod schemas
+│   └── validators/   # Request validators
+├── db/               # Database schema, queries, migrations
+├── services/         # Business logic
+├── utils/            # Utility functions
+├── ws/               # WebSocket server
+└── scripts/          # Admin and DB scripts
 ```
 
-## 🛠️ Development
+## Database
 
-### Adding New Features
-1. Update database schema in `src/db/schema.ts`
-2. Generate migration: `bun run db:generate`
-3. Create service in `src/services/`
-4. Add API routes in `src/api/routes/`
-5. Add handlers in `src/api/handlers/`
+### Tables
 
-### Testing
-```bash
-bun test
-bun run db:test  # Test database connection
+| Table | Description |
+|-------|-------------|
+| `accounts` | User accounts with roles (user/admin) |
+| `albums` | Music albums with metadata |
+| `audio_files` | Uploaded audio files |
+| `collections` | Playlists / audio collections |
+| `collection_items` | Collection-to-audio relationships |
+| `sessions` | Authentication sessions |
+
+## API Endpoints
+
+See [API Documentation](../../docs/api/README.md) for the full reference.
+
+### Key Routes
+
+- `POST /api/auth/login` - Authentication
+- `GET/POST /api/albums` - Album management
+- `POST /api/audio-files/upload` - File uploads
+- `GET/POST /api/collections` - Playlist management
+- `GET /api/monitoring/` - System monitoring
+- `/api/stream/*` - RTMP and Telegram control
+
+## Environment Variables
+
+```env
+PORT=6870
+SOCKET_PORT=6871
 ```
 
-## 📚 Documentation
+## File Storage
 
-- [Admin Setup Guide](../../docs/setup/admin-setup.md)
-- [API Documentation](../../docs/api/README.md)
-- [Database Schema](../../docs/database/schema.md)
-
-## 🚀 Deployment
-
-### Production
-```bash
-bun run build
-bun run start
-```
-
-### PM2 (Process Manager)
-```bash
-bun run pm2:start    # Start with PM2
-bun run pm2:stop     # Stop PM2 processes
-bun run pm2:restart  # Restart PM2 processes
-bun run pm2:logs     # View PM2 logs
-```
-
-## 🔍 Troubleshooting
-
-### Common Issues
-- **Port in use**: Change PORT in environment or kill existing process
-- **Database locked**: Ensure no other processes are using the database
-- **Admin access**: Use `bun run admin` to create admin user
-
-### Logs
-- Application logs: `logs/`
-- PM2 logs: `bun run pm2:logs`
-- Database studio: `bun run db:studio`
-
----
-
-**Related**: [Admin Panel](../admin/README.md) | [Player App](../player/README.md)
+- **Audio files**: `data/uploads/`
+- **Database**: `data/wave.sqlite`
+- **Logs**: `logs/`

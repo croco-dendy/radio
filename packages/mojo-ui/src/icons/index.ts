@@ -4,3 +4,7 @@ export { SettingsIcon } from './settings';
 export { MenuIcon } from './menu';
 export { PlusIcon } from './plus';
 export { SearchIcon } from './search';
+export { ArrowUpIcon } from './arrow-up';
+export { ArrowDownIcon } from './arrow-down';
+export { SortIcon } from './sort';
+export { FilterIcon } from './filter';

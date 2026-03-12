@@ -25,22 +25,6 @@ export const CollectionLayout = () => {
   }, []);
 
   useEffect(() => {
-    applyFilters();
-  }, [albums, filters]);
-
-  const loadAlbums = async () => {
-    try {
-      setLoading(true);
-      const data = await albumApi.getPublicAlbums();
-      setAlbums(data);
-    } catch (error) {
-      console.error('Failed to load albums:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyFilters = () => {
     let filtered = [...albums];
 
     if (filters.search) {
@@ -78,7 +62,6 @@ export const CollectionLayout = () => {
           return (b.year || 0) - (a.year || 0);
         case 'title':
           return a.title.localeCompare(b.title);
-        case 'date':
         default:
           return (
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -87,6 +70,18 @@ export const CollectionLayout = () => {
     });
 
     setFilteredAlbums(filtered);
+  }, [albums, filters]);
+
+  const loadAlbums = async () => {
+    try {
+      setLoading(true);
+      const data = await albumApi.getPublicAlbums();
+      setAlbums(data);
+    } catch (error) {
+      console.error('Failed to load albums:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAlbumClick = async (album: Album) => {
@@ -118,9 +113,9 @@ export const CollectionLayout = () => {
 
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-8">
-            {Array.from({ length: 10 }, (_, i) => (
+            {Array.from({ length: 10 }, (_, i) => `s${i}`).map((id) => (
               <div
-                key={i}
+                key={id}
                 className="aspect-square bg-neutral-800/50 rounded-lg animate-pulse"
               />
             ))}

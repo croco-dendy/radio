@@ -1,5 +1,5 @@
 export type Size = 'small' | 'medium' | 'large';
-export type Variant = 'green' | 'yellow' | 'gray' | 'red';
+export type Variant = 'green' | 'yellow' | 'gray' | 'red' | 'dark';
 
 export const getSizeTextClass = (size: Size): string => {
   switch (size) {
@@ -15,11 +15,3 @@ export const getSizeTextClass = (size: Size): string => {
 export const capitalizeFirst = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
-
-
-
-
-
-
-
-

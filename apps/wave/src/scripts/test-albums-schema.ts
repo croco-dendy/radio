@@ -75,7 +75,7 @@ const testAlbumsSchema = async () => {
       .where(eq(albums.id, albumResult.id))
       .get();
 
-    console.log(`✅ Album found:`, {
+    console.log('✅ Album found:', {
       id: createdAlbum?.id,
       title: createdAlbum?.title,
       artist: createdAlbum?.artist,

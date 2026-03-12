@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
 import clsx from 'clsx';
-import type { FC, ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect } from 'react';
+import type { FC, ReactNode } from 'react';
 import { CloseIcon } from '../../icons';
 import styles from './modal.module.scss';
 

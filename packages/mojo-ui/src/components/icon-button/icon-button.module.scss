@@ -91,6 +91,11 @@
     @include apply-glow(red);
   }
 
+  &.dark {
+    @include apply-variant(disabled);
+    @include frosted-inner;
+  }
+
   &.disabled {
     @include apply-variant(disabled);
     @include frosted-inner;
@@ -107,4 +112,10 @@
   width: 100%;
   pointer-events: none;
   margin-top: 1px;
+  color: white;
+
+  svg {
+    color: white;
+    stroke: currentColor;
+  }
 }

@@ -48,7 +48,7 @@ export const TagEditor = ({ tags, onTagsChange }: TagEditorProps) => {
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-300">Tags</label>
+      <label htmlFor="custom-tag-input" className="block text-sm font-medium text-gray-300">Tags</label>
 
       <div className="flex flex-wrap gap-2">
         {PREDEFINED_TAGS.map((tag) => (
@@ -92,6 +92,7 @@ export const TagEditor = ({ tags, onTagsChange }: TagEditorProps) => {
 
       <div className="flex gap-2">
         <input
+          id="custom-tag-input"
           type="text"
           value={customTag}
           onChange={(e) => setCustomTag(e.target.value)}

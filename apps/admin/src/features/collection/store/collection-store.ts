@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import type { Album } from '@radio/types';
-import type { AlbumFilters, SortField, SortOrder } from '../utils/album-helpers';
+import type {
+  AlbumFilters,
+  SortField,
+  SortOrder,
+} from '@/features/collection/utils/album-helpers';
 
 type CollectionState = {
   activeTab: 'playlists' | 'albums';
@@ -13,6 +17,9 @@ type CollectionState = {
   showCreateAlbumModal: boolean;
   showEditAlbumModal: boolean;
   showCreateCollectionModal: boolean;
+  filtersEnabled: boolean;
+  savedSearchQuery: string;
+  savedFilters: AlbumFilters;
 };
 
 type CollectionActions = {
@@ -30,6 +37,8 @@ type CollectionActions = {
   setShowCreateCollectionModal: (show: boolean) => void;
   resetFilters: () => void;
   resetState: () => void;
+  toggleFiltersEnabled: () => void;
+  hasActiveFilters: () => boolean;
 };
 
 type CollectionStore = CollectionState & CollectionActions;
@@ -45,6 +54,9 @@ const initialState: CollectionState = {
   showCreateAlbumModal: false,
   showEditAlbumModal: false,
   showCreateCollectionModal: false,
+  filtersEnabled: true,
+  savedSearchQuery: '',
+  savedFilters: {},
 };
 
 export const useCollectionStore = create<CollectionStore>((set) => ({
@@ -60,11 +72,20 @@ export const useCollectionStore = create<CollectionStore>((set) => ({
     selectedAlbum: null,
   }),
 
-  setSearchQuery: (query) => set({ searchQuery: query }),
+  setSearchQuery: (query) =>
+    set({
+      searchQuery: query,
+      filtersEnabled: true,
+      savedSearchQuery: '',
+      savedFilters: {},
+    }),
 
   setFilters: (filters) =>
     set((state) => ({
       filters: typeof filters === 'function' ? filters(state.filters) : filters,
+      filtersEnabled: true,
+      savedSearchQuery: '',
+      savedFilters: {},
     })),
 
   setSortBy: (sortBy) => set({ sortBy }),
@@ -94,5 +115,37 @@ export const useCollectionStore = create<CollectionStore>((set) => ({
     }),
 
   resetState: () => set(initialState),
+
+  toggleFiltersEnabled: () =>
+    set((state) => {
+      if (state.filtersEnabled) {
+        return {
+          filtersEnabled: false,
+          savedSearchQuery: state.searchQuery,
+          savedFilters: state.filters,
+          searchQuery: '',
+          filters: {},
+        };
+      }
+      return {
+        filtersEnabled: true,
+        searchQuery: state.savedSearchQuery,
+        filters: state.savedFilters,
+      };
+    }),
+
+  hasActiveFilters: (): boolean => {
+    const state: CollectionState = useCollectionStore.getState();
+    const hasSearch: boolean = state.searchQuery.trim() !== '';
+    const hasGenres: boolean =
+      !!state.filters.genres && state.filters.genres.length > 0;
+    const hasOtherFilters: boolean =
+      !!state.filters.yearMin ||
+      !!state.filters.yearMax ||
+      !!state.filters.artist ||
+      !!state.filters.trackCountMin ||
+      !!state.filters.trackCountMax;
+    return hasSearch || hasGenres || hasOtherFilters;
+  },
 }));
 

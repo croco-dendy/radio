@@ -1,7 +1,13 @@
 import type React from 'react';
 
 export const PlusIcon: React.FC<{ size?: number }> = ({ size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 28 28" fill="none">
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 28 28"
+    fill="none"
+    aria-hidden="true"
+  >
     <path d="M3.50004 1.16675H2.33337V2.33341H3.50004V1.16675Z" fill="white" />
     <path d="M4.66667 2.33325H3.5V3.49992H4.66667V2.33325Z" fill="white" />
     <path d="M5.83329 3.5H4.66663V4.66667H5.83329V3.5Z" fill="white" />

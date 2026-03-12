@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { AlbumFilters } from '../utils/album-helpers';
+import type { AlbumFilters } from '@/features/collection/utils/album-helpers';
 
 export const useCollectionFilters = (filters: AlbumFilters) => {
   const hasActiveFilters = useMemo(

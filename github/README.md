@@ -1,310 +1,116 @@
-# 🎵 Radio Streaming Platform
+# Radio Streaming Platform
 
-A complete streaming solution for radio stations with live and playlist-based streaming, featuring a modern admin panel and real-time management capabilities.
+A complete streaming solution for radio stations with live and playlist-based streaming, an admin panel, and a public player interface.
 
-## 🚀 Overview
+## Overview
 
-This is a monorepo containing a full-featured radio streaming platform with:
+Monorepo containing a full-featured radio streaming platform:
 
-- **🔴 Live Streaming**: Real-time audio streaming from external sources
-- **📻 Radio Mode**: Playlist-based streaming with track management
-- **🎛️ Admin Panel**: Complete web-based control interface
-- **📱 Frontend**: Public-facing radio player interface
-- **🔧 Backend API**: RESTful API with WebSocket support
-- **📡 Telegram Integration**: Stream to Telegram channels
-- **🖥️ RTMP Server**: Docker-based streaming infrastructure
+- **Live Streaming** - Real-time audio streaming from external sources
+- **Radio Mode** - Playlist-based streaming with track management
+- **Admin Panel** - Web-based control interface for stream and collection management
+- **Player** - Public-facing radio player with chat
+- **Backend API** - RESTful API with WebSocket support
+- **Telegram Integration** - Stream to Telegram channels
+- **RTMP Server** - Docker-based streaming infrastructure
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 radio/
 ├── apps/
-│   ├── wave/          # Backend streaming server (Bun + Hono)
-│   ├── admin/         # Admin panel (React + TypeScript)
-│   └── frontend/      # Public frontend (React + Vite)
+│   ├── wave/            # Backend server (Bun + Hono + SQLite)
+│   ├── admin/           # Admin panel (React + Vite)
+│   └── player/          # Public player (React + Vite + HLS.js)
 ├── packages/
-│   └── types/         # Shared TypeScript types
-├── github/            # Documentation (this folder)
-│   ├── docs/          # Technical documentation
-│   ├── apps/          # App-specific documentation
-│   ├── setup/         # Setup and deployment guides
-│   └── api/           # API documentation
-└── scripts/           # Utility scripts
+│   ├── types/           # Shared TypeScript types
+│   └── mojo-ui/         # Retro UI component library (React + SCSS)
+├── docs/                # Documentation
+│   ├── setup/           # Setup and deployment guides
+│   ├── api/             # API documentation
+│   ├── apps/            # App-specific docs
+│   └── docs/            # Architecture and technical docs
+└── .github/             # CI/CD workflows
 ```
 
-## 🎯 Key Features
+## Tech Stack
 
-### Streaming Capabilities
-- **Dual Mode Operation**: Live streaming and playlist-based radio
-- **Real-time Control**: Start/stop streaming via web interface
-- **Track Management**: Add, edit, and delete audio tracks
-- **Now Playing**: Real-time track information display
-- **Skip Functionality**: Skip to next track in radio mode
+| Layer | Technology |
+|-------|------------|
+| Runtime | Bun 1.2.9+, Node.js 22.15+ |
+| Backend | Hono, Drizzle ORM, SQLite, WebSocket |
+| Frontend | React 18, Vite, TanStack Router & Query |
+| Styling | Tailwind CSS, SCSS Modules |
+| UI Library | @radio/mojo-ui (retro-styled components) |
+| State | Zustand (client), React Query (server) |
+| Monorepo | Turborepo + pnpm workspaces |
+| Linting | Biome |
+| CI/CD | GitHub Actions |
+| Process Mgmt | PM2 |
+| Streaming | Docker RTMP, FFmpeg |
 
-### Admin Panel
-- **Modern UI**: Built with React 18, TypeScript, and Tailwind CSS
-- **Real-time Updates**: Live status monitoring with WebSocket support
-- **Stream Control Interface**: Complete streaming management with tabs
-  - **Monitoring Tab**: Real-time service status and system health
-  - **Configuration Tab**: Service configuration management
-  - **Logs Tab**: System and service logs
-- **Service Management**: 
-  - RTMP server start/stop/restart
-  - Telegram streaming with daemon control
-  - Configuration updates for both services
-- **Error Handling**: Comprehensive error reporting and recovery
-
-### Technical Stack
-- **Backend**: Bun runtime with Hono framework
-- **Frontend**: React 18 with Vite build system
-- **State Management**: React Query for server state, Zustand for client state
-- **Styling**: Tailwind CSS with custom Ukrainian-themed design system
-- **Type Safety**: Full TypeScript coverage with shared types package
-- **Process Management**: PM2 for production deployment
-- **Real-time**: WebSocket connections for live updates
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
-- Node.js 22.15.0+
+- Node.js 22.15.0+ (managed via Volta)
 - Bun 1.2.9+
-- pnpm 10.8.0+ (package manager)
+- pnpm 10.8.0+
 - Docker (for RTMP server)
-- PM2 (for production deployment)
 - FFmpeg (for Telegram streaming)
 
 ### Installation
+
 ```bash
-# Clone the repository
 git clone <repository-url>
 cd radio
-
-# Install dependencies
 pnpm install
+```
 
-# Start all services in development
+### Development
+
+```bash
+# Start all services
 pnpm dev
+
+# Or start individually
+pnpm wave:dev     # Backend API (port 6870)
+pnpm admin:dev    # Admin panel (port 3001)
+pnpm player:dev   # Public player (port 3030)
+pnpm mojo:dev     # Component showcase (port 3010)
 ```
 
-### Individual Services
+### Environment Setup
+
+Copy `.env.example` in each app directory:
+
 ```bash
-# Backend API server
-pnpm wave:dev
-
-# Admin panel
-pnpm admin:dev
-
-# Public frontend
-pnpm frontend:dev
+cp apps/wave/.env.example apps/wave/.env
+cp apps/admin/.env.example apps/admin/.env
+cp apps/player/.env.example apps/player/.env
 ```
 
-## 📚 Documentation
+## Production
 
-### Setup & Deployment
-- [📋 Complete Setup Guide](setup/README.md)
-- [🐳 Docker Deployment](setup/docker.md)
-- [☁️ Production Deployment](setup/production.md)
-- [🔧 Environment Configuration](setup/environment.md)
-
-### Applications
-- [🌊 Wave Backend](apps/wave.md)
-- [🎛️ Admin Panel](apps/admin.md)
-- [📱 Frontend](apps/frontend.md)
-
-### API Reference
-- [📡 Streaming API](api/streaming.md)
-- [🔌 WebSocket API](api/websocket.md)
-- [📊 Status Endpoints](api/status.md)
-
-### Technical Documentation
-- [🏗️ Architecture Overview](docs/architecture.md)
-- [🔄 Data Flow](docs/data-flow.md)
-- [📡 Streaming Setup Guide](docs/streaming-setup.md)
-- [🎨 Design System](docs/design-system.md)
-- [🧪 Testing](docs/testing.md)
-
-## 🎛️ Usage
-
-### Admin Panel Access
-Navigate to `http://localhost:3001/stream-control` to access the stream control interface.
-
-### API Endpoints
-All streaming operations are available via REST API at `http://localhost:6970/api/stream/`:
-
-#### Stream Control API (`/api/stream`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/telegram/start` | Start Telegram stream |
-| `POST` | `/telegram/stop` | Stop Telegram stream |
-| `POST` | `/telegram/restart` | Restart Telegram stream |
-| `GET` | `/telegram/config` | Get Telegram configuration |
-| `PUT` | `/telegram/config` | Update Telegram configuration |
-| `POST` | `/rtmp/start` | Start RTMP server |
-| `POST` | `/rtmp/stop` | Stop RTMP server |
-| `POST` | `/rtmp/restart` | Restart RTMP server |
-| `GET` | `/rtmp/config` | Get RTMP configuration |
-| `PUT` | `/rtmp/config` | Update RTMP configuration |
-
-#### Monitoring API (`/api/monitoring`)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Get complete monitoring data |
-| `GET` | `/health` | Get system health overview |
-| `GET` | `/telegram` | Get Telegram service statistics |
-| `GET` | `/rtmp` | Get RTMP service statistics |
-| `GET` | `/metrics/:service` | Get metrics for specific service |
-| `GET` | `/logs` | Get system logs |
-| `GET` | `/logs/:service` | Get logs for specific service |
-
-### Streaming Modes
-
-#### Live Mode
-- Streams directly from external audio sources
-- Real-time audio streaming
-- No playlist management needed
-- Perfect for live shows and events
-
-#### Radio Mode
-- Plays from a managed playlist of audio tracks
-- Supports track management (add/remove tracks)
-- Skip to next track functionality
-- Automatic playlist looping
-- Perfect for automated radio stations
-
-## 🔧 Configuration
-
-### Environment Variables
-Each application has its own environment configuration:
-
-- **Wave Backend**: `apps/wave/.env`
-- **Admin Panel**: `apps/admin/.env`
-- **Frontend**: `apps/frontend/.env`
-
-### Data Storage
-- **Audio Tracks**: `data/audio-tracks.json`
-- **Streaming Config**: `data/streaming-config.json`
-- **Telegram Config**: `data/telegram-config.json`
-
-### Logs
-- **Wave Server**: `logs/wave.log`
-- **Telegram Stream**: `logs/telegram-stream.log`
-- **RTMP Server**: Docker container logs
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-#### FFmpeg Not Found (Telegram Streaming)
-**Error**: `ENOENT: no such file or directory, posix_spawn 'ffmpeg'`
-**Solution**: Install FFmpeg:
 ```bash
-# Ubuntu/Debian
-sudo apt update && sudo apt install ffmpeg
+# Build all
+pnpm build
 
-# macOS
-brew install ffmpeg
+# Start backend with PM2
+pnpm wave:start
 
-# Verify installation
-ffmpeg -version
+# Start Telegram stream daemon
+pnpm --filter @radio/wave telegram:start
 ```
 
-#### Port Conflicts
-**Error**: Address already in use
-**Solution**: Check and kill processes using required ports:
-```bash
-# Check ports
-sudo lsof -i :6970  # Wave API
-sudo lsof -i :6971  # WebSocket
-sudo lsof -i :3001  # Admin Panel
-sudo lsof -i :1935  # RTMP Server
-sudo lsof -i :8069  # HLS Output
+## Documentation
 
-# Kill process
-sudo kill -9 <PID>
-```
+- [Setup Guide](../docs/setup/README.md)
+- [API Reference](../docs/api/README.md)
+- [Wave Backend](../apps/wave/README.md)
+- [Admin Panel](../apps/admin/README.md)
+- [Player](../apps/player/README.md)
+- [Mojo UI](../packages/mojo-ui/README.md)
 
-#### Telegram Stream Daemon Errors
-**Error**: Telegram process keeps restarting
-**Solution**: Check configuration and dependencies:
-```bash
-# Check PM2 status
-pm2 status
+## License
 
-# Check Telegram stream logs
-pm2 logs radio.telegram
-
-# Restart Telegram service
-pm2 restart radio.telegram
-```
-
-#### Docker RTMP Server Issues
-**Error**: RTMP server not responding
-**Solution**: 
-```bash
-# Check Docker container
-docker ps --filter "name=rtmp-server"
-
-# Check container logs
-docker logs rtmp-server
-
-# Restart RTMP server
-docker restart rtmp-server
-```
-
-### Debug Commands
-```bash
-# Check all services status
-pm2 status
-pnpm wave:logs
-
-# Check RTMP server
-docker ps | grep rtmp-server
-docker logs rtmp-server
-
-# Check Telegram stream
-pm2 logs radio.telegram --lines 50
-
-# Check Wave backend
-pm2 logs radio.wave --lines 50
-
-# Test API endpoints
-curl http://localhost:6970/health
-curl http://localhost:6970/api/monitoring/
-curl http://localhost:6970/api/stream/telegram/config
-
-# Check FFmpeg installation
-which ffmpeg
-ffmpeg -version
-```
-
-### Service Dependencies
-Ensure services start in this order:
-1. **Docker** (RTMP server)
-2. **Wave Backend** (API server)
-3. **Telegram Daemon** (requires Wave backend and RTMP)
-4. **Admin Panel** (requires Wave backend)
-5. **Frontend** (requires Wave backend)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-- Create an issue in the repository
-- Check the documentation in the `github/` folder
-- Review the troubleshooting section above
-
----
-
-**Built with ❤️ for the radio streaming community**
- 
+MIT

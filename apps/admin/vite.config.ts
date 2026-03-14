@@ -41,8 +41,21 @@ export default defineConfig({
       allow: ['..', '../..'],
     },
     watch: {
-      usePolling: true,
-      ignored: ['!**/node_modules/**'],
+      usePolling: false, // Disable polling - use native file system events (much more efficient)
+      ignored: [
+        '!**/node_modules/**',
+        '**/media/**',
+        '**/p-sound/**',
+        '/var/www/p-sound/**',
+        '**/dist/**',
+        '**/.git/**',
+      ],
+    },
+    hmr: {
+      // Configure HMR for remote Linux environment
+      protocol: 'ws',
+      host: 'localhost', // Use localhost for HMR connection
+      clientPort: 3001, // Match the server port
     },
   },
   resolve: {

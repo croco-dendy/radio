@@ -34,11 +34,12 @@ export interface SyncResult {
  *
  * Track logic (upsert by album_id + file_slug):
  *   – New track   → INSERT with defaults derived from the file slug.
- *   – Existing track → only UPDATE audio_url if it changed.
+ *   – Existing track → no updates (only creates new tracks).
  *   – NEVER overwrites manually-entered metadata (title, artist, duration, etc.).
+ *   – audio_url is computed dynamically at API layer, not stored in database.
  *
  * @param baseDir      – absolute path to the media root directory
- * @param mediaBaseUrl – URL prefix used to construct audio_url values
+ * @param mediaBaseUrl – URL prefix used to construct audio_url values (not stored, only for scanning)
  * @param ownerId      – account id used as the owner when creating new albums
  */
 export async function syncMediaToDatabase(
@@ -126,11 +127,8 @@ async function syncTracks(
     const existing = await findSongByAlbumAndFileSlug(albumId, track.fileSlug);
 
     if (existing) {
-      // Only update audioUrl if it actually changed – never touch other fields
-      if (existing.audioUrl !== track.audioUrl) {
-        await updateSong(existing.id, { audioUrl: track.audioUrl });
-        result.tracksUpdated++;
-      }
+      // Track already exists - no updates needed
+      // audio_url is computed dynamically at API layer, not stored
       continue;
     }
 
@@ -138,6 +136,7 @@ async function syncTracks(
     // Manual metadata (title, artist, duration) can be edited later via the admin UI.
     // audioFileId is set to 0 as a placeholder – these tracks come from the
     // media directory and don't have an associated audioFiles record.
+    // audio_url is computed dynamically at API layer using MEDIA_BASE_URL
     await createSong({
       albumId,
       audioFileId: 0,
@@ -146,7 +145,6 @@ async function syncTracks(
       duration: '0:00',
       format: 'm4a',
       fileSlug: track.fileSlug,
-      audioUrl: track.audioUrl,
     });
 
     result.tracksCreated++;

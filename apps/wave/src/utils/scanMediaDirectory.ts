@@ -6,7 +6,6 @@ const AUDIO_EXT = '.m4a';
 
 export interface ScannedTrack {
   fileSlug: string;
-  audioUrl: string;
 }
 
 export interface ScannedAlbum {
@@ -40,7 +39,7 @@ export function trackSlugToTitle(fileSlug: string): string {
  * Inside each matching subdirectory, collects all `.m4a` files as tracks.
  *
  * @param baseDir      - Absolute path to the media root directory
- * @param mediaBaseUrl - URL prefix used to construct audio_url values
+ * @param mediaBaseUrl - URL prefix (not used, kept for API compatibility - audio_url is computed at API layer)
  * @returns Array of parsed album objects with their tracks
  */
 export function scanMediaDirectory(
@@ -88,7 +87,6 @@ export function scanMediaDirectory(
         const fileSlug = basename(file, AUDIO_EXT);
         return {
           fileSlug,
-          audioUrl: `${mediaBaseUrl}/${folderSlug}/${file}`,
         };
       });
 

@@ -11,8 +11,22 @@ import { findAudioFileById } from '@/db/collections/audioFiles';
 import { authService } from '../auth';
 import { albumService } from './albumService';
 import { getErrorMessage } from '@/utils/errorMessages';
+import { env } from '@/utils/env';
 
 export class SongService {
+  /**
+   * Computes audioUrl dynamically for tracks based on MEDIA_BASE_URL, album folderSlug, and track fileSlug.
+   * Format: ${MEDIA_BASE_URL}/${folderSlug}/${fileSlug}.m4a
+   */
+  private computeAudioUrl(folderSlug: string | null, fileSlug: string | null): string | null {
+    if (!folderSlug || !fileSlug) {
+      return null;
+    }
+    // Normalize MEDIA_BASE_URL to remove trailing slashes
+    const normalizedBaseUrl = env.mediaBaseUrl.replace(/\/+$/, '');
+    return `${normalizedBaseUrl}/${folderSlug}/${fileSlug}.m4a`;
+  }
+
   async getSongById(id: number) {
     const song = await findSongById(id);
     if (!song) {
@@ -22,7 +36,14 @@ export class SongService {
   }
 
   async getSongsByAlbum(albumId: number) {
-    return findSongsByAlbum(albumId);
+    const album = await albumService.getAlbumById(albumId);
+    const songs = await findSongsByAlbum(albumId);
+    
+    // Add computed audioUrl to each song
+    return songs.map((song) => ({
+      ...song,
+      audioUrl: this.computeAudioUrl(album.folderSlug, song.fileSlug),
+    }));
   }
 
   async addSongToAlbum(

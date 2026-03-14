@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { apiUrl } from '@/services/env';
 
 export interface NowPlayingTrack {
   title: string;
@@ -80,9 +79,8 @@ export const useNowPlayingStore = create<NowPlayingStore>()((set, get) => {
       }
 
       // New track — set source and play
-      const src = track.audioUrl
-        ? `${apiUrl}${track.audioUrl}`
-        : '';
+      // audioUrl is now a full URL from MEDIA_BASE_URL (external CDN), use it directly
+      const src = track.audioUrl || '';
 
       el.src = src;
       el.load();

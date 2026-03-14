@@ -22,7 +22,9 @@ export const queryClient = new QueryClient({
         }
         return failureCount < 3;
       },
-      refetchOnWindowFocus: true, // Refetch on focus for admin dashboard
+      refetchOnWindowFocus: !import.meta.env.DEV, // Disable refetch on focus in dev to reduce CPU usage
+      refetchOnMount: true,
+      refetchOnReconnect: true,
     },
     mutations: {
       retry: false,

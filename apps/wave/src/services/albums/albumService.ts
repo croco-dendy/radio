@@ -20,6 +20,7 @@ import {
 import { findSongsByAlbum } from '@/db/albums/songs';
 import { authService } from '../auth';
 import { getErrorMessage } from '@/utils/errorMessages';
+import { env } from '@/utils/env';
 
 export class AlbumService {
   private coversDir: string;
@@ -79,10 +80,30 @@ export class AlbumService {
     return album;
   }
 
+  /**
+   * Computes audioUrl dynamically for tracks based on MEDIA_BASE_URL, album folderSlug, and track fileSlug.
+   * Format: ${MEDIA_BASE_URL}/${folderSlug}/${fileSlug}.m4a
+   */
+  private computeAudioUrl(folderSlug: string | null, fileSlug: string | null): string | null {
+    if (!folderSlug || !fileSlug) {
+      return null;
+    }
+    // Normalize MEDIA_BASE_URL to remove trailing slashes
+    const normalizedBaseUrl = env.mediaBaseUrl.replace(/\/+$/, '');
+    return `${normalizedBaseUrl}/${folderSlug}/${fileSlug}.m4a`;
+  }
+
   async getAlbumWithSongs(id: number) {
     const album = await this.getAlbumById(id);
     const songs = await findSongsByAlbum(id);
-    return { ...album, songs };
+    
+    // Add computed audioUrl to each song
+    const songsWithAudioUrl = songs.map((song) => ({
+      ...song,
+      audioUrl: this.computeAudioUrl(album.folderSlug, song.fileSlug),
+    }));
+
+    return { ...album, songs: songsWithAudioUrl };
   }
 
   async createAlbum(

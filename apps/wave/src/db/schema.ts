@@ -121,7 +121,6 @@ export const songs = sqliteTable(
     duration: text('duration').notNull(),
     format: text('format').notNull(),
     fileSlug: text('file_slug'),
-    audioUrl: text('audio_url'),
     createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
   },
   (table) => [

@@ -11,7 +11,6 @@ type NewSongData = {
   duration: string;
   format: string;
   fileSlug?: string;
-  audioUrl?: string;
 };
 
 const findSongById = async (id: number) =>
@@ -29,7 +28,6 @@ const findSongsByAlbum = async (albumId: number) => {
       duration: songs.duration,
       format: songs.format,
       fileSlug: songs.fileSlug,
-      audioUrl: songs.audioUrl,
       createdAt: songs.createdAt,
       audioFilePath: audioFiles.path,
       audioFileName: audioFiles.name,

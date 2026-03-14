@@ -37,11 +37,25 @@ export const NowPlaying: React.FC<NowPlayingProps> = ({ className }) => {
           title={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-label="Pause"
+              role="img"
+            >
               <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
             </svg>
           ) : (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-label="Play"
+              role="img"
+            >
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
@@ -103,7 +117,14 @@ export const NowPlaying: React.FC<NowPlayingProps> = ({ className }) => {
             className={clsx(styles.stopButton)}
             title="Stop"
           >
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-label="Stop"
+              role="img"
+            >
               <path d="M6 6h12v12H6z" />
             </svg>
           </button>

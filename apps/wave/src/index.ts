@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { join } from 'node:path';
 import { env } from '@/utils/env';
 import {
   accountsRoutes,
@@ -35,6 +36,26 @@ app.use(
 
 app.get('/health', (c) => {
   return c.json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+// Serve media files (vinyl audio) from MEDIA_ROOT_PATH at MEDIA_BASE_URL
+app.get(`${env.mediaBaseUrl}/*`, async (c) => {
+  const relativePath = c.req.path.replace(env.mediaBaseUrl, '');
+  const filePath = join(env.mediaRootPath, relativePath);
+  const file = Bun.file(filePath);
+
+  if (!(await file.exists())) {
+    return c.notFound();
+  }
+
+  return new Response(file, {
+    headers: {
+      'Content-Type': file.type || 'audio/mp4',
+      'Content-Length': file.size.toString(),
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  });
 });
 
 app.route('/api/stream', streamRoutes);

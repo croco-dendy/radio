@@ -58,7 +58,10 @@ export const useUpdateAlbum = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Parameters<typeof albumApi.updateAlbum>[1] }) =>
+    mutationFn: ({
+      id,
+      data,
+    }: { id: number; data: Parameters<typeof albumApi.updateAlbum>[1] }) =>
       albumApi.updateAlbum(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: albumKeys.detail(id) });
@@ -155,3 +158,28 @@ export const useReorderSongs = () => {
   });
 };
 
+export const useSyncMedia = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (baseDir?: string) => albumApi.syncMedia(baseDir),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: albumKeys.userAlbums() });
+      queryClient.invalidateQueries({ queryKey: albumKeys.publicAlbums() });
+    },
+  });
+};
+
+export const useTogglePublished = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, isPublished }: { id: number; isPublished: boolean }) =>
+      albumApi.updateAlbum(id, { isPublic: isPublished }),
+    onSuccess: (_, { id }) => {
+      queryClient.invalidateQueries({ queryKey: albumKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: albumKeys.userAlbums() });
+      queryClient.invalidateQueries({ queryKey: albumKeys.publicAlbums() });
+    },
+  });
+};

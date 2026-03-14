@@ -14,6 +14,12 @@ type CreateAlbumData = {
   description?: string;
   tags?: string;
   isPublic?: boolean;
+  isPublished?: boolean;
+  releaseYear?: number;
+  rpmSpeed?: string;
+  vinylCondition?: string;
+  digitizationDate?: string;
+  equipmentUsed?: string;
 };
 
 type AlbumWithSongs = Album & {
@@ -28,6 +34,15 @@ type CreateSongData = {
   trackNumber: number;
   title: string;
   artist?: string;
+};
+
+export type SyncMediaResult = {
+  albumsCreated: number;
+  albumsUpdated: number;
+  albumsMarkedOffline: number;
+  tracksCreated: number;
+  tracksUpdated: number;
+  errors: string[];
 };
 
 export const albumApi = {
@@ -142,7 +157,14 @@ export const albumApi = {
       { songs },
     );
   },
+
+  syncMedia: async (baseDir?: string): Promise<SyncMediaResult> => {
+    const response = await waveApiClient.post<ApiResponse<SyncMediaResult>>(
+      '/api/albums/sync-media',
+      baseDir ? { baseDir } : {},
+    );
+    return response.data.data;
+  },
 };
 
 export type { CreateAlbumData, AlbumWithSongs, CreateSongData };
-

@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { albums, songs } from '../schema';
-import { eq, desc, sql, and, like } from 'drizzle-orm';
+import { eq, desc, sql, and, like, isNotNull } from 'drizzle-orm';
 
 type NewAlbumData = {
   title: string;
@@ -11,6 +11,14 @@ type NewAlbumData = {
   tags?: string;
   isPublic?: number;
   ownerId: number;
+  folderSlug?: string;
+  hasMedia?: number;
+  isPublished?: number;
+  releaseYear?: number;
+  rpmSpeed?: string;
+  vinylCondition?: string;
+  digitizationDate?: string;
+  equipmentUsed?: string;
 };
 
 const findAlbumById = async (id: number) =>
@@ -28,6 +36,14 @@ const findAlbumsByOwner = async (ownerId: number, limit = 50, offset = 0) => {
       tags: albums.tags,
       isPublic: albums.isPublic,
       ownerId: albums.ownerId,
+      folderSlug: albums.folderSlug,
+      hasMedia: albums.hasMedia,
+      isPublished: albums.isPublished,
+      releaseYear: albums.releaseYear,
+      rpmSpeed: albums.rpmSpeed,
+      vinylCondition: albums.vinylCondition,
+      digitizationDate: albums.digitizationDate,
+      equipmentUsed: albums.equipmentUsed,
       createdAt: albums.createdAt,
       updatedAt: albums.updatedAt,
       songCount: sql<number>`COALESCE(COUNT(${songs.id}), 0)`.as('songCount'),
@@ -131,11 +147,27 @@ const updateAlbumCoverArt = async (id: number, coverArtPath: string) => {
     .run();
 };
 
+const findAlbumByFolderSlug = async (folderSlug: string) =>
+  db.select().from(albums).where(eq(albums.folderSlug, folderSlug)).get();
+
+const findAlbumsWithFolderSlug = async () =>
+  db
+    .select({
+      id: albums.id,
+      folderSlug: albums.folderSlug,
+      hasMedia: albums.hasMedia,
+    })
+    .from(albums)
+    .where(isNotNull(albums.folderSlug))
+    .all();
+
 export {
   findAlbumById,
   findAlbumsByOwner,
   findPublicAlbums,
   findPublicAlbumsWithFilters,
+  findAlbumByFolderSlug,
+  findAlbumsWithFolderSlug,
   createAlbum,
   updateAlbum,
   deleteAlbum,
@@ -143,4 +175,3 @@ export {
 };
 
 export type { NewAlbumData };
-

@@ -1,8 +1,11 @@
 import { Hono } from 'hono';
 import { albumHandlers } from '@/api/handlers/albumHandlers';
 import { songHandlers } from '@/api/handlers/songHandlers';
-import { albumValidators, songValidators } from '@/api/validators/albumValidators';
-import { authMiddleware } from '@/services/auth';
+import {
+  albumValidators,
+  songValidators,
+} from '@/api/validators/albumValidators';
+import { authMiddleware, adminMiddleware } from '@/services/auth';
 
 type Variables = {
   accountId: number;
@@ -40,10 +43,7 @@ albumsRoutes.post(
 
 albumsRoutes.get('/:id/cover', albumHandlers.getCoverArtHandler);
 
-albumsRoutes.get(
-  '/:albumId/songs',
-  albumHandlers.getAlbumByIdHandler,
-);
+albumsRoutes.get('/:albumId/songs', albumHandlers.getAlbumByIdHandler);
 
 albumsRoutes.post(
   '/:albumId/songs',
@@ -66,7 +66,17 @@ albumsRoutes.put(
   songHandlers.updateSongHandler,
 );
 
-albumsRoutes.delete('/songs/:id', authMiddleware, songHandlers.deleteSongHandler);
+albumsRoutes.delete(
+  '/songs/:id',
+  authMiddleware,
+  songHandlers.deleteSongHandler,
+);
+
+albumsRoutes.post(
+  '/sync-media',
+  authMiddleware,
+  adminMiddleware,
+  albumHandlers.syncMediaHandler,
+);
 
 export { albumsRoutes };
-

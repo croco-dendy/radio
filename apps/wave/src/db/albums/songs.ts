@@ -10,6 +10,8 @@ type NewSongData = {
   artist?: string;
   duration: string;
   format: string;
+  fileSlug?: string;
+  audioUrl?: string;
 };
 
 const findSongById = async (id: number) =>
@@ -26,6 +28,8 @@ const findSongsByAlbum = async (albumId: number) => {
       artist: songs.artist,
       duration: songs.duration,
       format: songs.format,
+      fileSlug: songs.fileSlug,
+      audioUrl: songs.audioUrl,
       createdAt: songs.createdAt,
       audioFilePath: audioFiles.path,
       audioFileName: audioFiles.name,
@@ -71,9 +75,17 @@ const reorderSongs = async (
   }
 };
 
+const findSongByAlbumAndFileSlug = async (albumId: number, fileSlug: string) =>
+  db
+    .select()
+    .from(songs)
+    .where(and(eq(songs.albumId, albumId), eq(songs.fileSlug, fileSlug)))
+    .get();
+
 export {
   findSongById,
   findSongsByAlbum,
+  findSongByAlbumAndFileSlug,
   createSong,
   updateSong,
   deleteSong,
@@ -82,4 +94,3 @@ export {
 };
 
 export type { NewSongData };
-

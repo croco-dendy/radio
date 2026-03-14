@@ -101,6 +101,14 @@ export interface Album {
   tags: string | null;
   isPublic: number;
   ownerId: number;
+  folderSlug: string | null;
+  hasMedia: number;
+  isPublished: number;
+  releaseYear: number | null;
+  rpmSpeed: string | null;
+  vinylCondition: string | null;
+  digitizationDate: string | null;
+  equipmentUsed: string | null;
   createdAt: string;
   updatedAt: string;
   songCount?: number;
@@ -115,6 +123,8 @@ export interface Song {
   artist: string | null;
   duration: string;
   format: string;
+  fileSlug: string | null;
+  audioUrl: string | null;
   createdAt: string;
 }
 

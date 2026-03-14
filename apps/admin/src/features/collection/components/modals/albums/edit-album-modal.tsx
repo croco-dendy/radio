@@ -1,9 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Modal } from '@radio/mojo-ui';
 import { useUpdateAlbum } from '@/services/api';
-import { FormInput, FormTextarea, FormCheckbox } from '@/components/ui';
+import {
+  FormInput,
+  FormTextarea,
+  FormCheckbox,
+  FormSelect,
+} from '@/components/ui';
 import { TagEditor } from '../../shared';
 import type { Album } from '@radio/types';
+
+const RPM_OPTIONS = [
+  { value: '', label: 'Not specified' },
+  { value: '33', label: '33 RPM' },
+  { value: '45', label: '45 RPM' },
+  { value: '78', label: '78 RPM' },
+];
+
+const CONDITION_OPTIONS = [
+  { value: '', label: 'Not specified' },
+  { value: 'mint', label: 'Mint (M)' },
+  { value: 'near-mint', label: 'Near Mint (NM)' },
+  { value: 'very-good-plus', label: 'Very Good Plus (VG+)' },
+  { value: 'very-good', label: 'Very Good (VG)' },
+  { value: 'good', label: 'Good (G)' },
+  { value: 'fair', label: 'Fair (F)' },
+  { value: 'poor', label: 'Poor (P)' },
+];
 
 type EditAlbumModalProps = {
   isOpen: boolean;
@@ -23,6 +46,13 @@ export const EditAlbumModal = ({
   const [tags, setTags] = useState<string[]>([]);
   const [isPublic, setIsPublic] = useState(false);
 
+  // Vinyl metadata
+  const [releaseYear, setReleaseYear] = useState('');
+  const [rpmSpeed, setRpmSpeed] = useState('');
+  const [vinylCondition, setVinylCondition] = useState('');
+  const [digitizationDate, setDigitizationDate] = useState('');
+  const [equipmentUsed, setEquipmentUsed] = useState('');
+
   const updateAlbum = useUpdateAlbum();
 
   useEffect(() => {
@@ -33,6 +63,15 @@ export const EditAlbumModal = ({
       setDescription(album.description || '');
       setTags(album.tags ? JSON.parse(album.tags) : []);
       setIsPublic(!!album.isPublic);
+
+      // Vinyl metadata
+      setReleaseYear(album.releaseYear ? album.releaseYear.toString() : '');
+      setRpmSpeed(album.rpmSpeed || '');
+      setVinylCondition(album.vinylCondition || '');
+      setDigitizationDate(
+        album.digitizationDate ? album.digitizationDate.substring(0, 10) : '',
+      );
+      setEquipmentUsed(album.equipmentUsed || '');
     }
   }, [isOpen, album]);
 
@@ -50,6 +89,11 @@ export const EditAlbumModal = ({
           description: description.trim() || undefined,
           tags: tags.length > 0 ? JSON.stringify(tags) : undefined,
           isPublic,
+          releaseYear: releaseYear ? Number.parseInt(releaseYear) : undefined,
+          rpmSpeed: rpmSpeed || undefined,
+          vinylCondition: vinylCondition || undefined,
+          digitizationDate: digitizationDate || undefined,
+          equipmentUsed: equipmentUsed.trim() || undefined,
         },
       });
 
@@ -65,9 +109,12 @@ export const EditAlbumModal = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Edit Album"
-      maxWidth="max-w-md"
+      maxWidth="max-w-lg"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 max-h-[70vh] overflow-y-auto pr-1"
+      >
         <FormInput
           label="Album Title"
           value={title}
@@ -109,6 +156,56 @@ export const EditAlbumModal = ({
           checked={isPublic}
           onChange={(e) => setIsPublic(e.target.checked)}
         />
+
+        {/* Vinyl Metadata Section */}
+        <div className="border-t border-gray-700/50 pt-4 mt-4">
+          <h4 className="text-sm font-display font-semibold text-stone-400 uppercase tracking-wide mb-3">
+            Vinyl Metadata
+          </h4>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <FormInput
+                label="Release Year"
+                type="number"
+                value={releaseYear}
+                onChange={(e) => setReleaseYear(e.target.value)}
+                placeholder="e.g. 1975"
+                min="1900"
+                max="2100"
+              />
+
+              <FormSelect
+                label="RPM Speed"
+                value={rpmSpeed}
+                onChange={(e) => setRpmSpeed(e.target.value)}
+                options={RPM_OPTIONS}
+              />
+            </div>
+
+            <FormSelect
+              label="Vinyl Condition"
+              value={vinylCondition}
+              onChange={(e) => setVinylCondition(e.target.value)}
+              options={CONDITION_OPTIONS}
+            />
+
+            <FormInput
+              label="Digitization Date"
+              type="date"
+              value={digitizationDate}
+              onChange={(e) => setDigitizationDate(e.target.value)}
+            />
+
+            <FormTextarea
+              label="Equipment Used"
+              value={equipmentUsed}
+              onChange={(e) => setEquipmentUsed(e.target.value)}
+              placeholder="e.g. Technics SL-1200, Audient iD4, Audacity"
+              rows={2}
+            />
+          </div>
+        </div>
 
         <div className="flex gap-3 pt-4">
           <button

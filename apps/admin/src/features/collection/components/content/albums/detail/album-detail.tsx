@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  useAlbum,
-  useDeleteAlbum,
-  useUpdateAlbum,
-  albumApi,
-} from '@/services/api';
+import { useAlbum, useDeleteAlbum, albumApi } from '@/services/api';
 import { CoverUpload } from '@/features/collection/components/shared';
 import { SongList } from './song-list';
 import {
@@ -20,7 +15,6 @@ type AlbumDetailProps = {
 export const AlbumDetail = ({ album }: AlbumDetailProps) => {
   const { data: albumWithSongs, isLoading } = useAlbum(album.id);
   const deleteAlbum = useDeleteAlbum();
-  const updateAlbum = useUpdateAlbum();
   const [showCoverUpload, setShowCoverUpload] = useState(false);
   const [showAddSong, setShowAddSong] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -42,28 +36,13 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
     }
   };
 
-  const togglePublic = async () => {
-    try {
-      await updateAlbum.mutateAsync({
-        id: album.id,
-        data: { isPublic: !album.isPublic },
-      });
-    } catch (error) {
-      console.error('Failed to update album:', error);
-      alert('Failed to update album visibility');
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="space-y-4">
         <div className="h-8 bg-gray-100/10 rounded" />
         <div className="space-y-3">
           {['s1', 's2', 's3'].map((id) => (
-            <div
-              key={id}
-              className="h-16 bg-gray-100/10 rounded"
-            />
+            <div key={id} className="h-16 bg-gray-100/10 rounded" />
           ))}
         </div>
       </div>
@@ -144,15 +123,6 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
           )}
 
           <div className="flex items-center gap-3 mt-4">
-            <span
-              className={`px-3 py-1 rounded-full text-sm ${
-                albumWithSongs.isPublic
-                  ? 'bg-green-900/30 text-green-400'
-                  : 'bg-gray-700/50 text-gray-400'
-              }`}
-            >
-              {albumWithSongs.isPublic ? 'Public' : 'Private'}
-            </span>
             <span className="text-sm text-gray-500">
               {albumWithSongs.songs?.length || 0} songs
             </span>
@@ -168,18 +138,6 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
               className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors text-sm"
             >
               Edit
-            </button>
-            <button
-              type="button"
-              onClick={togglePublic}
-              disabled={updateAlbum.isPending}
-              className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors text-sm"
-            >
-              {updateAlbum.isPending
-                ? 'Updating...'
-                : albumWithSongs.isPublic
-                  ? 'Make Private'
-                  : 'Make Public'}
             </button>
             <button
               type="button"

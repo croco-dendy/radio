@@ -1,9 +1,10 @@
 import type { Context } from 'hono';
 import { ResponseHelper } from '@/utils/response';
 import { withErrorHandling } from '@/utils/routeHandler';
-import { albumService } from '@/services/albums';
+import { albumService, syncMediaToDatabase } from '@/services/albums';
 import { authService } from '@/services/auth';
 import { commonSchemas } from '@/utils/validation';
+import { env } from '@/utils/env';
 
 export const albumHandlers = {
   get getPublicAlbumsHandler() {
@@ -15,12 +16,16 @@ export const albumHandlers = {
 
       const filters = {
         artist: c.req.query('artist'),
-        year: c.req.query('year') ? Number.parseInt(c.req.query('year') as string) : undefined,
+        year: c.req.query('year')
+          ? Number.parseInt(c.req.query('year') as string)
+          : undefined,
         tags: c.req.query('tags')?.split(','),
         search: c.req.query('search'),
       };
 
-      const hasFilters = Object.values(filters).some((v) => v !== undefined && v !== null);
+      const hasFilters = Object.values(filters).some(
+        (v) => v !== undefined && v !== null,
+      );
 
       const albums = hasFilters
         ? await albumService.getPublicAlbumsWithFilters(filters, limit, offset)
@@ -39,7 +44,11 @@ export const albumHandlers = {
           offset: c.req.query('offset'),
         });
 
-        const albums = await albumService.getUserAlbums(accountId, limit, offset);
+        const albums = await albumService.getUserAlbums(
+          accountId,
+          limit,
+          offset,
+        );
         return ResponseHelper.success(c, albums);
       },
     );
@@ -137,5 +146,31 @@ export const albumHandlers = {
       });
     });
   },
-};
 
+  get syncMediaHandler() {
+    return withErrorHandling(
+      async (c: Context<{ Variables: { accountId: number } }>) => {
+        const accountId = c.get('accountId');
+
+        const result = await syncMediaToDatabase(
+          env.mediaRootPath,
+          env.mediaBaseUrl,
+          accountId,
+        );
+
+        if (result.errors.length > 0) {
+          return c.json(
+            {
+              success: true,
+              message: 'Media sync completed with warnings',
+              data: result,
+            },
+            200,
+          );
+        }
+
+        return ResponseHelper.success(c, result);
+      },
+    );
+  },
+};

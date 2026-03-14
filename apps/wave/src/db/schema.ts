@@ -1,4 +1,9 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import {
+  sqliteTable,
+  text,
+  integer,
+  uniqueIndex,
+} from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
 export const accounts = sqliteTable('accounts', {
@@ -88,22 +93,41 @@ export const albums = sqliteTable('albums', {
   ownerId: integer('owner_id')
     .notNull()
     .references(() => accounts.id, { onDelete: 'cascade' }),
+  folderSlug: text('folder_slug').unique(),
+  hasMedia: integer('has_media').default(0),
+  isPublished: integer('is_published').default(0),
+  releaseYear: integer('release_year'),
+  rpmSpeed: text('rpm_speed'),
+  vinylCondition: text('vinyl_condition'),
+  digitizationDate: text('digitization_date'),
+  equipmentUsed: text('equipment_used'),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const songs = sqliteTable('songs', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  albumId: integer('album_id')
-    .notNull()
-    .references(() => albums.id, { onDelete: 'cascade' }),
-  audioFileId: integer('audio_file_id')
-    .notNull()
-    .references(() => audioFiles.id, { onDelete: 'cascade' }),
-  trackNumber: integer('track_number').notNull(),
-  title: text('title').notNull(),
-  artist: text('artist'),
-  duration: text('duration').notNull(),
-  format: text('format').notNull(),
-  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-});
+export const songs = sqliteTable(
+  'songs',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    albumId: integer('album_id')
+      .notNull()
+      .references(() => albums.id, { onDelete: 'cascade' }),
+    audioFileId: integer('audio_file_id')
+      .notNull()
+      .references(() => audioFiles.id, { onDelete: 'cascade' }),
+    trackNumber: integer('track_number').notNull(),
+    title: text('title').notNull(),
+    artist: text('artist'),
+    duration: text('duration').notNull(),
+    format: text('format').notNull(),
+    fileSlug: text('file_slug'),
+    audioUrl: text('audio_url'),
+    createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+  },
+  (table) => [
+    uniqueIndex('songs_album_id_file_slug_unique').on(
+      table.albumId,
+      table.fileSlug,
+    ),
+  ],
+);

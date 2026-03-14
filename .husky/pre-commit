@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run type checks for all packages (Turbo will parallelize and cache)
+echo "📝 Checking TypeScript types..."
+pnpm turbo run check-types || exit 1
+
+# Run linting for all packages (Turbo will parallelize and cache)
+echo "✨ Running linters..."
+pnpm lint || exit 1
+
+echo "✅ All checks passed! Ready to commit."

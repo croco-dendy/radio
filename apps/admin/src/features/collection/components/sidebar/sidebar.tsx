@@ -24,7 +24,7 @@ export const CollectionSidebar = () => {
         };
 
   return (
-    <div className="w-full flex-shrink-0 flex flex-col gap-4 lg:w-80 lg:h-full">
+    <div className="w-80 flex-shrink-0 flex flex-col gap-4 h-full">
       <Panel
         content={
           <div className="flex flex-col gap-4 lg:h-full lg:overflow-hidden">

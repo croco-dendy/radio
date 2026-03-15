@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { useAlbum, useDeleteAlbum, albumApi } from '@/services/api';
+import { Button } from '@radio/mojo-ui';
+import { useAlbum, useDeleteAlbum } from '@/services/api';
 import { CoverUpload } from '@/features/collection/components/shared';
 import { SongList } from './song-list';
 import {
   AddSongModal,
   EditAlbumModal,
 } from '@/features/collection/components/modals/albums';
+import { useCollectionStore } from '@/features/collection/store/collection-store';
 import type { Album } from '@radio/types';
 
 type AlbumDetailProps = {
@@ -15,9 +17,14 @@ type AlbumDetailProps = {
 export const AlbumDetail = ({ album }: AlbumDetailProps) => {
   const { data: albumWithSongs, isLoading } = useAlbum(album.id);
   const deleteAlbum = useDeleteAlbum();
+  const { setSelectedAlbum } = useCollectionStore();
   const [showCoverUpload, setShowCoverUpload] = useState(false);
   const [showAddSong, setShowAddSong] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const handleClose = () => {
+    setSelectedAlbum(null);
+  };
 
   const handleDelete = async () => {
     if (
@@ -56,45 +63,61 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
   const tags = albumWithSongs.tags ? JSON.parse(albumWithSongs.tags) : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+      {/* Close/Back Button */}
+      <div className="flex items-center mb-4">
+        <Button
+          variant="gray"
+          size="medium"
+          title="← Back"
+          onClick={handleClose}
+          className="flex-shrink-0"
+        />
+      </div>
+
       <div className="flex gap-6">
         <div className="flex-shrink-0">
           <div className="w-48 h-48 bg-gray-700 rounded-lg overflow-hidden">
-            {albumWithSongs.coverArtPath ? (
-              <img
-                src={albumApi.getCoverArtUrl(albumWithSongs.id)}
-                alt={albumWithSongs.title}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-500">
-                <svg
-                  aria-hidden="true"
-                  className="w-16 h-16"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                  />
-                </svg>
-              </div>
-            )}
+            {(() => {
+              // coverImageUrl is computed by the API and handles both uploaded covers and media folder covers
+              const coverUrl = albumWithSongs.coverImageUrl || null;
+
+              return coverUrl ? (
+                <img
+                  src={coverUrl}
+                  alt={albumWithSongs.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-500">
+                  <svg
+                    aria-hidden="true"
+                    className="w-16 h-16"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
+                    />
+                  </svg>
+                </div>
+              );
+            })()}
           </div>
-          <button
-            type="button"
+          <Button
+            variant="gray"
+            size="small"
+            title={albumWithSongs.coverImageUrl ? 'Change Cover' : 'Upload Cover'}
             onClick={() => setShowCoverUpload(!showCoverUpload)}
-            className="w-full mt-2 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors text-sm"
-          >
-            {albumWithSongs.coverArtPath ? 'Change Cover' : 'Upload Cover'}
-          </button>
+            className="w-full mt-2"
+          />
         </div>
 
         <div className="flex-1">
@@ -132,21 +155,19 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <button
-              type="button"
+            <Button
+              variant="gray"
+              size="small"
+              title="Edit"
               onClick={() => setShowEditModal(true)}
-              className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors text-sm"
-            >
-              Edit
-            </button>
-            <button
-              type="button"
+            />
+            <Button
+              variant="red"
+              size="small"
+              title={deleteAlbum.isPending ? 'Deleting...' : 'Delete'}
               onClick={handleDelete}
               disabled={deleteAlbum.isPending}
-              className="px-4 py-2 bg-red-900/30 text-red-400 rounded-lg hover:bg-red-900/50 transition-colors text-sm"
-            >
-              {deleteAlbum.isPending ? 'Deleting...' : 'Delete'}
-            </button>
+            />
           </div>
         </div>
       </div>
@@ -163,13 +184,12 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
       <div className="border-t border-gray-700/50 pt-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-200">Songs</h3>
-          <button
-            type="button"
+          <Button
+            variant="yellow"
+            size="small"
+            title="Add Song"
             onClick={() => setShowAddSong(true)}
-            className="px-4 py-2 bg-sun text-gray-900 rounded-lg hover:bg-sun/90 transition-colors text-sm font-medium"
-          >
-            Add Song
-          </button>
+          />
         </div>
 
         <SongList albumId={albumWithSongs.id} songs={albumWithSongs.songs} />

@@ -6,7 +6,7 @@ type NewAlbumData = {
   title: string;
   artist: string;
   year?: number;
-  coverArtPath?: string;
+  cover?: string;
   description?: string;
   tags?: string;
   isPublic?: number;
@@ -22,7 +22,31 @@ type NewAlbumData = {
 };
 
 const findAlbumById = async (id: number) =>
-  db.select().from(albums).where(eq(albums.id, id)).get();
+  db
+    .select({
+      id: albums.id,
+      title: albums.title,
+      artist: albums.artist,
+      year: albums.year,
+      cover: albums.cover,
+      description: albums.description,
+      tags: albums.tags,
+      isPublic: albums.isPublic,
+      ownerId: albums.ownerId,
+      folderSlug: albums.folderSlug,
+      hasMedia: albums.hasMedia,
+      isPublished: albums.isPublished,
+      releaseYear: albums.releaseYear,
+      rpmSpeed: albums.rpmSpeed,
+      vinylCondition: albums.vinylCondition,
+      digitizationDate: albums.digitizationDate,
+      equipmentUsed: albums.equipmentUsed,
+      createdAt: albums.createdAt,
+      updatedAt: albums.updatedAt,
+    })
+    .from(albums)
+    .where(eq(albums.id, id))
+    .get();
 
 const findAlbumsByOwner = async (ownerId: number, limit = 50, offset = 0) => {
   const result = await db
@@ -31,7 +55,7 @@ const findAlbumsByOwner = async (ownerId: number, limit = 50, offset = 0) => {
       title: albums.title,
       artist: albums.artist,
       year: albums.year,
-      coverArtPath: albums.coverArtPath,
+      cover: albums.cover,
       description: albums.description,
       tags: albums.tags,
       isPublic: albums.isPublic,
@@ -65,7 +89,27 @@ const findAlbumsByOwner = async (ownerId: number, limit = 50, offset = 0) => {
 
 const findPublicAlbums = async (limit = 50, offset = 0) => {
   return db
-    .select()
+    .select({
+      id: albums.id,
+      title: albums.title,
+      artist: albums.artist,
+      year: albums.year,
+      cover: albums.cover,
+      description: albums.description,
+      tags: albums.tags,
+      isPublic: albums.isPublic,
+      ownerId: albums.ownerId,
+      folderSlug: albums.folderSlug,
+      hasMedia: albums.hasMedia,
+      isPublished: albums.isPublished,
+      releaseYear: albums.releaseYear,
+      rpmSpeed: albums.rpmSpeed,
+      vinylCondition: albums.vinylCondition,
+      digitizationDate: albums.digitizationDate,
+      equipmentUsed: albums.equipmentUsed,
+      createdAt: albums.createdAt,
+      updatedAt: albums.updatedAt,
+    })
     .from(albums)
     .where(eq(albums.isPublic, 1))
     .orderBy(desc(albums.createdAt))
@@ -101,7 +145,27 @@ const findPublicAlbumsWithFilters = async (
   }
 
   return db
-    .select()
+    .select({
+      id: albums.id,
+      title: albums.title,
+      artist: albums.artist,
+      year: albums.year,
+      cover: albums.cover,
+      description: albums.description,
+      tags: albums.tags,
+      isPublic: albums.isPublic,
+      ownerId: albums.ownerId,
+      folderSlug: albums.folderSlug,
+      hasMedia: albums.hasMedia,
+      isPublished: albums.isPublished,
+      releaseYear: albums.releaseYear,
+      rpmSpeed: albums.rpmSpeed,
+      vinylCondition: albums.vinylCondition,
+      digitizationDate: albums.digitizationDate,
+      equipmentUsed: albums.equipmentUsed,
+      createdAt: albums.createdAt,
+      updatedAt: albums.updatedAt,
+    })
     .from(albums)
     .where(and(...conditions))
     .orderBy(desc(albums.createdAt))
@@ -137,10 +201,10 @@ const deleteAlbum = async (id: number) => {
   db.delete(albums).where(eq(albums.id, id)).run();
 };
 
-const updateAlbumCoverArt = async (id: number, coverArtPath: string) => {
+const updateAlbumCover = async (id: number, cover: string) => {
   db.update(albums)
     .set({
-      coverArtPath,
+      cover,
       updatedAt: sql`CURRENT_TIMESTAMP`,
     })
     .where(eq(albums.id, id))
@@ -171,7 +235,7 @@ export {
   createAlbum,
   updateAlbum,
   deleteAlbum,
-  updateAlbumCoverArt,
+  updateAlbumCover,
 };
 
 export type { NewAlbumData };

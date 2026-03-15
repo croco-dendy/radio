@@ -25,7 +25,7 @@ export const calculateAlbumCompleteness = (album: Album): number => {
   if (album.year) filledFields++;
   if (album.description) filledFields++;
   if (album.tags) filledFields++;
-  if (album.coverArtPath) filledFields++;
+  if (album.cover) filledFields++;
   if (album.songCount && album.songCount > 0) filledFields++;
 
   return Math.round((filledFields / COMPLETENESS_FIELDS) * 100);

@@ -86,7 +86,7 @@ export const albums = sqliteTable('albums', {
   title: text('title').notNull(),
   artist: text('artist').notNull(),
   year: integer('year'),
-  coverArtPath: text('cover_art_path'),
+  cover: text('cover'),
   description: text('description'),
   tags: text('tags'),
   isPublic: integer('is_public').default(0),

@@ -14,7 +14,7 @@ import {
   createAlbum,
   updateAlbum,
   deleteAlbum,
-  updateAlbumCoverArt,
+  updateAlbumCover,
   type NewAlbumData,
 } from '@/db/albums/albums';
 import { findSongsByAlbum } from '@/db/albums/songs';
@@ -52,7 +52,11 @@ export class AlbumService {
   }
 
   async getPublicAlbums(limit: number, offset: number) {
-    return findPublicAlbums(limit, offset);
+    const albums = await findPublicAlbums(limit, offset);
+    return albums.map((album) => ({
+      ...album,
+      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+    }));
   }
 
   async getPublicAlbumsWithFilters(
@@ -65,11 +69,19 @@ export class AlbumService {
     limit: number,
     offset: number,
   ) {
-    return findPublicAlbumsWithFilters(filters, limit, offset);
+    const albums = await findPublicAlbumsWithFilters(filters, limit, offset);
+    return albums.map((album) => ({
+      ...album,
+      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+    }));
   }
 
   async getUserAlbums(accountId: number, limit: number, offset: number) {
-    return findAlbumsByOwner(accountId, limit, offset);
+    const albums = await findAlbumsByOwner(accountId, limit, offset);
+    return albums.map((album) => ({
+      ...album,
+      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+    }));
   }
 
   async getAlbumById(id: number) {
@@ -77,7 +89,10 @@ export class AlbumService {
     if (!album) {
       throw new Error(getErrorMessage.collection('NOT_FOUND', id));
     }
-    return album;
+    return {
+      ...album,
+      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+    };
   }
 
   /**
@@ -91,6 +106,50 @@ export class AlbumService {
     // Normalize MEDIA_BASE_URL to remove trailing slashes
     const normalizedBaseUrl = env.mediaBaseUrl.replace(/\/+$/, '');
     return `${normalizedBaseUrl}/${folderSlug}/${fileSlug}.m4a`;
+  }
+
+  /**
+   * Computes coverImageUrl dynamically for albums.
+   * - If cover is a relative path (starts with "img/"), compute from MEDIA_BASE_URL
+   * - If cover is set but not a relative path, it's an uploaded cover - use cover endpoint
+   * - If cover is null, fallback to default media folder cover (img/cover.webp)
+   */
+  private computeCoverImageUrl(
+    folderSlug: string | null,
+    cover: string | null,
+    albumId?: number,
+  ): string | null {
+    // If cover is set and is a relative path from media folder
+    if (cover?.startsWith('img/')) {
+      if (!folderSlug) {
+        return null;
+      }
+      const normalizedBaseUrl = env.mediaBaseUrl.replace(/\/+$/, '');
+      return `${normalizedBaseUrl}/${folderSlug}/${cover}`;
+    }
+
+    // If cover is set but not a relative path, it's an uploaded cover
+    // Use the cover endpoint to serve it
+    if (cover && !cover.startsWith('img/') && albumId) {
+      // For uploaded covers, use the API endpoint
+      // For uploaded covers, construct API endpoint URL
+      // Extract origin from mediaBaseUrl
+      try {
+        const url = new URL(env.mediaBaseUrl);
+        return `${url.origin}/api/albums/${albumId}/cover`;
+      } catch {
+        // Fallback if mediaBaseUrl is not a full URL
+        return `/api/albums/${albumId}/cover`;
+      }
+    }
+
+    // Fallback: if cover is null but folderSlug exists, use default media folder cover
+    if (!cover && folderSlug) {
+      const normalizedBaseUrl = env.mediaBaseUrl.replace(/\/+$/, '');
+      return `${normalizedBaseUrl}/${folderSlug}/img/cover.webp`;
+    }
+
+    return null;
   }
 
   async getAlbumWithSongs(id: number) {
@@ -131,8 +190,9 @@ export class AlbumService {
     const album = await this.getAlbumById(id);
     await authService.requireOwnership(accountId, album.ownerId);
 
-    if (album.coverArtPath && existsSync(album.coverArtPath)) {
-      unlinkSync(album.coverArtPath);
+    // Delete uploaded cover file if it exists and is not from media folder
+    if (album.cover && !album.cover.startsWith('img/') && existsSync(album.cover)) {
+      unlinkSync(album.cover);
     }
 
     await deleteAlbum(id);
@@ -146,17 +206,19 @@ export class AlbumService {
     const fileName = this.generateCoverFileName(albumId, extension);
     const filePath = join(this.coversDir, fileName);
 
-    if (album.coverArtPath && existsSync(album.coverArtPath)) {
-      unlinkSync(album.coverArtPath);
+    // Delete old uploaded cover file if it exists
+    if (album.cover && !album.cover.startsWith('img/') && existsSync(album.cover)) {
+      unlinkSync(album.cover);
     }
 
     const buffer = await file.arrayBuffer();
     writeFileSync(filePath, new Uint8Array(buffer));
 
-    await updateAlbumCoverArt(albumId, filePath);
+    // Save file path to cover field
+    await updateAlbumCover(albumId, filePath);
 
     return {
-      coverArtPath: filePath,
+      cover: filePath,
       fileName,
     };
   }
@@ -164,19 +226,41 @@ export class AlbumService {
   async getCoverArt(albumId: number) {
     const album = await this.getAlbumById(albumId);
 
-    if (!album.coverArtPath || !existsSync(album.coverArtPath)) {
-      throw new Error('Cover art not found');
+    // If cover is from media folder, we need to read from media root
+    if (album.cover?.startsWith('img/')) {
+      if (!album.folderSlug) {
+        throw new Error('Cover art not found');
+      }
+      const coverPath = join(env.mediaRootPath, album.folderSlug, album.cover);
+      if (!existsSync(coverPath)) {
+        throw new Error('Cover art not found');
+      }
+      const buffer = readFileSync(coverPath);
+      const extension = album.cover.split('.').pop() || 'webp';
+      const mimeType = this.getMimeType(extension);
+      return {
+        buffer,
+        mimeType,
+        size: buffer.length,
+      };
     }
 
-    const buffer = readFileSync(album.coverArtPath);
-    const extension = album.coverArtPath.split('.').pop() || 'jpg';
-    const mimeType = this.getMimeType(extension);
+    // If cover is an uploaded file path
+    if (album.cover && !album.cover.startsWith('img/')) {
+      if (!existsSync(album.cover)) {
+        throw new Error('Cover art not found');
+      }
+      const buffer = readFileSync(album.cover);
+      const extension = album.cover.split('.').pop() || 'jpg';
+      const mimeType = this.getMimeType(extension);
+      return {
+        buffer,
+        mimeType,
+        size: buffer.length,
+      };
+    }
 
-    return {
-      buffer,
-      mimeType,
-      size: buffer.length,
-    };
+    throw new Error('Cover art not found');
   }
 
   async checkAlbumAccess(

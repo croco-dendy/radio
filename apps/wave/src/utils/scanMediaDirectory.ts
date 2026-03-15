@@ -1,4 +1,4 @@
-import { readdirSync, statSync } from 'node:fs';
+import { readdirSync, statSync, existsSync } from 'node:fs';
 import { join, basename, extname } from 'node:path';
 
 const FOLDER_PATTERN = /^(.+?)_(.+)$/;
@@ -13,6 +13,7 @@ export interface ScannedAlbum {
   artistName: string;
   albumName: string;
   tracks: ScannedTrack[];
+  cover?: string;
 }
 
 /**
@@ -90,11 +91,20 @@ export function scanMediaDirectory(
         };
       });
 
+    // Check for cover image in img/ subdirectory
+    let cover: string | undefined;
+    const imgDirPath = join(entryPath, 'img');
+    const coverPath = join(imgDirPath, 'cover.webp');
+    if (existsSync(imgDirPath) && statSync(imgDirPath).isDirectory() && existsSync(coverPath)) {
+      cover = 'img/cover.webp';
+    }
+
     results.push({
       folderSlug,
       artistName: slugToTitle(artistSlug),
       albumName: slugToTitle(albumSlug),
       tracks,
+      cover,
     });
   }
 

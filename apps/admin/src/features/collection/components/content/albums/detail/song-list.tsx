@@ -42,12 +42,33 @@ export const SongList = ({ songs }: SongListProps) => {
 
   const sortedSongs = [...songs].sort((a, b) => a.trackNumber - b.trackNumber);
 
+  // Convert songs to playlist format and create a map of song audioUrl to playlist index
+  const playlist: Array<{ title: string; artist: string; audioUrl?: string }> = [];
+  const songToPlaylistIndex = new Map<string, number>();
+
+  for (const song of sortedSongs) {
+    if (song.audioUrl) {
+      const playlistIndex = playlist.length;
+      playlist.push({
+        title: song.title,
+        artist: song.artist || '',
+        audioUrl: song.audioUrl || undefined,
+      });
+      songToPlaylistIndex.set(song.audioUrl, playlistIndex);
+    }
+  }
+
   return (
     <div className="space-y-3">
       {sortedSongs.map((song) => {
         const isCurrentTrack =
           currentTrack?.audioUrl === song.audioUrl && !!song.audioUrl;
         const isThisPlaying = isCurrentTrack && isPlaying;
+
+        // Get the playlist index for this song
+        const playlistIndex = song.audioUrl
+          ? songToPlaylistIndex.get(song.audioUrl) ?? -1
+          : -1;
 
         return (
           <div
@@ -60,15 +81,11 @@ export const SongList = ({ songs }: SongListProps) => {
           >
             <div className="flex items-center gap-4">
               {/* Play button / track number */}
-              {song.audioUrl ? (
+              {song.audioUrl && playlistIndex >= 0 ? (
                 <button
                   type="button"
                   onClick={() =>
-                    playTrack({
-                      title: song.title,
-                      artist: song.artist || '',
-                      audioUrl: song.audioUrl || undefined,
-                    })
+                    playTrack(playlist, playlistIndex)
                   }
                   className={`flex-shrink-0 w-8 h-8 rounded flex items-center justify-center transition-colors ${
                     isThisPlaying

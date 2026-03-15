@@ -39,15 +39,7 @@ export const CollectionModals = ({
         </DetailModal>
       )}
 
-      {activeTab === 'albums' && selectedAlbum && !showEditAlbumModal && (
-        <DetailModal
-          title={selectedAlbum.title}
-          onClose={() => setSelectedAlbum(null)}
-          isOpen={!!selectedAlbum}
-        >
-          <AlbumDetail album={selectedAlbum} />
-        </DetailModal>
-      )}
+      {/* Album detail is now shown inline in master-detail layout, not as modal */}
 
       <CreateCollectionModal
         isOpen={showCreateCollectionModal}

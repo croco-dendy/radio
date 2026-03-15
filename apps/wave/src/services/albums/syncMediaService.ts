@@ -95,8 +95,16 @@ async function syncAlbum(
 
   if (existing) {
     // Only touch hasMedia – never overwrite other metadata
+    const updateData: { hasMedia?: number; cover?: string } = {};
     if (!existing.hasMedia) {
-      await updateAlbum(existing.id, { hasMedia: 1 });
+      updateData.hasMedia = 1;
+    }
+    // Update cover only if it's currently null (don't overwrite manually set covers)
+    if (scanned.cover && !existing.cover) {
+      updateData.cover = scanned.cover;
+    }
+    if (Object.keys(updateData).length > 0) {
+      await updateAlbum(existing.id, updateData);
     }
     result.albumsUpdated++;
     return existing.id;
@@ -111,6 +119,7 @@ async function syncAlbum(
     hasMedia: 1,
     isPublished: 0,
     isPublic: 0,
+    cover: scanned.cover,
   });
 
   result.albumsCreated++;

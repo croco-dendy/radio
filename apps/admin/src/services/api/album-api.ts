@@ -108,12 +108,12 @@ export const albumApi = {
   uploadCoverArt: async (
     id: number,
     file: File,
-  ): Promise<{ coverArtPath: string; fileName: string }> => {
+  ): Promise<{ cover: string; fileName: string }> => {
     const formData = new FormData();
     formData.append('cover', file);
 
     const response = await waveApiClient.post<
-      ApiResponse<{ coverArtPath: string; fileName: string }>
+      ApiResponse<{ cover: string; fileName: string }>
     >(`/api/albums/${id}/cover`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

@@ -1,9 +1,6 @@
 import { AlbumSearch } from '@/features/collection/components/filters/album-search';
 import { useCollectionStore } from '@/features/collection/store/collection-store';
-import { useSyncMedia } from '@/services/api';
-import { useNotificationStore } from '@/stores/notification-store';
 import {
-  Button,
   IconButton,
   Popup,
   PopupItem,
@@ -13,7 +10,13 @@ import {
   FilterIcon,
 } from '@radio/mojo-ui';
 
-export const AlbumListHeader = () => {
+type AlbumListHeaderVariant = 'default' | 'minimal';
+
+type AlbumListHeaderProps = {
+  variant?: AlbumListHeaderVariant;
+};
+
+export const AlbumListHeader = ({ variant = 'default' }: AlbumListHeaderProps) => {
   const {
     searchQuery,
     setSearchQuery,
@@ -25,49 +28,6 @@ export const AlbumListHeader = () => {
     hasActiveFilters,
     filtersEnabled,
   } = useCollectionStore();
-
-  const syncMedia = useSyncMedia();
-  const { addNotification } = useNotificationStore();
-
-  const handleSyncMedia = () => {
-    syncMedia.mutate(undefined, {
-      onSuccess: (data) => {
-        const parts: string[] = [];
-        if (data.albumsCreated > 0)
-          parts.push(`${data.albumsCreated} albums created`);
-        if (data.albumsUpdated > 0)
-          parts.push(`${data.albumsUpdated} albums updated`);
-        if (data.albumsMarkedOffline > 0)
-          parts.push(`${data.albumsMarkedOffline} marked offline`);
-        if (data.tracksCreated > 0)
-          parts.push(`${data.tracksCreated} tracks added`);
-        if (data.tracksUpdated > 0)
-          parts.push(`${data.tracksUpdated} tracks updated`);
-
-        const message =
-          parts.length > 0 ? parts.join(', ') : 'No changes detected';
-
-        addNotification({
-          type: data.errors.length > 0 ? 'warning' : 'success',
-          title: 'Media sync complete',
-          message:
-            data.errors.length > 0
-              ? `${message}. ${data.errors.length} error(s) occurred.`
-              : message,
-        });
-      },
-      onError: (error) => {
-        addNotification({
-          type: 'error',
-          title: 'Media sync failed',
-          message:
-            error instanceof Error
-              ? error.message
-              : 'An unexpected error occurred',
-        });
-      },
-    });
-  };
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -87,6 +47,11 @@ export const AlbumListHeader = () => {
   const currentSortLabel =
     sortOptions.find((opt) => opt.value === sortBy)?.label || 'Назва';
 
+  // Minimal variant - hide all controls
+  if (variant === 'minimal') {
+    return null;
+  }
+
   return (
     <div className="flex items-center gap-3 w-full">
       <h3 className="text-lg font-semibold text-gray-200 whitespace-nowrap">
@@ -96,15 +61,6 @@ export const AlbumListHeader = () => {
       <div className="flex-1" />
 
       <div className="flex items-center gap-2">
-        <Button
-          variant="green"
-          size="small"
-          title={syncMedia.isPending ? 'Syncing...' : 'Sync Media'}
-          onClick={handleSyncMedia}
-          disabled={syncMedia.isPending}
-          rounded="half"
-        />
-
         <Popup
           label={currentSortLabel}
           icon={<SortIcon size={14} />}

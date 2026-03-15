@@ -16,9 +16,9 @@ export const AlbumCard = ({ album, onClick }: AlbumCardProps) => {
       className="group cursor-pointer transition-all duration-300 hover:scale-105 text-left w-full"
     >
       <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow bg-neutral-800/80 backdrop-blur-sm border border-neutral-700/50">
-        {album.coverArtPath ? (
+        {album.coverImageUrl ? (
           <img
-            src={albumApi.getCoverArtUrl(album.id)}
+            src={album.coverImageUrl}
             alt={album.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
             onError={(e) => {

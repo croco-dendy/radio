@@ -1,17 +1,17 @@
-import { albumApi } from '@/services/api';
-
 type AlbumCoverProps = {
-  albumId: number;
-  coverArtPath: string | null;
+  coverImageUrl?: string | null;
   title: string;
 };
 
-export const AlbumCover = ({ albumId, coverArtPath, title }: AlbumCoverProps) => {
+export const AlbumCover = ({ coverImageUrl, title }: AlbumCoverProps) => {
+  // coverImageUrl is computed by the API and handles both uploaded covers and media folder covers
+  const coverUrl = coverImageUrl || null;
+
   return (
     <div className="flex-shrink-0 w-16 h-16 bg-gray-700 rounded-lg overflow-hidden">
-      {coverArtPath ? (
+      {coverUrl ? (
         <img
-          src={albumApi.getCoverArtUrl(albumId)}
+          src={coverUrl}
           alt={title}
           className="w-full h-full object-cover"
           onError={(e) => {

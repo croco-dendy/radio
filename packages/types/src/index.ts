@@ -96,7 +96,8 @@ export interface Album {
   title: string;
   artist: string;
   year: number | null;
-  coverArtPath: string | null;
+  cover: string | null;
+  coverImageUrl?: string | null;
   description: string | null;
   tags: string | null;
   isPublic: number;

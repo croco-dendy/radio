@@ -55,9 +55,9 @@ export const AlbumDetailModal = ({ album, onClose }: AlbumDetailModalProps) => {
           <div className="flex flex-col md:flex-row gap-8 p-8 overflow-y-auto max-h-[90vh]">
             <div className="flex-shrink-0">
               <div className="w-64 h-64 rounded-lg overflow-hidden shadow-lg">
-                {album.coverArtPath ? (
+                {album.coverImageUrl ? (
                   <img
-                    src={albumApi.getCoverArtUrl(album.id)}
+                    src={album.coverImageUrl}
                     alt={album.title}
                     className="w-full h-full object-cover"
                     onError={(e) => {

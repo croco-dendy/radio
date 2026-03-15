@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { AlbumListSkeleton } from './list/album-list-skeleton';
 import { AlbumListEmpty } from './list/album-list-empty';
@@ -11,29 +11,13 @@ import {
 import { useCollectionStore } from '@/features/collection/store/collection-store';
 import { useUserAlbums } from '@/services/api';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
+type AlbumListVariant = 'default' | 'minimal';
+
+type AlbumListProps = {
+  variant?: AlbumListVariant;
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-    },
-  },
-};
-
-export const AlbumList = () => {
+export const AlbumList = ({ variant = 'default' }: AlbumListProps) => {
   const {
     searchQuery,
     filters,
@@ -48,6 +32,22 @@ export const AlbumList = () => {
     const filtered = filterAlbums(albums || [], filters, searchQuery);
     return sortAlbums(filtered, sortBy, sortOrder);
   }, [albums, filters, searchQuery, sortBy, sortOrder]);
+
+  // Track if albums list has actually changed (not just variant)
+  const albumsKey = useMemo(
+    () => filteredAndSortedAlbums.map((a) => a.id).join(','),
+    [filteredAndSortedAlbums],
+  );
+  const prevAlbumsKeyRef = useRef<string>('');
+
+  // Check synchronously if albums changed (not variant)
+  const albumsChanged = prevAlbumsKeyRef.current !== albumsKey;
+  if (albumsChanged) {
+    prevAlbumsKeyRef.current = albumsKey;
+  }
+
+  // Only animate if albums actually changed, not just variant
+  const shouldAnimate = albumsChanged;
 
   const handleAlbumClick = (album: Album) => {
     setSelectedAlbum(album);
@@ -99,21 +99,51 @@ export const AlbumList = () => {
 
   return (
     <motion.div
+      key={albumsKey}
       className="space-y-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
-      variants={containerVariants}
-      initial="hidden"
+      variants={shouldAnimate ? containerVariants : undefined}
+      initial={shouldAnimate ? 'hidden' : 'visible'}
       animate="visible"
     >
       {filteredAndSortedAlbums.map((album) => (
-        <motion.div key={album.id} variants={itemVariants}>
+        <motion.div
+          key={album.id}
+          variants={shouldAnimate ? itemVariants : undefined}
+          initial={shouldAnimate ? 'hidden' : 'visible'}
+          animate="visible"
+        >
           <AlbumListItem
             album={album}
             onClick={handleAlbumClick}
             onEdit={handleAlbumEdit}
             onDelete={handleAlbumDelete}
+            variant={variant}
           />
         </motion.div>
       ))}
     </motion.div>
   );
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.03,
+      delayChildren: 0,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      ease: 'easeOut',
+    },
+  },
 };

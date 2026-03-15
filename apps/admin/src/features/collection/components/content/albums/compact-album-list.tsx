@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { AlbumListSkeleton } from './list/album-list-skeleton';
 import { AlbumListEmpty } from './list/album-list-empty';
-import { AlbumListItem } from './list/album-list-item';
+import { CompactAlbumListItem } from './list/compact-album-list-item';
 import type { Album } from '@radio/types';
 import {
   filterAlbums,
@@ -11,13 +11,14 @@ import {
 import { useCollectionStore } from '@/features/collection/store/collection-store';
 import { useUserAlbums } from '@/services/api';
 
-export const AlbumList = () => {
+export const CompactAlbumList = () => {
   const {
     searchQuery,
     filters,
     sortBy,
     sortOrder,
     setSelectedAlbum,
+    selectedAlbum,
   } = useCollectionStore();
   const { data: albums, isLoading } = useUserAlbums();
 
@@ -26,20 +27,20 @@ export const AlbumList = () => {
     return sortAlbums(filtered, sortBy, sortOrder);
   }, [albums, filters, searchQuery, sortBy, sortOrder]);
 
-  // Track if albums list has actually changed (not just variant)
+  // Track if albums list has actually changed
   const albumsKey = useMemo(
     () => filteredAndSortedAlbums.map((a) => a.id).join(','),
     [filteredAndSortedAlbums],
   );
   const prevAlbumsKeyRef = useRef<string>('');
 
-  // Check synchronously if albums changed (not variant)
+  // Check synchronously if albums changed
   const albumsChanged = prevAlbumsKeyRef.current !== albumsKey;
   if (albumsChanged) {
     prevAlbumsKeyRef.current = albumsKey;
   }
 
-  // Only animate if albums actually changed, not just variant
+  // Only animate if albums actually changed
   const shouldAnimate = albumsChanged;
 
   const handleAlbumClick = (album: Album) => {
@@ -84,7 +85,7 @@ export const AlbumList = () => {
   return (
     <motion.div
       key={albumsKey}
-      className="space-y-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
+      className="space-y-2"
       variants={shouldAnimate ? containerVariants : undefined}
       initial={shouldAnimate ? 'hidden' : 'visible'}
       animate="visible"
@@ -96,9 +97,10 @@ export const AlbumList = () => {
           initial={shouldAnimate ? 'hidden' : 'visible'}
           animate="visible"
         >
-          <AlbumListItem
+          <CompactAlbumListItem
             album={album}
             onClick={handleAlbumClick}
+            isSelected={selectedAlbum?.id === album.id}
           />
         </motion.div>
       ))}

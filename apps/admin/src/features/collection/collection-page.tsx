@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PageLayout, VinylTabs } from '@radio/mojo-ui';
+import { PageLayout, VinylTabs, Panel } from '@radio/mojo-ui';
 import {
   CollectionContent,
   CollectionSidebar,
   CollectionModals,
 } from './components';
+import {
+  CompactAlbumList,
+  CompactAlbumListHeader,
+} from './components/content/albums';
 import type { Collection } from '@radio/types';
 import { useCollectionStore } from './store/collection-store';
 
@@ -41,24 +45,28 @@ export const CollectionPage = () => {
         />
       }
     >
-      <div className="relative pb-16 lg:pb-28 lg:h-[calc(100vh-12rem)] overflow-visible">
+      <div className="relative lg:h-[calc(100vh-12rem)] overflow-visible pb-16">
         <div
           className="relative h-full"
-          style={{ width: '100%', paddingTop: '24px', paddingBottom: '24px' }}
+          style={{
+            width: '100%',
+            paddingTop: `${layout.padding}px`,
+            paddingBottom: `${layout.padding}px`,
+          }}
         >
           {/* Sidebar - slides out to the left */}
           <motion.div
             className="absolute left-0 top-0 bottom-0 overflow-hidden"
-            style={{ width: 320, willChange: 'transform' }}
-            animate={{
-              x: showAlbumDetail ? -336 : 0,
-              opacity: showAlbumDetail ? 0 : 1,
-              pointerEvents: showAlbumDetail ? 'none' : 'auto',
+            style={{
+              width: layout.sidebarWidth,
+              willChange: 'transform',
             }}
-            transition={{
-              duration: 0.3,
-              ease: [0.25, 0.1, 0.25, 1],
-            }}
+            animate={
+              showAlbumDetail
+                ? animations.sidebar.slideOut
+                : animations.sidebar.slideIn
+            }
+            transition={animations.transition}
           >
             <CollectionSidebar />
           </motion.div>
@@ -67,17 +75,16 @@ export const CollectionPage = () => {
           <motion.div
             className="absolute top-0 bottom-0 overflow-hidden flex flex-col"
             style={{
-              left: 336,
-              width: 'calc(100% - 320px - 24px)',
+              left: layout.listLeftPosition,
+              width: `calc(100% - ${layout.sidebarWidth}px - ${layout.padding}px)`,
               willChange: 'transform',
             }}
-            animate={{
-              x: showAlbumDetail ? -336 : 0,
-            }}
-            transition={{
-              duration: 0.3,
-              ease: [0.25, 0.1, 0.25, 1],
-            }}
+            animate={
+              showAlbumDetail
+                ? animations.list.slideOut
+                : animations.list.slideIn
+            }
+            transition={animations.transition}
           >
             <CollectionContent
               onCollectionClick={setSelectedCollection}
@@ -85,27 +92,51 @@ export const CollectionPage = () => {
             />
           </motion.div>
 
-          {/* Album Detail - slides in from right, positioned above list with more height */}
+          {/* Compact Album List Panel - appears smoothly when detail is open */}
+          <AnimatePresence>
+            {showAlbumDetail && (
+              <motion.div
+                key="compact-album-panel"
+                className="absolute top-0 bottom-0 overflow-hidden flex flex-col"
+                style={{
+                  left: layout.compactPanelLeftPosition,
+                  width: layout.compactPanelWidth,
+                  willChange: 'transform',
+                  zIndex: animations.compactPanel.zIndex,
+                }}
+                initial={animations.compactPanel.initial}
+                animate={animations.compactPanel.animate}
+                exit={animations.compactPanel.exit}
+                transition={animations.transition}
+              >
+                <Panel
+                  header={<CompactAlbumListHeader />}
+                  content={<CompactAlbumList />}
+                  className="flex-1 flex flex-col overflow-hidden h-auto lg:h-full"
+                  minHeight="h-full"
+                  decorated={false}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Album Detail - slides in from right, positioned after compact panel */}
           <AnimatePresence mode="popLayout">
             {showAlbumDetail && (
               <motion.div
                 key="album-detail"
                 className="absolute top-0 bottom-0 overflow-hidden flex flex-col"
                 style={{
-                  left: 336,
-                  width: 'calc(100% - 320px - 24px)',
-                  height: 'calc(100% + 48px)',
-                  marginTop: '-24px',
+                  left: layout.detailPanelLeftPosition,
+                  right: 0,
+                  width: 'auto',
                   willChange: 'transform',
-                  zIndex: 10,
+                  zIndex: animations.detailPanel.zIndex,
                 }}
-                initial={{ x: '100%', opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: '100%', opacity: 0 }}
-                transition={{
-                  duration: 0.3,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
+                initial={animations.detailPanel.initial}
+                animate={animations.detailPanel.animate}
+                exit={animations.detailPanel.exit}
+                transition={animations.transition}
               >
                 <CollectionContent
                   onCollectionClick={setSelectedCollection}
@@ -123,4 +154,49 @@ export const CollectionPage = () => {
       />
     </PageLayout>
   );
+};
+
+const layout = {
+  sidebarWidth: 320,
+  sidebarGap: 16,
+  compactPanelWidth: 400,
+  compactPanelGap: 16,
+  padding: 24,
+
+  get listLeftPosition() {
+    return this.sidebarWidth + this.sidebarGap;
+  },
+  get compactPanelLeftPosition() {
+    return 0;
+  },
+  get detailPanelLeftPosition() {
+    return this.compactPanelWidth + this.compactPanelGap;
+  },
+  get detailHeightAdjustment() {
+    return this.padding * 2;
+  },
+};
+
+const animations = {
+  transition: { duration: 0.2 },
+  sidebar: {
+    slideOut: { x: '-50%', opacity: 0, pointerEvents: 'none' as const },
+    slideIn: { x: 0, opacity: 1, pointerEvents: 'auto' as const },
+  },
+  list: {
+    slideOut: { x: '-20%', opacity: 0, pointerEvents: 'none' as const },
+    slideIn: { x: 0, opacity: 1, pointerEvents: 'auto' as const },
+  },
+  compactPanel: {
+    initial: { x: '50%', opacity: 0 },
+    animate: { x: 0, opacity: 1 },
+    exit: { x: '50%', opacity: 0 },
+    zIndex: 5,
+  },
+  detailPanel: {
+    initial: { x: '50%', opacity: 0 },
+    animate: { x: 0, opacity: 1 },
+    exit: { x: '50%', opacity: 0 },
+    zIndex: 10,
+  },
 };

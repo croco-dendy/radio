@@ -128,17 +128,6 @@ export const useRemoveItemFromCollection = () => {
 };
 
 // Audio File Hooks
-export const useUploadAudioFile = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: collectionApi.uploadAudioFile,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: audioFileKeys.all });
-    },
-  });
-};
-
 export const useAudioFile = (id: number) => {
   return useQuery({
     queryKey: audioFileKeys.detail(id),

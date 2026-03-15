@@ -18,7 +18,7 @@ export const GenreStats = ({
   const selectedSet = new Set(selectedGenres);
 
   if (sortedGenres.length === 0) {
-    return null;
+    return <div />;
   }
 
   return (

@@ -42,4 +42,3 @@ export const AlbumCover = ({ coverImageUrl, title }: AlbumCoverProps) => {
     </div>
   );
 };
-

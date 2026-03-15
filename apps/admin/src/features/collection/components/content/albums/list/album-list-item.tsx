@@ -8,20 +8,14 @@ import {
 import { useTogglePublished } from '@/services/api';
 import { useNotificationStore } from '@/stores/notification-store';
 
-type AlbumListItemVariant = 'default' | 'minimal';
-
 type AlbumListItemProps = {
   album: Album;
   onClick: (album: Album) => void;
-  onEdit: (album: Album) => void;
-  onDelete: (albumId: number) => void;
-  variant?: AlbumListItemVariant;
 };
 
 export const AlbumListItem = ({
   album,
   onClick,
-  variant = 'default',
 }: AlbumListItemProps) => {
   const tags = album.tags ? JSON.parse(album.tags) : [];
   const completeness = calculateAlbumCompleteness(album);
@@ -53,32 +47,6 @@ export const AlbumListItem = ({
     );
   };
 
-  // Minimal variant - only cover, title, and artist
-  if (variant === 'minimal') {
-    return (
-      <div className="relative group">
-        <button
-          type="button"
-          className="w-full flex items-center gap-3 p-2 rounded-lg transition-all bg-gray-800/30 hover:bg-gray-800/50 border border-transparent cursor-pointer text-left"
-          onClick={() => onClick(album)}
-        >
-          <AlbumCover
-            coverImageUrl={album.coverImageUrl}
-            title={album.title}
-          />
-          <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-gray-200 truncate text-sm">
-              {album.title}
-            </h4>
-            <p className="text-xs text-gray-400 truncate mt-0.5">
-              {album.artist}
-            </p>
-          </div>
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="relative group">
       <div className="w-full flex items-center gap-3 p-3 rounded-lg transition-all bg-gray-800/30 hover:bg-gray-800/50 border border-transparent">
@@ -87,10 +55,7 @@ export const AlbumListItem = ({
           className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer text-left"
           onClick={() => onClick(album)}
         >
-          <AlbumCover
-            coverImageUrl={album.coverImageUrl}
-            title={album.title}
-          />
+          <AlbumCover coverImageUrl={album.coverImageUrl} title={album.title} />
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">

@@ -43,6 +43,7 @@
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.44.5",
     "hono": "^4.7.6",
+    "music-metadata": "^8.1.4",
     "node-media-server": "^4.0.18",
     "ws": "^8.18.2",
     "xml-js": "^1.6.11",

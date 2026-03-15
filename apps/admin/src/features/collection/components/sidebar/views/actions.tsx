@@ -21,7 +21,7 @@ export const CollectionActions = ({
         <Button
           variant="green"
           size="medium"
-          title={isSyncing ? 'Syncing...' : 'SYNC MEDIA'}
+          title={isSyncing ? 'Оновлення...' : 'ОНОВИТИ'}
           onClick={onSyncMedia}
           disabled={isSyncing}
           className="w-full"
@@ -35,15 +35,7 @@ export const CollectionActions = ({
           onClick={onCreateCollection}
           className="w-full"
         />
-      ) : activeTab === 'albums' && onCreateAlbum ? (
-        <Button
-          variant="green"
-          size="medium"
-          title="Додати альбом"
-          onClick={onCreateAlbum}
-          className="w-full"
-        />
-      ) : null}
+      ) : activeTab === 'albums' && onCreateAlbum ? null : null}
     </div>
   );
 };

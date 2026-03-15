@@ -50,7 +50,9 @@ for (const stmt of statements) {
 db.close();
 
 if (errorCount === 0) {
-  console.log(`\n✅ Migration applied successfully! (${successCount} statements)`);
+  console.log(
+    `\n✅ Migration applied successfully! (${successCount} statements)`,
+  );
 } else {
   console.error(`\n❌ Migration completed with ${errorCount} errors`);
   process.exit(1);

@@ -95,22 +95,6 @@ export const collectionApi = {
   },
 
   // Audio Files
-  uploadAudioFile: async (file: File): Promise<AudioFile> => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await waveApiClient.post<ApiResponse<AudioFile>>(
-      '/api/audio-files/upload',
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
-    );
-    return response.data.data;
-  },
-
   getAudioFile: async (id: number): Promise<AudioFile> => {
     const response = await waveApiClient.get<ApiResponse<AudioFile>>(
       `/api/audio-files/${id}`,

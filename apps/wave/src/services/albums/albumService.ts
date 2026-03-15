@@ -21,6 +21,7 @@ import { findSongsByAlbum } from '@/db/albums/songs';
 import { authService } from '../auth';
 import { getErrorMessage } from '@/utils/errorMessages';
 import { env } from '@/utils/env';
+import { formatDurationFromString } from '@/utils/audioMetadata';
 
 export class AlbumService {
   private coversDir: string;
@@ -55,7 +56,11 @@ export class AlbumService {
     const albums = await findPublicAlbums(limit, offset);
     return albums.map((album) => ({
       ...album,
-      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+      coverImageUrl: this.computeCoverImageUrl(
+        album.folderSlug,
+        album.cover,
+        album.id,
+      ),
     }));
   }
 
@@ -72,7 +77,11 @@ export class AlbumService {
     const albums = await findPublicAlbumsWithFilters(filters, limit, offset);
     return albums.map((album) => ({
       ...album,
-      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+      coverImageUrl: this.computeCoverImageUrl(
+        album.folderSlug,
+        album.cover,
+        album.id,
+      ),
     }));
   }
 
@@ -80,7 +89,11 @@ export class AlbumService {
     const albums = await findAlbumsByOwner(accountId, limit, offset);
     return albums.map((album) => ({
       ...album,
-      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+      coverImageUrl: this.computeCoverImageUrl(
+        album.folderSlug,
+        album.cover,
+        album.id,
+      ),
     }));
   }
 
@@ -91,7 +104,11 @@ export class AlbumService {
     }
     return {
       ...album,
-      coverImageUrl: this.computeCoverImageUrl(album.folderSlug, album.cover, album.id),
+      coverImageUrl: this.computeCoverImageUrl(
+        album.folderSlug,
+        album.cover,
+        album.id,
+      ),
     };
   }
 
@@ -99,7 +116,10 @@ export class AlbumService {
    * Computes audioUrl dynamically for tracks based on MEDIA_BASE_URL, album folderSlug, and track fileSlug.
    * Format: ${MEDIA_BASE_URL}/${folderSlug}/${fileSlug}.m4a
    */
-  private computeAudioUrl(folderSlug: string | null, fileSlug: string | null): string | null {
+  private computeAudioUrl(
+    folderSlug: string | null,
+    fileSlug: string | null,
+  ): string | null {
     if (!folderSlug || !fileSlug) {
       return null;
     }
@@ -155,20 +175,18 @@ export class AlbumService {
   async getAlbumWithSongs(id: number) {
     const album = await this.getAlbumById(id);
     const songs = await findSongsByAlbum(id);
-    
-    // Add computed audioUrl to each song
+
+    // Add computed audioUrl and format duration for each song
     const songsWithAudioUrl = songs.map((song) => ({
       ...song,
       audioUrl: this.computeAudioUrl(album.folderSlug, song.fileSlug),
+      duration: formatDurationFromString(song.duration) || null,
     }));
 
     return { ...album, songs: songsWithAudioUrl };
   }
 
-  async createAlbum(
-    accountId: number,
-    data: Omit<NewAlbumData, 'ownerId'>,
-  ) {
+  async createAlbum(accountId: number, data: Omit<NewAlbumData, 'ownerId'>) {
     const albumData: NewAlbumData = {
       ...data,
       ownerId: accountId,
@@ -191,7 +209,11 @@ export class AlbumService {
     await authService.requireOwnership(accountId, album.ownerId);
 
     // Delete uploaded cover file if it exists and is not from media folder
-    if (album.cover && !album.cover.startsWith('img/') && existsSync(album.cover)) {
+    if (
+      album.cover &&
+      !album.cover.startsWith('img/') &&
+      existsSync(album.cover)
+    ) {
       unlinkSync(album.cover);
     }
 
@@ -207,7 +229,11 @@ export class AlbumService {
     const filePath = join(this.coversDir, fileName);
 
     // Delete old uploaded cover file if it exists
-    if (album.cover && !album.cover.startsWith('img/') && existsSync(album.cover)) {
+    if (
+      album.cover &&
+      !album.cover.startsWith('img/') &&
+      existsSync(album.cover)
+    ) {
       unlinkSync(album.cover);
     }
 
@@ -284,4 +310,3 @@ export class AlbumService {
 }
 
 export const albumService = new AlbumService();
-

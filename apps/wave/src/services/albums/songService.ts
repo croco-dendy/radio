@@ -12,6 +12,7 @@ import { authService } from '../auth';
 import { albumService } from './albumService';
 import { getErrorMessage } from '@/utils/errorMessages';
 import { env } from '@/utils/env';
+import { formatDurationFromString } from '@/utils/audioMetadata';
 
 export class SongService {
   /**
@@ -39,10 +40,11 @@ export class SongService {
     const album = await albumService.getAlbumById(albumId);
     const songs = await findSongsByAlbum(albumId);
     
-    // Add computed audioUrl to each song
+    // Add computed audioUrl and format duration for each song
     return songs.map((song) => ({
       ...song,
       audioUrl: this.computeAudioUrl(album.folderSlug, song.fileSlug),
+      duration: formatDurationFromString(song.duration) || null,
     }));
   }
 

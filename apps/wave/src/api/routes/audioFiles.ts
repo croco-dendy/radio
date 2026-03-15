@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { audioFileHandlers } from '@/api/handlers/audioFileHandlers';
-import { audioFileValidators } from '@/api/validators/audioFileValidators';
 import { authMiddleware } from '@/services/auth';
 
 type Variables = {
@@ -8,13 +7,6 @@ type Variables = {
 };
 
 const audioFilesRoutes = new Hono<{ Variables: Variables }>();
-
-audioFilesRoutes.post(
-  '/upload',
-  authMiddleware,
-  audioFileValidators.uploadValidator,
-  audioFileHandlers.uploadAudioFileHandler,
-);
 
 audioFilesRoutes.get('/:id', audioFileHandlers.getAudioFileHandler);
 

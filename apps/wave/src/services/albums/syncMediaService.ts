@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import {
   findAlbumByFolderSlug,
   findAlbumsWithFolderSlug,
@@ -14,6 +15,10 @@ import {
   trackSlugToTitle,
   type ScannedAlbum,
 } from '@/utils/scanMediaDirectory';
+import {
+  extractDurationFromFile,
+  formatDuration,
+} from '@/utils/audioMetadata';
 
 export interface SyncResult {
   albumsCreated: number;
@@ -34,8 +39,9 @@ export interface SyncResult {
  *
  * Track logic (upsert by album_id + file_slug):
  *   – New track   → INSERT with defaults derived from the file slug.
- *   – Existing track → no updates (only creates new tracks).
- *   – NEVER overwrites manually-entered metadata (title, artist, duration, etc.).
+ *   – Existing track → UPDATE duration (extracted from file) if successfully extracted.
+ *   – NEVER overwrites manually-entered metadata (title, artist).
+ *   – Duration is always recalculated from the file during sync.
  *   – audio_url is computed dynamically at API layer, not stored in database.
  *
  * @param baseDir      – absolute path to the media root directory
@@ -64,7 +70,7 @@ export async function syncMediaToDatabase(
   for (const scanned of scannedAlbums) {
     try {
       const albumId = await syncAlbum(scanned, ownerId, result);
-      await syncTracks(albumId, scanned, result);
+      await syncTracks(albumId, scanned, result, baseDir);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       result.errors.push(`[${scanned.folderSlug}] ${msg}`);
@@ -130,19 +136,43 @@ async function syncTracks(
   albumId: number,
   scanned: ScannedAlbum,
   result: SyncResult,
+  baseDir: string,
 ): Promise<void> {
   for (let i = 0; i < scanned.tracks.length; i++) {
     const track = scanned.tracks[i];
     const existing = await findSongByAlbumAndFileSlug(albumId, track.fileSlug);
 
+    // Extract duration from the actual audio file
+    const filePath = join(baseDir, scanned.folderSlug, `${track.fileSlug}.m4a`);
+    let duration: string | null = null;
+
+    try {
+      const durationSeconds = await extractDurationFromFile(filePath);
+      if (durationSeconds !== null) {
+        duration = formatDuration(durationSeconds);
+      }
+    } catch (error) {
+      // Handle errors gracefully - continue with null duration
+      const msg = error instanceof Error ? error.message : String(error);
+      result.errors.push(
+        `[${scanned.folderSlug}/${track.fileSlug}] Failed to extract duration: ${msg}`,
+      );
+    }
+
     if (existing) {
-      // Track already exists - no updates needed
+      // Track already exists - update duration if we successfully extracted it
+      // Duration is a technical property extracted from the file, so it's safe to update
+      if (duration) {
+        await updateSong(existing.id, { duration });
+        result.tracksUpdated++;
+      }
       // audio_url is computed dynamically at API layer, not stored
       continue;
     }
 
     // Insert a new track with sensible defaults.
-    // Manual metadata (title, artist, duration) can be edited later via the admin UI.
+    // Manual metadata (title, artist) can be edited later via the admin UI.
+    // Duration is always extracted from the file.
     // audioFileId is set to 0 as a placeholder – these tracks come from the
     // media directory and don't have an associated audioFiles record.
     // audio_url is computed dynamically at API layer using MEDIA_BASE_URL
@@ -151,7 +181,7 @@ async function syncTracks(
       audioFileId: 0,
       trackNumber: i + 1,
       title: trackSlugToTitle(track.fileSlug),
-      duration: '0:00',
+      duration: duration || '0:00',
       format: 'm4a',
       fileSlug: track.fileSlug,
     });

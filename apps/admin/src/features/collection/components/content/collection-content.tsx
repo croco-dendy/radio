@@ -5,6 +5,8 @@ import {
   AlbumList,
   AlbumListHeader,
   AlbumDetail,
+  CompactAlbumList,
+  CompactAlbumListHeader,
 } from '@/features/collection/components/content/albums';
 import { useCollectionStore } from '@/features/collection/store/collection-store';
 
@@ -17,8 +19,12 @@ export const CollectionContent = ({
   onCollectionClick,
   showDetail = false,
 }: CollectionContentProps) => {
-  const { activeTab, selectedAlbum } = useCollectionStore();
+  const { activeTab, selectedAlbum, setSelectedAlbum } = useCollectionStore();
   const isPlaylistsTab = activeTab === 'playlists';
+
+  const handleCloseDetail = () => {
+    setSelectedAlbum(null);
+  };
 
   // Show detail view if requested and album is selected
   if (showDetail && selectedAlbum && !isPlaylistsTab) {
@@ -28,32 +34,35 @@ export const CollectionContent = ({
           content={<AlbumDetail album={selectedAlbum} />}
           className="flex-1 flex flex-col overflow-hidden h-auto lg:h-full"
           minHeight="h-full"
+          title={selectedAlbum.title}
           decorated={false}
+          onClose={handleCloseDetail}
         />
       </div>
     );
   }
 
-  // Determine variant based on context
-  // When an album is selected (detail view is open), use minimal variant for the list panel
-  const albumListVariant =
-    selectedAlbum && !isPlaylistsTab ? 'minimal' : 'default';
+  // When an album is selected, show compact list instead of regular list
+  const showCompactList = selectedAlbum && !isPlaylistsTab;
 
   const content = isPlaylistsTab ? (
     <CollectionList onCollectionClick={onCollectionClick} />
+  ) : showCompactList ? (
+    <CompactAlbumList />
   ) : (
-    <AlbumList variant={albumListVariant} />
+    <AlbumList />
+  );
+
+  const header = isPlaylistsTab ? undefined : showCompactList ? (
+    <CompactAlbumListHeader />
+  ) : (
+    <AlbumListHeader />
   );
 
   return (
     <div className="flex-1 flex flex-col min-w-0 h-auto lg:h-full">
       <Panel
-        sectionTitle={isPlaylistsTab ? 'Ваші плейлисти' : 'Ваші альбоми'}
-        header={
-          !isPlaylistsTab ? (
-            <AlbumListHeader variant={albumListVariant} />
-          ) : undefined
-        }
+        header={header}
         content={content}
         className="flex-1 flex flex-col overflow-hidden h-auto lg:h-full"
         minHeight="h-full"

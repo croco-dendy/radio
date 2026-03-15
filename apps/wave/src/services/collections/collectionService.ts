@@ -14,6 +14,7 @@ import {
 } from '@/db/collections/index';
 import { authService } from '../auth';
 import { getErrorMessage } from '@/utils/errorMessages';
+import { formatDurationFromString } from '@/utils/audioMetadata';
 
 export class CollectionService {
   async getPublicCollections(limit: number, offset: number) {
@@ -35,7 +36,12 @@ export class CollectionService {
   async getCollectionWithItems(id: number) {
     const collection = await this.getCollectionById(id);
     const items = await getCollectionItems(id);
-    return { ...collection, items };
+    // Format duration for each item
+    const itemsWithFormattedDuration = items.map((item) => ({
+      ...item,
+      duration: formatDurationFromString(item.duration) || null,
+    }));
+    return { ...collection, items: itemsWithFormattedDuration };
   }
 
   async createCollection(

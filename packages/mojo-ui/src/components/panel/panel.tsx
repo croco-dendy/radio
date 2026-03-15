@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 import type { FC, ReactNode } from 'react';
+import { CloseIcon } from '../../icons';
+import { IconButton } from '../icon-button';
 import styles from './panel.module.scss';
 
 export interface PanelSection {
@@ -20,6 +22,7 @@ interface PanelProps {
   title?: string;
   subtitle?: string;
   decorated?: boolean;
+  onClose?: () => void;
 }
 
 export const Panel: FC<PanelProps> = ({
@@ -34,6 +37,7 @@ export const Panel: FC<PanelProps> = ({
   title,
   subtitle,
   decorated = true,
+  onClose,
 }) => {
   const sections =
     propSections || (content ? [{ content, header, title: sectionTitle }] : []);
@@ -52,6 +56,7 @@ export const Panel: FC<PanelProps> = ({
         styles.panel,
         !decorated && styles.panelPlain,
         isSingleSection && styles.panelSingleSection,
+        onClose && styles.panelWithClose,
         minHeight,
         className,
       )}
@@ -63,16 +68,32 @@ export const Panel: FC<PanelProps> = ({
         </>
       )}
 
-      {(title || subtitle) && (
+      {(title || subtitle || onClose) && (
         <div className={styles.header}>
-          {title && <h2 className={styles.title}>{title}</h2>}
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          {onClose && (
+            <IconButton
+              variant="red"
+              size="small"
+              onClick={onClose}
+              className={styles.closeButton}
+              aria-label="Close"
+            >
+              <CloseIcon size={16} />
+            </IconButton>
+          )}
+          {(title || subtitle) && (
+            <div className={styles.headerContent}>
+              {title && <h2 className={styles.title}>{title}</h2>}
+              {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+            </div>
+          )}
         </div>
       )}
       <div
         className={clsx(
           contentClassName,
           isSingleSection && styles.contentSingleSection,
+          onClose && styles.contentWithClose,
         )}
       >
         {sections.map((section) => (
@@ -92,14 +113,17 @@ export const Panel: FC<PanelProps> = ({
               {section.header && (
                 <div className={styles.sectionHeader}>{section.header}</div>
               )}
-              {!section.header && !decorated && isSingleSection && (
-                <div className={styles.sectionTitlePlain}>
-                  <span className={styles.sectionTitleTextPlain}>
-                    {section.title}
-                  </span>
-                </div>
-              )}
-              {!section.header && decorated && (
+              {!section.header &&
+                section.title &&
+                !decorated &&
+                isSingleSection && (
+                  <div className={styles.sectionTitlePlain}>
+                    <span className={styles.sectionTitleTextPlain}>
+                      {section.title}
+                    </span>
+                  </div>
+                )}
+              {!section.header && section.title && decorated && (
                 <div className={styles.sectionTitle}>
                   <span className={styles.sectionTitleText}>
                     {section.title}

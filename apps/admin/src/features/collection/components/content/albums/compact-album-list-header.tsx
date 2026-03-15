@@ -1,4 +1,3 @@
-import { AlbumSearch } from '@/features/collection/components/filters/album-search';
 import { useCollectionStore } from '@/features/collection/store/collection-store';
 import {
   IconButton,
@@ -7,21 +6,10 @@ import {
   SortIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  FilterIcon,
 } from '@radio/mojo-ui';
 
-export const AlbumListHeader = () => {
-  const {
-    searchQuery,
-    setSearchQuery,
-    sortBy,
-    sortOrder,
-    setSortBy,
-    setSortOrder,
-    toggleFiltersEnabled,
-    hasActiveFilters,
-    filtersEnabled,
-  } = useCollectionStore();
+export const CompactAlbumListHeader = () => {
+  const { sortBy, sortOrder, setSortBy, setSortOrder } = useCollectionStore();
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -54,7 +42,7 @@ export const AlbumListHeader = () => {
           label={currentSortLabel}
           icon={<SortIcon size={14} />}
           size="small"
-          variant="yellow"
+          variant="dark"
           rounded="half"
           align="right"
           buttonClassName="max-w-[200px]"
@@ -82,20 +70,6 @@ export const AlbumListHeader = () => {
             <ArrowDownIcon size={16} />
           )}
         </IconButton>
-
-        <IconButton
-          variant={hasActiveFilters() && filtersEnabled ? 'yellow' : 'dark'}
-          size="small"
-          onClick={toggleFiltersEnabled}
-          disabled={!hasActiveFilters()}
-          aria-label={filtersEnabled ? 'Вимкнути фільтри' : 'Увімкнути фільтри'}
-        >
-          <FilterIcon size={16} />
-        </IconButton>
-
-        <div className="w-64">
-          <AlbumSearch value={searchQuery} onChange={setSearchQuery} />
-        </div>
       </div>
     </div>
   );

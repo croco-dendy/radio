@@ -1,12 +1,9 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   useCollection,
-  useAddItemToCollection,
   useRemoveItemFromCollection,
   collectionApi,
 } from '@/services/api';
-import { AudioUpload } from '../../shared';
 import type { Collection } from '@radio/types';
 
 type CollectionDetailProps = {
@@ -15,29 +12,7 @@ type CollectionDetailProps = {
 
 export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
   const { data: collectionWithItems, isLoading } = useCollection(collection.id);
-  const addItemToCollection = useAddItemToCollection();
   const removeItemFromCollection = useRemoveItemFromCollection();
-  const [showUpload, setShowUpload] = useState(false);
-
-  const handleUploadSuccess = async (audioFile: {
-    id: number;
-    name: string;
-    size: number;
-    format: string;
-    duration: string;
-  }) => {
-    try {
-      await addItemToCollection.mutateAsync({
-        collectionId: collection.id,
-        audioFileId: audioFile.id,
-        order: (collectionWithItems?.items?.length || 0) + 1,
-      });
-      setShowUpload(false);
-    } catch (error) {
-      console.error('Failed to add audio to collection:', error);
-      alert('Failed to add audio to collection');
-    }
-  };
 
   const handleRemoveItem = async (audioFileId: number, name: string) => {
     if (!confirm(`Remove "${name}" from this collection?`)) return;
@@ -51,11 +26,6 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
       console.error('Failed to remove item:', error);
       alert('Failed to remove item from collection');
     }
-  };
-
-  const formatDuration = (duration: string) => {
-    if (duration === '0:00') return 'Unknown';
-    return duration;
   };
 
   if (isLoading) {
@@ -107,29 +77,6 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-200">Audio Files</h3>
-          <button
-            type="button"
-            onClick={() => setShowUpload(!showUpload)}
-            className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors"
-          >
-            {showUpload ? 'Cancel Upload' : 'Add Audio'}
-          </button>
-        </div>
-
-        {showUpload && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <AudioUpload onUploadSuccess={handleUploadSuccess} />
-          </motion.div>
-        )}
-      </div>
-
       <div className="space-y-3">
         {collectionWithItems.items?.length === 0 ? (
           <div className="text-center py-8 text-gray-400">
@@ -167,7 +114,7 @@ export const CollectionDetail = ({ collection }: CollectionDetailProps) => {
                   {item.name}
                 </h4>
                 <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
-                  <span>{formatDuration(item.duration)}</span>
+                  {item.duration && <span>{item.duration}</span>}
                   <span>{item.format.toUpperCase()}</span>
                   <span>
                     Added {new Date(item.addedAt).toLocaleDateString()}

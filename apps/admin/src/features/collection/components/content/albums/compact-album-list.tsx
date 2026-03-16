@@ -104,6 +104,7 @@ export const CompactAlbumList = () => {
           />
         </motion.div>
       ))}
+      <div className="h-6" />
     </motion.div>
   );
 };

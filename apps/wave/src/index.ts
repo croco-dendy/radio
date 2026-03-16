@@ -8,6 +8,7 @@ import {
   albumsRoutes,
   monitoringRoutes,
   streamRoutes,
+  adminRoutes,
 } from '@/api';
 import { startWsServer } from './ws/server';
 
@@ -43,6 +44,7 @@ app.route('/api/accounts', accountsRoutes);
 app.route('/api/collections', collectionsRoutes);
 app.route('/api/audio-files', audioFilesRoutes);
 app.route('/api/albums', albumsRoutes);
+app.route('/api/admin', adminRoutes);
 
 Bun.serve({
   fetch: app.fetch,

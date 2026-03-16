@@ -1,10 +1,6 @@
 import type { Album } from '@radio/types';
 import { Switch } from '@radio/mojo-ui';
 import { AlbumCover } from './album-cover';
-import {
-  calculateAlbumCompleteness,
-  getCompletenessColor,
-} from '@/features/collection/utils/album-helpers';
 import { useTogglePublished } from '@/services/api';
 import { useNotificationStore } from '@/stores/notification-store';
 
@@ -13,13 +9,8 @@ type AlbumListItemProps = {
   onClick: (album: Album) => void;
 };
 
-export const AlbumListItem = ({
-  album,
-  onClick,
-}: AlbumListItemProps) => {
+export const AlbumListItem = ({ album, onClick }: AlbumListItemProps) => {
   const tags = album.tags ? JSON.parse(album.tags) : [];
-  const completeness = calculateAlbumCompleteness(album);
-  const completenessColors = getCompletenessColor(completeness);
 
   const togglePublished = useTogglePublished();
   const { addNotification } = useNotificationStore();
@@ -63,10 +54,6 @@ export const AlbumListItem = ({
                 {album.title}
               </h4>
               <div
-                className={`w-2 h-2 rounded-full ${completenessColors.bg}`}
-                title={`${completeness}% complete`}
-              />
-              <div
                 className={`w-2 h-2 rounded-full flex-shrink-0 ${
                   album.hasMedia
                     ? 'bg-green-400 shadow-[0_0_4px_rgba(74,222,128,0.5)]'
@@ -104,7 +91,7 @@ export const AlbumListItem = ({
             <div className="flex flex-col items-end gap-1 whitespace-nowrap">
               <span>{new Date(album.createdAt).toLocaleDateString()}</span>
               {album.songCount !== undefined && (
-                <span className="text-gray-400">
+                <span className="text-ember">
                   {album.songCount} {album.songCount === 1 ? 'track' : 'tracks'}
                 </span>
               )}

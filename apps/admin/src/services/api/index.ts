@@ -5,4 +5,5 @@ export * from './collection-api';
 export * from './album-api';
 export * from './auth-api';
 export * from './user-management-api';
+export * from './stats-api';
 export * from './hooks';

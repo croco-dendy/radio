@@ -180,7 +180,7 @@ const layout = {
 const animations = {
   transition: { duration: 0.2 },
   sidebar: {
-    slideOut: { x: '-50%', opacity: 0, pointerEvents: 'none' as const },
+    slideOut: { x: '-20%', opacity: 0, pointerEvents: 'none' as const },
     slideIn: { x: 0, opacity: 1, pointerEvents: 'auto' as const },
   },
   list: {

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { AlbumListSkeleton } from './list/album-list-skeleton';
 import { AlbumListEmpty } from './list/album-list-empty';
 import { AlbumListItem } from './list/album-list-item';
+import { AlbumListHeaderRow } from './list/album-list-header-row';
 import type { Album } from '@radio/types';
 import {
   filterAlbums,
@@ -12,13 +13,8 @@ import { useCollectionStore } from '@/features/collection/store/collection-store
 import { useUserAlbums } from '@/services/api';
 
 export const AlbumList = () => {
-  const {
-    searchQuery,
-    filters,
-    sortBy,
-    sortOrder,
-    setSelectedAlbum,
-  } = useCollectionStore();
+  const { searchQuery, filters, sortBy, sortOrder, setSelectedAlbum } =
+    useCollectionStore();
   const { data: albums, isLoading } = useUserAlbums();
 
   const filteredAndSortedAlbums = useMemo(() => {
@@ -82,27 +78,28 @@ export const AlbumList = () => {
   }
 
   return (
-    <motion.div
-      key={albumsKey}
-      className="space-y-3 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
-      variants={shouldAnimate ? containerVariants : undefined}
-      initial={shouldAnimate ? 'hidden' : 'visible'}
-      animate="visible"
-    >
-      {filteredAndSortedAlbums.map((album) => (
-        <motion.div
-          key={album.id}
-          variants={shouldAnimate ? itemVariants : undefined}
-          initial={shouldAnimate ? 'hidden' : 'visible'}
-          animate="visible"
-        >
-          <AlbumListItem
-            album={album}
-            onClick={handleAlbumClick}
-          />
-        </motion.div>
-      ))}
-    </motion.div>
+    <div className="space-y-3">
+      <AlbumListHeaderRow />
+      <motion.div
+        key={albumsKey}
+        className="space-y-3"
+        variants={shouldAnimate ? containerVariants : undefined}
+        initial={shouldAnimate ? 'hidden' : 'visible'}
+        animate="visible"
+      >
+        {filteredAndSortedAlbums.map((album) => (
+          <motion.div
+            key={album.id}
+            variants={shouldAnimate ? itemVariants : undefined}
+            initial={shouldAnimate ? 'hidden' : 'visible'}
+            animate="visible"
+          >
+            <AlbumListItem album={album} onClick={handleAlbumClick} />
+          </motion.div>
+        ))}
+        <div className="h-6" />
+      </motion.div>
+    </div>
   );
 };
 

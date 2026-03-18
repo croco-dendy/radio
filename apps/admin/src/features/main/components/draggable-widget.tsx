@@ -1,23 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
-import type { DraggableEvent, DraggableData } from 'react-draggable';
+import type { DraggableData, DraggableEvent } from 'react-draggable';
+import type { WidgetPosition } from '../store/widget-config-store';
+import { WidgetEditControls } from './widget-edit-controls';
 
 type DraggableWidgetProps = {
   id: string;
+  radius: number;
   isEditMode: boolean;
   positionStyle: React.CSSProperties;
   className?: string;
   isSelected?: boolean;
-  onPositionChange: (
-    id: string,
-    position: { top?: number; left?: number; right?: number; bottom?: number },
-  ) => void;
+  onPositionChange: (id: string, position: Partial<WidgetPosition>) => void;
   onSelect?: (id: string) => void;
   children: React.ReactNode;
 };
 
 export const DraggableWidget = ({
   id,
+  radius,
   isEditMode,
   positionStyle,
   className,
@@ -26,42 +27,42 @@ export const DraggableWidget = ({
   onSelect,
   children,
 }: DraggableWidgetProps) => {
-  // Extract position from style
-  const getPositionFromStyle = () => {
-    const top = positionStyle.top
-      ? Number.parseFloat(String(positionStyle.top).replace('px', ''))
-      : undefined;
+  const nodeRef = useRef<HTMLDivElement>(null);
+
+  const [draggablePosition, setDraggablePosition] = useState(() => {
     const left = positionStyle.left
       ? Number.parseFloat(String(positionStyle.left).replace('px', ''))
-      : undefined;
-    return { x: left ?? 0, y: top ?? 0 };
-  };
-
-  const [draggablePosition, setDraggablePosition] = useState(() =>
-    getPositionFromStyle(),
-  );
-
-  // Update draggable position when positionStyle changes
-  useEffect(() => {
+      : 0;
     const top = positionStyle.top
       ? Number.parseFloat(String(positionStyle.top).replace('px', ''))
-      : undefined;
+      : 0;
+    return { x: left, y: top };
+  });
+
+  // Sync when positionStyle changes (e.g. container resize/zoom)
+  useLayoutEffect(() => {
     const left = positionStyle.left
       ? Number.parseFloat(String(positionStyle.left).replace('px', ''))
-      : undefined;
-    setDraggablePosition({ x: left ?? 0, y: top ?? 0 });
+      : 0;
+    const top = positionStyle.top
+      ? Number.parseFloat(String(positionStyle.top).replace('px', ''))
+      : 0;
+    setDraggablePosition({ x: left, y: top });
   }, [positionStyle.top, positionStyle.left]);
 
-  // Extract rotation transform from positionStyle
   const rotationTransform = positionStyle.transform || '';
 
-  // In view mode, render a simple positioned wrapper
   if (!isEditMode) {
     return (
       <button
         type="button"
         className={className}
-        style={{ ...positionStyle, background: 'transparent', border: 'none', padding: 0 }}
+        style={{
+          ...positionStyle,
+          background: 'transparent',
+          border: 'none',
+          padding: 0,
+        }}
         onClick={() => onSelect?.(id)}
       >
         {children}
@@ -69,7 +70,6 @@ export const DraggableWidget = ({
     );
   }
 
-  // In edit mode, allow dragging via react-draggable
   const handleStop = (_e: DraggableEvent, data: DraggableData) => {
     const parent = (data.node.parentElement ||
       data.node.offsetParent) as HTMLElement | null;
@@ -79,18 +79,18 @@ export const DraggableWidget = ({
     const parentRect = parent.getBoundingClientRect();
     const nodeRect = data.node.getBoundingClientRect();
 
-    // Calculate position in pixels relative to parent
     const topPx = nodeRect.top - parentRect.top;
     const leftPx = nodeRect.left - parentRect.left;
 
-    const newPosition = {
-      top: Math.round(topPx),
-      left: Math.round(leftPx),
-      right: undefined,
-      bottom: undefined,
-    };
+    const topPercent = (topPx / parentRect.height) * 100;
+    const leftPercent = (leftPx / parentRect.width) * 100;
 
-    onPositionChange(id, newPosition);
+    onPositionChange(id, {
+      topPercent,
+      leftPercent,
+      bottomPercent: undefined,
+      rightPercent: undefined,
+    });
     setDraggablePosition({ x: leftPx, y: topPx });
   };
 
@@ -100,30 +100,32 @@ export const DraggableWidget = ({
       onStop={handleStop}
       handle=".draggable-widget-handle"
       position={draggablePosition}
+      nodeRef={nodeRef}
     >
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: Draggable element, primary interaction is drag not click */}
       <div
+        ref={nodeRef}
         className={`${className ?? ''} draggable-widget-handle cursor-move`}
         style={{
           position: 'absolute',
+          top: 0,
+          left: 0,
         }}
         onClick={() => onSelect?.(id)}
       >
-        {/* Selection outline wrapper - only shown when selected */}
+        {/* Selection outline wrapper */}
         <div
-          className={isSelected ? 'rounded-full' : ''}
           style={{
             width: '100%',
             height: '100%',
             borderRadius: isSelected ? '50%' : 'inherit',
             outline: isSelected ? '2px solid #ff9f1c' : 'none',
             outlineOffset: isSelected ? '4px' : '0',
-            boxShadow: isSelected
-              ? '0 0 20px rgba(255,159,28,0.4)'
-              : 'none',
+            boxShadow: isSelected ? '0 0 20px rgba(255,159,28,0.4)' : 'none',
+            position: 'relative',
           }}
         >
-          {/* Inner wrapper to apply rotation transform */}
+          {/* Inner wrapper for rotation transform */}
           <div
             style={{
               transform: rotationTransform,
@@ -133,9 +135,11 @@ export const DraggableWidget = ({
           >
             {children}
           </div>
+
+          {/* Edit controls – 3 circular buttons near the title corner */}
+          {isSelected && <WidgetEditControls widgetId={id} radius={radius} />}
         </div>
       </div>
     </Draggable>
   );
 };
-

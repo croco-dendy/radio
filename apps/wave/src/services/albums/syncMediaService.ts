@@ -92,6 +92,32 @@ export async function syncMediaToDatabase(
 // Internal helpers
 // ---------------------------------------------------------------------------
 
+function buildAlbumDataFromMetadata(
+  scanned: ScannedAlbum,
+  ownerId: number,
+): Parameters<typeof createAlbum>[0] {
+  const m = scanned.metadata;
+  const base = {
+    title: m?.album_title ?? scanned.albumName,
+    artist: m?.artist ?? scanned.artistName,
+    ownerId,
+    folderSlug: scanned.folderSlug,
+    hasMedia: 1,
+    isPublished: 0,
+    isPublic: 0,
+    cover: scanned.cover,
+    year: m?.recording_year != null ? m.recording_year : undefined,
+    releaseYear: m?.release_info?.issue_year != null ? m.release_info.issue_year : undefined,
+    recordingDetails: m?.recording_details ? JSON.stringify(m.recording_details) : undefined,
+    releaseInfo: m?.release_info ? JSON.stringify(m.release_info) : undefined,
+    personnel: m?.personnel ? JSON.stringify(m.personnel) : undefined,
+    production: m?.production ? JSON.stringify(m.production) : undefined,
+    visuals: m?.visuals ? JSON.stringify(m.visuals) : undefined,
+    additionalInfo: m?.additional_info ?? undefined,
+  };
+  return base;
+}
+
 async function syncAlbum(
   scanned: ScannedAlbum,
   ownerId: number,
@@ -100,14 +126,26 @@ async function syncAlbum(
   const existing = await findAlbumByFolderSlug(scanned.folderSlug);
 
   if (existing) {
-    // Only touch hasMedia – never overwrite other metadata
-    const updateData: { hasMedia?: number; cover?: string } = {};
+    const updateData: Parameters<typeof updateAlbum>[1] = {};
     if (!existing.hasMedia) {
       updateData.hasMedia = 1;
     }
-    // Update cover only if it's currently null (don't overwrite manually set covers)
     if (scanned.cover && !existing.cover) {
       updateData.cover = scanned.cover;
+    }
+    // When data.json exists, upsert metadata from it
+    if (scanned.metadata) {
+      const m = scanned.metadata;
+      updateData.title = m.album_title ?? existing.title;
+      updateData.artist = m.artist ?? existing.artist;
+      if (m.recording_year != null) updateData.year = m.recording_year;
+      if (m.release_info?.issue_year != null) updateData.releaseYear = m.release_info.issue_year;
+      if (m.recording_details) updateData.recordingDetails = JSON.stringify(m.recording_details);
+      if (m.release_info) updateData.releaseInfo = JSON.stringify(m.release_info);
+      if (m.personnel) updateData.personnel = JSON.stringify(m.personnel);
+      if (m.production) updateData.production = JSON.stringify(m.production);
+      if (m.visuals) updateData.visuals = JSON.stringify(m.visuals);
+      if (m.additional_info != null) updateData.additionalInfo = m.additional_info;
     }
     if (Object.keys(updateData).length > 0) {
       await updateAlbum(existing.id, updateData);
@@ -116,20 +154,21 @@ async function syncAlbum(
     return existing.id;
   }
 
-  // Create a brand-new album from the scan data
-  const albumId = await createAlbum({
-    title: scanned.albumName,
-    artist: scanned.artistName,
-    ownerId,
-    folderSlug: scanned.folderSlug,
-    hasMedia: 1,
-    isPublished: 0,
-    isPublic: 0,
-    cover: scanned.cover,
-  });
-
+  const albumId = await createAlbum(buildAlbumDataFromMetadata(scanned, ownerId));
   result.albumsCreated++;
   return albumId;
+}
+
+/** Match tracklist item to fileSlug by position (e.g. A1 → a1-song-name) */
+function findTracklistMatch(
+  fileSlug: string,
+  tracklist: Array<{ position: string; title: string }>,
+): { position: string; title: string } | undefined {
+  const slugLower = fileSlug.toLowerCase();
+  return tracklist.find((t) => {
+    const posLower = t.position.toLowerCase();
+    return slugLower === posLower || slugLower.startsWith(`${posLower}-`);
+  });
 }
 
 async function syncTracks(
@@ -138,9 +177,14 @@ async function syncTracks(
   result: SyncResult,
   baseDir: string,
 ): Promise<void> {
+  const tracklist = scanned.metadata?.tracklist;
+
   for (let i = 0; i < scanned.tracks.length; i++) {
     const track = scanned.tracks[i];
     const existing = await findSongByAlbumAndFileSlug(albumId, track.fileSlug);
+    const match = tracklist ? findTracklistMatch(track.fileSlug, tracklist) : undefined;
+    const title = match?.title ?? trackSlugToTitle(track.fileSlug);
+    const position = match?.position ?? undefined;
 
     // Extract duration from the actual audio file
     const filePath = join(baseDir, scanned.folderSlug, `${track.fileSlug}.m4a`);
@@ -152,7 +196,6 @@ async function syncTracks(
         duration = formatDuration(durationSeconds);
       }
     } catch (error) {
-      // Handle errors gracefully - continue with null duration
       const msg = error instanceof Error ? error.message : String(error);
       result.errors.push(
         `[${scanned.folderSlug}/${track.fileSlug}] Failed to extract duration: ${msg}`,
@@ -160,30 +203,28 @@ async function syncTracks(
     }
 
     if (existing) {
-      // Track already exists - update duration if we successfully extracted it
-      // Duration is a technical property extracted from the file, so it's safe to update
-      if (duration) {
-        await updateSong(existing.id, { duration });
+      const updateData: { duration?: string; title?: string; position?: string } = {};
+      if (duration) updateData.duration = duration;
+      if (match) {
+        updateData.title = match.title;
+        updateData.position = match.position;
+      }
+      if (Object.keys(updateData).length > 0) {
+        await updateSong(existing.id, updateData);
         result.tracksUpdated++;
       }
-      // audio_url is computed dynamically at API layer, not stored
       continue;
     }
 
-    // Insert a new track with sensible defaults.
-    // Manual metadata (title, artist) can be edited later via the admin UI.
-    // Duration is always extracted from the file.
-    // audioFileId is set to 0 as a placeholder – these tracks come from the
-    // media directory and don't have an associated audioFiles record.
-    // audio_url is computed dynamically at API layer using MEDIA_BASE_URL
     await createSong({
       albumId,
       audioFileId: 0,
       trackNumber: i + 1,
-      title: trackSlugToTitle(track.fileSlug),
+      title,
       duration: duration || '0:00',
       format: 'm4a',
       fileSlug: track.fileSlug,
+      position,
     });
 
     result.tracksCreated++;

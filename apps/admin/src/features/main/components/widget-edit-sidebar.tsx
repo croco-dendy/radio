@@ -1,7 +1,7 @@
+import { Input, Panel, Popup, PopupItem } from '@radio/mojo-ui';
 import type React from 'react';
-import { Panel, Input, Popup, PopupItem } from '@radio/mojo-ui';
-import { WIDGET_COLOR_OPTIONS } from '../utils/widget-colors';
 import { useWidgetConfigStore } from '../store/widget-config-store';
+import { WIDGET_COLOR_OPTIONS } from '../utils/widget-colors';
 
 type WidgetEditSidebarProps = {
   isOpen: boolean;

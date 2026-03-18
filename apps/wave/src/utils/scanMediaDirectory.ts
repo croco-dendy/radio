@@ -1,8 +1,10 @@
-import { readdirSync, statSync, existsSync } from 'node:fs';
+import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, basename, extname } from 'node:path';
+import type { AlbumDataJson } from '@radio/types';
 
 const FOLDER_PATTERN = /^(.+?)_(.+)$/;
 const AUDIO_EXT = '.m4a';
+const DATA_JSON = 'data.json';
 
 export interface ScannedTrack {
   fileSlug: string;
@@ -14,6 +16,7 @@ export interface ScannedAlbum {
   albumName: string;
   tracks: ScannedTrack[];
   cover?: string;
+  metadata?: AlbumDataJson;
 }
 
 /**
@@ -99,12 +102,25 @@ export function scanMediaDirectory(
       cover = 'img/cover.webp';
     }
 
+    // Check for data.json metadata
+    let metadata: AlbumDataJson | undefined;
+    const dataJsonPath = join(entryPath, DATA_JSON);
+    if (existsSync(dataJsonPath) && statSync(dataJsonPath).isFile()) {
+      try {
+        const raw = readFileSync(dataJsonPath, 'utf-8');
+        metadata = JSON.parse(raw) as AlbumDataJson;
+      } catch {
+        // Invalid JSON – skip metadata, continue with scan defaults
+      }
+    }
+
     results.push({
       folderSlug,
       artistName: slugToTitle(artistSlug),
       albumName: slugToTitle(albumSlug),
       tracks,
       cover,
+      metadata,
     });
   }
 

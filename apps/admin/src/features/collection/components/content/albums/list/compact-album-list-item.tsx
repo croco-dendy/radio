@@ -20,7 +20,7 @@ export const CompactAlbumListItem = ({
           'w-full flex items-center gap-3 p-2 rounded-lg transition-all cursor-pointer text-left',
           isSelected
             ? 'bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/50'
-            : 'bg-gray-800/30 hover:bg-gray-800/50 border border-transparent',
+            : 'hover:bg-gray-800/50 border border-transparent',
         )}
         onClick={() => onClick(album)}
       >

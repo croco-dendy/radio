@@ -36,6 +36,20 @@
       "when": 1773582984945,
       "tag": "0004_flippant_patch",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1773583000000,
+      "tag": "0005_single_cover_field",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1773583100000,
+      "tag": "0006_album_metadata_data_json",
+      "breakpoints": true
     }
   ]
 }

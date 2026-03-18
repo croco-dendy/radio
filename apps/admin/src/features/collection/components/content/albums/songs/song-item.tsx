@@ -72,7 +72,7 @@ export const SongItem = ({
                 : 'No audio available'
             }
           >
-            {song.trackNumber}
+            {song.position ?? song.trackNumber}
           </button>
         )}
 

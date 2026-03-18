@@ -25,4 +25,3 @@ export const WIDGET_COLOR_OPTIONS: WidgetColorOption[] = [
   // Paper Accent
   { name: 'Paper Accent', value: '#F49517' },
 ];
-

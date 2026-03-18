@@ -10,15 +10,15 @@ import {
   sortAlbums,
 } from '@/features/collection/utils/album-helpers';
 import { useCollectionStore } from '@/features/collection/store/collection-store';
-import { useUserAlbums } from '@/services/api';
+import { useCollectionData } from '@/features/collection/hooks';
 
 export const AlbumList = () => {
   const { searchQuery, filters, sortBy, sortOrder, setSelectedAlbum } =
     useCollectionStore();
-  const { data: albums, isLoading } = useUserAlbums();
+  const { albums, albumsLoading: isLoading } = useCollectionData();
 
   const filteredAndSortedAlbums = useMemo(() => {
-    const filtered = filterAlbums(albums || [], filters, searchQuery);
+    const filtered = filterAlbums(albums ?? [], filters, searchQuery);
     return sortAlbums(filtered, sortBy, sortOrder);
   }, [albums, filters, searchQuery, sortBy, sortOrder]);
 
@@ -46,7 +46,7 @@ export const AlbumList = () => {
     return <AlbumListSkeleton />;
   }
 
-  if (!albums || albums.length === 0) {
+  if (!albums?.length) {
     return <AlbumListEmpty />;
   }
 

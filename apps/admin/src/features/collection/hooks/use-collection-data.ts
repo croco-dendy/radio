@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
-import { useUserAlbums, useUserCollections } from '@/services/api';
+import {
+  useUserAlbums,
+  useUserCollections,
+  usePublicAlbums,
+} from '@/services/api';
 import { useCollectionStats } from './use-collection-stats';
 
 type AlbumsQuery = ReturnType<typeof useUserAlbums>;
@@ -39,12 +43,21 @@ export const useCollectionData = (): CollectionData => {
   } = useUserCollections();
 
   const {
-    data: albums,
+    data: userAlbums,
     isLoading: albumsLoading,
     isFetching: albumsFetching,
     error: albumsError,
     refetch: refetchAlbums,
   } = useUserAlbums();
+
+  const { data: publicAlbums } = usePublicAlbums(undefined, 50, 0, {
+    enabled: !albumsLoading && !albumsFetching && (!userAlbums || userAlbums.length === 0),
+  });
+
+  const albums =
+    userAlbums && userAlbums.length > 0
+      ? userAlbums
+      : publicAlbums ?? userAlbums ?? undefined;
 
   const albumStats = useCollectionStats(albums);
 

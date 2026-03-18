@@ -20,10 +20,12 @@ export const usePublicAlbums = (
   },
   limit = 50,
   offset = 0,
+  options?: { enabled?: boolean },
 ) => {
   return useQuery({
     queryKey: [...albumKeys.publicAlbums(), { filters, limit, offset }],
     queryFn: () => albumApi.getPublicAlbums(filters, limit, offset),
+    ...options,
   });
 };
 

@@ -1,79 +1,14 @@
+import { useCollectionData } from '@/features/collection/hooks';
 import { useStats } from '@/services/api/hooks/use-stats';
 import { ParticlesBackground } from './components/particles-background';
 import { RecordWidgets } from './components/record-widgets';
-import { useCollectionData } from '@/features/collection/hooks';
 import { useWidgetConfigStore } from './store/widget-config-store';
-import { Input, Popup, PopupItem, Button } from '@radio/mojo-ui';
-import { WIDGET_COLOR_OPTIONS } from './utils/widget-colors';
 
 export const MainPage = () => {
   const { data: stats, isLoading } = useStats();
   const { albumStats } = useCollectionData();
   const isEditMode = useWidgetConfigStore((state) => state.isEditMode);
-  const selectedWidgetId = useWidgetConfigStore(
-    (state) => state.selectedWidgetId,
-  );
-  const widgets = useWidgetConfigStore((state) => state.widgets);
-  const updateWidget = useWidgetConfigStore((state) => state.updateWidget);
   const toggleEditMode = useWidgetConfigStore((state) => state.toggleEditMode);
-
-  const activeWidget =
-    (selectedWidgetId &&
-      widgets.find((widget) => widget.id === selectedWidgetId)) ||
-    widgets[0];
-
-  const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    if (!activeWidget) return;
-    updateWidget(activeWidget.id, { title: event.target.value });
-  };
-
-  const handleRadiusChange: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    if (!activeWidget) return;
-    const radius = Number.parseInt(event.target.value || '0', 10);
-    updateWidget(activeWidget.id, {
-      radius: Number.isNaN(radius) ? undefined : radius,
-    });
-  };
-
-  const handleRotationChange: React.ChangeEventHandler<HTMLInputElement> = (
-    event,
-  ) => {
-    if (!activeWidget) return;
-    const rotation = Number.parseInt(event.target.value || '0', 10);
-    updateWidget(activeWidget.id, {
-      position: {
-        ...activeWidget.position,
-        rotation: Number.isNaN(rotation)
-          ? activeWidget.position.rotation
-          : rotation,
-      },
-    });
-  };
-
-  const handleTitleRotationChange: React.ChangeEventHandler<
-    HTMLInputElement
-  > = (event) => {
-    if (!activeWidget) return;
-    const value = Number.parseInt(event.target.value || '0', 10);
-    updateWidget(activeWidget.id, {
-      titleRotation: Number.isNaN(value) ? 0 : value,
-    });
-  };
-
-  const handleColorChange = (color: string) => {
-    if (!activeWidget) return;
-    updateWidget(activeWidget.id, { color: color || undefined });
-  };
-
-  const selectedColorOption = (activeWidget &&
-    WIDGET_COLOR_OPTIONS.find((opt) => opt.value === activeWidget.color)) || {
-    name: 'Default (Sun)',
-    value: '',
-  };
 
   return (
     <div className={styles.container.join(' ')}>
@@ -83,104 +18,24 @@ export const MainPage = () => {
         {/* Central Welcome Card */}
         <div className={styles.welcomeCardWrapper.join(' ')}>
           <div className={styles.content.join(' ')}>
-            {!isEditMode && (
-              <>
-                <h1 className={styles.title.join(' ')}>Радіо Пан</h1>
-                <p className={styles.subtitle.join(' ')}>
-                  Привіт! Це адмін панель для Вінілового Радіо. Тут можна
-                  редагувати музику, відео, новини та багато іншого. Щоб
-                  редагувати, авторизуйся.
-                </p>
-              </>
-            )}
-
-            {isEditMode && activeWidget && (
-              <div className="flex flex-col gap-4 items-stretch text-left">
-                <div className="flex items-center justify-between gap-4 mb-2">
-                  <h2 className="text-xl font-semibold text-sun">
-                    Edit widget: {activeWidget.title}
-                  </h2>
-                  <Button
-                    variant="yellow"
-                    size="small"
-                    title="Exit layout edit"
-                    onClick={() => toggleEditMode()}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Input
-                    label="Title"
-                    type="text"
-                    value={activeWidget.title}
-                    onChange={handleTitleChange}
-                    size="small"
-                  />
-
-                  <Input
-                    label="Radius (px)"
-                    type="number"
-                    min={40}
-                    max={160}
-                    value={activeWidget.radius ?? 112}
-                    onChange={handleRadiusChange}
-                    size="small"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Input
-                    label="Widget rotation (deg)"
-                    type="number"
-                    min={-180}
-                    max={180}
-                    value={activeWidget.position.rotation}
-                    onChange={handleRotationChange}
-                    size="small"
-                  />
-
-                  <Input
-                    label="Title rotation (deg)"
-                    type="number"
-                    min={0}
-                    max={360}
-                    value={activeWidget.titleRotation ?? 0}
-                    onChange={handleTitleRotationChange}
-                    size="small"
-                  />
-                </div>
-
-                <div>
-                  <span className="mb-1 block text-xs uppercase tracking-wide text-paper-calm">
-                    Color
-                  </span>
-                  <Popup
-                    label={selectedColorOption.name}
-                    size="small"
-                    variant="dark"
-                    rounded="half"
-                    align="center"
-                  >
-                    <PopupItem
-                      selected={!activeWidget.color}
-                      onClick={() => handleColorChange('')}
-                    >
-                      Default (Sun)
-                    </PopupItem>
-                    {WIDGET_COLOR_OPTIONS.map((option) => (
-                      <PopupItem
-                        key={option.name}
-                        selected={activeWidget.color === option.value}
-                        onClick={() => handleColorChange(option.value)}
-                      >
-                        {option.name}
-                      </PopupItem>
-                    ))}
-                  </Popup>
-                </div>
-              </div>
-            )}
+            <h1 className={styles.title.join(' ')}>Радіо Пан</h1>
+            <p className={styles.subtitle.join(' ')}>
+              Привіт! Це адмін панель для Вінілового Радіо. Тут можна редагувати
+              музику, відео, новини та багато іншого. Щоб редагувати,
+              авторизуйся.
+            </p>
           </div>
+
+          {/* Exit edit mode button – floats below the welcome card */}
+          {isEditMode && (
+            <button
+              type="button"
+              onClick={toggleEditMode}
+              className={styles.doneButton.join(' ')}
+            >
+              ✓ Done editing
+            </button>
+          )}
         </div>
 
         <RecordWidgets
@@ -204,14 +59,26 @@ const styles = {
     'h-full min-h-[600px] py-8',
     'flex items-center justify-center',
   ],
-  welcomeCardWrapper: ['relative z-30', 'flex justify-center items-center'],
+  welcomeCardWrapper: [
+    'relative z-30',
+    'flex flex-col justify-center items-center gap-4',
+  ],
   content: [
-    'text-center bg-coal-deep/30 backdrop-blur-md rounded-full p-12 border border-white/20',
+    'text-center bg-coal-deep/30 backdrop-blur-md rounded-full p-8 sm:p-12 border border-white/20',
     'shadow-2xl transition-all duration-500',
     'relative z-30',
-    'w-[600px] h-[500px]',
+    'w-[min(600px,90vw)] min-h-[400px] h-[min(500px,70vh)]',
     'flex flex-col justify-center items-center',
+    'pointer-events-none',
   ],
   title: ['mb-8 font-serif text-6xl font-bold text-sun'],
   subtitle: ['mb-8 font-serif text-xl text-paper-calm max-w-xl'],
+  doneButton: [
+    'relative z-40',
+    'px-5 py-2 rounded-full text-sm font-semibold',
+    'bg-sun/20 hover:bg-sun/30 border border-sun/40 hover:border-sun/70',
+    'text-sun transition-all duration-200',
+    'backdrop-blur-md shadow-lg',
+    'cursor-pointer',
+  ],
 } as const;

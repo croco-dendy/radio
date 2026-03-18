@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
+import { apiUrl } from '@/services/env';
 
 const createHttpClient = (baseURL: string): AxiosInstance => {
   const client = axios.create({
@@ -38,6 +39,4 @@ const createHttpClient = (baseURL: string): AxiosInstance => {
   return client;
 };
 
-export const waveApiClient = createHttpClient(
-  import.meta.env.VITE_API_URL || 'http://localhost:6870',
-);
+export const waveApiClient = createHttpClient(apiUrl);

@@ -75,10 +75,17 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
                 title={albumWithSongs.title}
                 artist={albumWithSongs.artist}
                 year={albumWithSongs.year}
+                releaseYear={albumWithSongs.releaseYear}
                 description={albumWithSongs.description}
                 tags={tags}
                 songCount={albumWithSongs.songs?.length || 0}
                 createdAt={albumWithSongs.createdAt}
+                recordingDetails={albumWithSongs.recordingDetails}
+                releaseInfo={albumWithSongs.releaseInfo}
+                personnel={albumWithSongs.personnel}
+                production={albumWithSongs.production}
+                visuals={albumWithSongs.visuals}
+                additionalInfo={albumWithSongs.additionalInfo}
               />
 
               <AlbumActions

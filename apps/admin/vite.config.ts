@@ -52,10 +52,10 @@ export default defineConfig({
       ],
     },
     hmr: {
-      // Configure HMR for remote Linux environment
+      // Use page's host so HMR works when accessing via IP (e.g. 192.168.x.x:3001)
+      // or when using port forwarding. Avoids ERR_CONNECTION_REFUSED spam.
       protocol: 'ws',
-      host: 'localhost', // Use localhost for HMR connection
-      clientPort: 3001, // Match the server port
+      clientPort: 3001,
     },
   },
   resolve: {

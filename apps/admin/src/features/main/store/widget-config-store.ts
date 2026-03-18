@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type WidgetPosition = {
-  top?: number; // pixels
-  bottom?: number; // pixels
-  left?: number; // pixels
-  right?: number; // pixels
+export type WidgetPosition = {
+  topPercent?: number; // 0-100
+  bottomPercent?: number; // 0-100
+  leftPercent?: number; // 0-100
+  rightPercent?: number; // 0-100
   rotation: number;
 };
 
@@ -35,12 +35,8 @@ type WidgetConfigActions = {
 
 export type WidgetConfigStore = WidgetConfigState & WidgetConfigActions;
 
-// Helper to convert percentage to pixels (assuming 1280px container width, 720px height as baseline)
-const percentToPx = (percent: string, dimension: 'width' | 'height'): number => {
-  const value = Number.parseFloat(percent.replace('%', ''));
-  const base = dimension === 'width' ? 1280 : 720;
-  return (value / 100) * base;
-};
+const BASELINE_WIDTH = 1280;
+const BASELINE_HEIGHT = 720;
 
 const defaultWidgets: WidgetVisualConfig[] = [
   {
@@ -48,8 +44,8 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Albums',
     radius: 60,
     position: {
-      top: percentToPx('24%', 'height'),
-      left: percentToPx('32%', 'width'),
+      topPercent: 24,
+      leftPercent: 32,
       rotation: 6,
     },
     color: '#ff9f1c',
@@ -60,8 +56,8 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Tracks',
     radius: 80,
     position: {
-      top: percentToPx('20%', 'height'),
-      left: percentToPx('7%', 'width'),
+      topPercent: 20,
+      leftPercent: 7,
       rotation: -35,
     },
     color: '#ffc857',
@@ -72,8 +68,8 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Airtime',
     radius: 112,
     position: {
-      top: percentToPx('10%', 'height'),
-      left: percentToPx('20%', 'width'),
+      topPercent: 10,
+      leftPercent: 20,
       rotation: -8,
     },
     color: '#ffbd30',
@@ -84,8 +80,8 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Catalog Health',
     radius: 100,
     position: {
-      bottom: percentToPx('20%', 'height'),
-      left: percentToPx('20%', 'width'),
+      bottomPercent: 20,
+      leftPercent: 20,
       rotation: -9,
     },
     color: '#4ade80',
@@ -96,8 +92,8 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Fresh 1',
     radius: 90,
     position: {
-      top: percentToPx('15%', 'height'),
-      right: percentToPx('20%', 'width'),
+      topPercent: 15,
+      rightPercent: 20,
       rotation: -4,
     },
     color: '#ff6f00',
@@ -108,8 +104,8 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Fresh 2',
     radius: 100,
     position: {
-      top: percentToPx('12%', 'height'),
-      right: percentToPx('7%', 'width'),
+      topPercent: 12,
+      rightPercent: 7,
       rotation: -10,
     },
     color: '#d45500',
@@ -120,14 +116,44 @@ const defaultWidgets: WidgetVisualConfig[] = [
     title: 'Fresh 3',
     radius: 112,
     position: {
-      top: percentToPx('25%', 'height'),
-      right: 0,
+      topPercent: 25,
+      rightPercent: 0,
       rotation: -3,
     },
     color: '#ff9f1c',
     titleRotation: 20,
   },
 ];
+
+/** Migrate legacy pixel positions to percentages (baseline 1280x720) */
+function migratePosition(
+  pos: WidgetPosition & {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  },
+): WidgetPosition {
+  const result: WidgetPosition = { rotation: pos.rotation };
+
+  if (pos.topPercent !== undefined) result.topPercent = pos.topPercent;
+  else if (pos.top !== undefined)
+    result.topPercent = (pos.top / BASELINE_HEIGHT) * 100;
+
+  if (pos.bottomPercent !== undefined) result.bottomPercent = pos.bottomPercent;
+  else if (pos.bottom !== undefined)
+    result.bottomPercent = (pos.bottom / BASELINE_HEIGHT) * 100;
+
+  if (pos.leftPercent !== undefined) result.leftPercent = pos.leftPercent;
+  else if (pos.left !== undefined)
+    result.leftPercent = (pos.left / BASELINE_WIDTH) * 100;
+
+  if (pos.rightPercent !== undefined) result.rightPercent = pos.rightPercent;
+  else if (pos.right !== undefined)
+    result.rightPercent = (pos.right / BASELINE_WIDTH) * 100;
+
+  return result;
+}
 
 const initialState: WidgetConfigState = {
   isEditMode: false,
@@ -194,7 +220,24 @@ export const useWidgetConfigStore = create<WidgetConfigStore>()(
     }),
     {
       name: 'main-page-widget-configs',
+      version: 2,
+      migrate: (persistedState: unknown, version: number) => {
+        const state = persistedState as WidgetConfigState;
+        if (version < 2 && state?.widgets) {
+          state.widgets = state.widgets.map((w) => ({
+            ...w,
+            position: migratePosition(
+              w.position as WidgetPosition & {
+                top?: number;
+                bottom?: number;
+                left?: number;
+                right?: number;
+              },
+            ),
+          }));
+        }
+        return state;
+      },
     },
   ),
 );
-

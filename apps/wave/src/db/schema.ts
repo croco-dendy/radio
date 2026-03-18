@@ -101,6 +101,12 @@ export const albums = sqliteTable('albums', {
   vinylCondition: text('vinyl_condition'),
   digitizationDate: text('digitization_date'),
   equipmentUsed: text('equipment_used'),
+  recordingDetails: text('recording_details'),
+  releaseInfo: text('release_info'),
+  personnel: text('personnel'),
+  production: text('production'),
+  visuals: text('visuals'),
+  additionalInfo: text('additional_info'),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
 });
@@ -121,6 +127,7 @@ export const songs = sqliteTable(
     duration: text('duration').notNull(),
     format: text('format').notNull(),
     fileSlug: text('file_slug'),
+    position: text('position'),
     createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
   },
   (table) => [

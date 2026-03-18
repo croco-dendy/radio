@@ -22,6 +22,42 @@ import { authService } from '../auth';
 import { getErrorMessage } from '@/utils/errorMessages';
 import { env } from '@/utils/env';
 import { formatDurationFromString } from '@/utils/audioMetadata';
+import type {
+  RecordingDetails,
+  ReleaseInfo,
+  PersonnelItem,
+  Production,
+  Visuals,
+} from '@radio/types';
+
+function parseAlbumJsonFields<T extends Record<string, unknown>>(album: T) {
+  const a = album as T & {
+    recordingDetails?: string | null;
+    releaseInfo?: string | null;
+    personnel?: string | null;
+    production?: string | null;
+    visuals?: string | null;
+    additionalInfo?: string | null;
+  };
+  return {
+    ...album,
+    recordingDetails: safeParseJson<RecordingDetails>(a.recordingDetails),
+    releaseInfo: safeParseJson<ReleaseInfo>(a.releaseInfo),
+    personnel: safeParseJson<PersonnelItem[]>(a.personnel),
+    production: safeParseJson<Production>(a.production),
+    visuals: safeParseJson<Visuals>(a.visuals),
+    additionalInfo: a.additionalInfo ?? null,
+  };
+}
+
+function safeParseJson<T>(raw: string | null | undefined): T | null {
+  if (raw == null || raw === '') return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+}
 
 export class AlbumService {
   private coversDir: string;
@@ -54,14 +90,16 @@ export class AlbumService {
 
   async getPublicAlbums(limit: number, offset: number) {
     const albums = await findPublicAlbums(limit, offset);
-    return albums.map((album) => ({
-      ...album,
-      coverImageUrl: this.computeCoverImageUrl(
-        album.folderSlug,
-        album.cover,
-        album.id,
-      ),
-    }));
+    return albums.map((album) =>
+      parseAlbumJsonFields({
+        ...album,
+        coverImageUrl: this.computeCoverImageUrl(
+          album.folderSlug,
+          album.cover,
+          album.id,
+        ),
+      }),
+    );
   }
 
   async getPublicAlbumsWithFilters(
@@ -75,26 +113,30 @@ export class AlbumService {
     offset: number,
   ) {
     const albums = await findPublicAlbumsWithFilters(filters, limit, offset);
-    return albums.map((album) => ({
-      ...album,
-      coverImageUrl: this.computeCoverImageUrl(
-        album.folderSlug,
-        album.cover,
-        album.id,
-      ),
-    }));
+    return albums.map((album) =>
+      parseAlbumJsonFields({
+        ...album,
+        coverImageUrl: this.computeCoverImageUrl(
+          album.folderSlug,
+          album.cover,
+          album.id,
+        ),
+      }),
+    );
   }
 
   async getUserAlbums(accountId: number, limit: number, offset: number) {
     const albums = await findAlbumsByOwner(accountId, limit, offset);
-    return albums.map((album) => ({
-      ...album,
-      coverImageUrl: this.computeCoverImageUrl(
-        album.folderSlug,
-        album.cover,
-        album.id,
-      ),
-    }));
+    return albums.map((album) =>
+      parseAlbumJsonFields({
+        ...album,
+        coverImageUrl: this.computeCoverImageUrl(
+          album.folderSlug,
+          album.cover,
+          album.id,
+        ),
+      }),
+    );
   }
 
   async getAlbumById(id: number) {
@@ -102,14 +144,14 @@ export class AlbumService {
     if (!album) {
       throw new Error(getErrorMessage.collection('NOT_FOUND', id));
     }
-    return {
+    return parseAlbumJsonFields({
       ...album,
       coverImageUrl: this.computeCoverImageUrl(
         album.folderSlug,
         album.cover,
         album.id,
       ),
-    };
+    });
   }
 
   /**
@@ -179,6 +221,7 @@ export class AlbumService {
     // Add computed audioUrl and format duration for each song
     const songsWithAudioUrl = songs.map((song) => ({
       ...song,
+      position: song.position ?? null,
       audioUrl: this.computeAudioUrl(album.folderSlug, song.fileSlug),
       duration: formatDurationFromString(song.duration) || null,
     }));

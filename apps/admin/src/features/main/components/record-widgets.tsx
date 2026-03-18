@@ -1,24 +1,40 @@
 import { albumApi } from '@/services/api';
+import type { StatsResponse } from '@/services/api/stats-api';
+import { useEffect, useRef, useState } from 'react';
+import { useWidgetConfigStore } from '../store/widget-config-store';
+import type {
+  WidgetPosition,
+  WidgetVisualConfig,
+} from '../store/widget-config-store';
+import { DraggableWidget } from './draggable-widget';
 import { RecordWidget } from './record-widget';
 import type { RecordContent } from './record-widget';
-import type { StatsResponse } from '@/services/api/stats-api';
-import { useWidgetConfigStore } from '../store/widget-config-store';
-import type { WidgetVisualConfig } from '../store/widget-config-store';
-import { DraggableWidget } from './draggable-widget';
 
 type StatsData = StatsResponse | undefined;
 
+type ContainerSize = { width: number; height: number };
+
 const getPositionStyle = (
-  position: WidgetVisualConfig['position'],
+  position: WidgetPosition,
+  containerSize: ContainerSize,
+  widgetSize = 224,
 ): React.CSSProperties => {
+  const { width: cw, height: ch } = containerSize;
   const style: React.CSSProperties = {};
 
-  if (position.top !== undefined) style.top = `${position.top}px`;
-  if (position.bottom !== undefined) style.bottom = `${position.bottom}px`;
-  if (position.left !== undefined) style.left = `${position.left}px`;
-  if (position.right !== undefined) style.right = `${position.right}px`;
+  // Always output top/left for consistent layout (Draggable needs them)
+  if (position.topPercent !== undefined) {
+    style.top = `${(position.topPercent / 100) * ch}px`;
+  } else if (position.bottomPercent !== undefined) {
+    style.top = `${(ch * (100 - position.bottomPercent)) / 100 - widgetSize}px`;
+  }
 
-  // Apply rotation transform
+  if (position.leftPercent !== undefined) {
+    style.left = `${(position.leftPercent / 100) * cw}px`;
+  } else if (position.rightPercent !== undefined) {
+    style.left = `${(cw * (100 - position.rightPercent)) / 100 - widgetSize}px`;
+  }
+
   if (position.rotation !== 0) {
     style.transform = `rotate(${position.rotation}deg)`;
   }
@@ -188,11 +204,18 @@ const renderRecord = (
   );
 };
 
+const DEFAULT_CONTAINER_SIZE: ContainerSize = { width: 1280, height: 720 };
+
 export const RecordWidgets = ({
   stats,
   overallCompleteness,
   isLoading,
 }: RecordWidgetsProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState<ContainerSize>(
+    DEFAULT_CONTAINER_SIZE,
+  );
+
   const widgets = useWidgetConfigStore((state) => state.widgets);
   const isEditMode = useWidgetConfigStore((state) => state.isEditMode);
   const selectedWidgetId = useWidgetConfigStore(
@@ -206,37 +229,55 @@ export const RecordWidgets = ({
   );
   const setEditMode = useWidgetConfigStore((state) => state.setEditMode);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const ro = new ResizeObserver((entries) => {
+      const { width, height } = entries[0]?.contentRect ?? {};
+      if (width != null && height != null && (width > 0 || height > 0)) {
+        setContainerSize({ width, height });
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const handleWidgetClick = (id: string) => {
     if (!isEditMode) {
-      // Enter edit mode and select the clicked widget
       setEditMode(true);
       setSelectedWidget(id);
       return;
     }
-
-    // In edit mode, just change selection
     setSelectedWidget(id);
   };
+
+  const size = containerSize.width > 0 ? containerSize : DEFAULT_CONTAINER_SIZE;
 
   return (
     <>
       {/* Scattered Vinyl Records - Desktop */}
-      <div className={styles.recordsContainer.join(' ')}>
+      <div ref={containerRef} className={styles.recordsContainer.join(' ')}>
         {widgets.map((config) => {
           const isSelected = selectedWidgetId === config.id;
           const baseClassName = styles.recordWrapper.join(' ');
+          const widgetSize = (config.radius ?? 112) * 2;
+          const positionStyle = getPositionStyle(
+            config.position,
+            size,
+            widgetSize,
+          );
 
           return isEditMode ? (
             <DraggableWidget
               key={config.id}
               id={config.id}
+              radius={config.radius ?? 112}
               isEditMode={isEditMode}
-              positionStyle={getPositionStyle(config.position)}
+              positionStyle={positionStyle}
               className={baseClassName}
               isSelected={isSelected}
-              onPositionChange={(id, position) =>
-                updateWidgetPosition(id, position)
-              }
+              onPositionChange={updateWidgetPosition}
               onSelect={handleWidgetClick}
             >
               {renderRecord(config, stats, overallCompleteness, isLoading)}
@@ -246,7 +287,7 @@ export const RecordWidgets = ({
               key={config.id}
               type="button"
               className={`${baseClassName} cursor-pointer bg-transparent`}
-              style={getPositionStyle(config.position)}
+              style={positionStyle}
               onClick={() => handleWidgetClick(config.id)}
             >
               {renderRecord(config, stats, overallCompleteness, isLoading)}

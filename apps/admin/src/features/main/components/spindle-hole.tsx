@@ -8,7 +8,10 @@ type SpindleHoleProps = {
 export const SpindleHole = ({ size = 24, className }: SpindleHoleProps) => {
   return (
     <div
-      className={clsx('absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2', className)}
+      className={clsx(
+        'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
+        className,
+      )}
       style={{ width: size, height: size }}
     >
       {/* Outer ring */}

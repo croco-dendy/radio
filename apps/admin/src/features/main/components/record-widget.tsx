@@ -1,9 +1,9 @@
-import clsx from 'clsx';
 import { formatDuration } from '@/utils/format-duration';
-import { WidgetSkeleton } from './widget-skeleton';
-import { SpindleHole } from './spindle-hole';
+import clsx from 'clsx';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { CircularProgress } from './circular-progress';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { SpindleHole } from './spindle-hole';
+import { WidgetSkeleton } from './widget-skeleton';
 
 export type RecordContent =
   | { type: 'number'; value: number; format?: 'default' | 'duration' }

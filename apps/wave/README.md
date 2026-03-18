@@ -32,7 +32,7 @@ bun run dev
 
 | Script | Description |
 |--------|-------------|
-| `bun run db:migrate` | Run database migrations |
+| `bun run db:migrate` | Run database migrations (creates pre-migration backup in `data/backups/`) |
 | `bun run db:generate` | Generate new migration |
 | `bun run db:push` | Push schema changes |
 | `bun run db:studio` | Open Drizzle Studio |
@@ -48,7 +48,8 @@ bun run dev
 | `bun run create-admin` | Create new admin user |
 | `bun run reset-password` | Reset user password |
 | `bun run cleanup-users` | Clean up users |
-| `bun run backup-db` | Backup database |
+| `bun run backup-db` | Backup database (JSON export) |
+| `bun run restore-db` | Restore from latest pre-migration backup |
 
 ### Services
 

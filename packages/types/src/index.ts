@@ -91,6 +91,58 @@ export interface StreamConfig {
   updatedAt: string;
 }
 
+// Album metadata types (from data.json / album.example.json)
+export interface RecordingDetails {
+  period?: string;
+  location?: string;
+  exceptions?: string;
+}
+
+export interface ReleaseInfo {
+  label?: string;
+  distributor?: string;
+  issue_year?: number;
+  phonographic_copyright?: string;
+}
+
+export interface TracklistItem {
+  position: string;
+  title: string;
+}
+
+export interface PersonnelItem {
+  name: string;
+  roles: string[];
+}
+
+export interface Production {
+  engineer?: string;
+  producers?: string[];
+  coordination?: string;
+  thanks?: string;
+  mastering?: string;
+}
+
+export interface Visuals {
+  photography?: string[];
+  design?: string;
+  sleeve_printing?: string;
+}
+
+/** Shape of data.json in album folders */
+export interface AlbumDataJson {
+  album_title?: string;
+  artist?: string;
+  recording_year?: number;
+  recording_details?: RecordingDetails;
+  release_info?: ReleaseInfo;
+  tracklist?: TracklistItem[];
+  personnel?: PersonnelItem[];
+  production?: Production;
+  visuals?: Visuals;
+  additional_info?: string;
+}
+
 export interface Album {
   id: number;
   title: string;
@@ -110,6 +162,12 @@ export interface Album {
   vinylCondition: string | null;
   digitizationDate: string | null;
   equipmentUsed: string | null;
+  recordingDetails?: RecordingDetails | null;
+  releaseInfo?: ReleaseInfo | null;
+  personnel?: PersonnelItem[] | null;
+  production?: Production | null;
+  visuals?: Visuals | null;
+  additionalInfo?: string | null;
   createdAt: string;
   updatedAt: string;
   songCount?: number;
@@ -120,6 +178,7 @@ export interface Song {
   albumId: number;
   audioFileId: number;
   trackNumber: number;
+  position?: string | null;
   title: string;
   artist: string | null;
   duration: string;

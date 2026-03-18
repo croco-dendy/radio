@@ -19,6 +19,12 @@ type NewAlbumData = {
   vinylCondition?: string;
   digitizationDate?: string;
   equipmentUsed?: string;
+  recordingDetails?: string;
+  releaseInfo?: string;
+  personnel?: string;
+  production?: string;
+  visuals?: string;
+  additionalInfo?: string;
 };
 
 const findAlbumById = async (id: number) =>
@@ -41,6 +47,12 @@ const findAlbumById = async (id: number) =>
       vinylCondition: albums.vinylCondition,
       digitizationDate: albums.digitizationDate,
       equipmentUsed: albums.equipmentUsed,
+      recordingDetails: albums.recordingDetails,
+      releaseInfo: albums.releaseInfo,
+      personnel: albums.personnel,
+      production: albums.production,
+      visuals: albums.visuals,
+      additionalInfo: albums.additionalInfo,
       createdAt: albums.createdAt,
       updatedAt: albums.updatedAt,
     })
@@ -68,6 +80,12 @@ const findAlbumsByOwner = async (ownerId: number, limit = 50, offset = 0) => {
       vinylCondition: albums.vinylCondition,
       digitizationDate: albums.digitizationDate,
       equipmentUsed: albums.equipmentUsed,
+      recordingDetails: albums.recordingDetails,
+      releaseInfo: albums.releaseInfo,
+      personnel: albums.personnel,
+      production: albums.production,
+      visuals: albums.visuals,
+      additionalInfo: albums.additionalInfo,
       createdAt: albums.createdAt,
       updatedAt: albums.updatedAt,
       songCount: sql<number>`COALESCE(COUNT(${songs.id}), 0)`.as('songCount'),
@@ -107,6 +125,12 @@ const findPublicAlbums = async (limit = 50, offset = 0) => {
       vinylCondition: albums.vinylCondition,
       digitizationDate: albums.digitizationDate,
       equipmentUsed: albums.equipmentUsed,
+      recordingDetails: albums.recordingDetails,
+      releaseInfo: albums.releaseInfo,
+      personnel: albums.personnel,
+      production: albums.production,
+      visuals: albums.visuals,
+      additionalInfo: albums.additionalInfo,
       createdAt: albums.createdAt,
       updatedAt: albums.updatedAt,
     })
@@ -163,6 +187,12 @@ const findPublicAlbumsWithFilters = async (
       vinylCondition: albums.vinylCondition,
       digitizationDate: albums.digitizationDate,
       equipmentUsed: albums.equipmentUsed,
+      recordingDetails: albums.recordingDetails,
+      releaseInfo: albums.releaseInfo,
+      personnel: albums.personnel,
+      production: albums.production,
+      visuals: albums.visuals,
+      additionalInfo: albums.additionalInfo,
       createdAt: albums.createdAt,
       updatedAt: albums.updatedAt,
     })

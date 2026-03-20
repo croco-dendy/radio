@@ -43,6 +43,18 @@ albumsRoutes.post(
 
 albumsRoutes.get('/:id/cover', albumHandlers.getCoverArtHandler);
 
+albumsRoutes.get(
+  '/:id/photos',
+  authMiddleware,
+  albumHandlers.getAlbumPhotosHandler,
+);
+
+albumsRoutes.get(
+  '/:id/photos/:filename',
+  authMiddleware,
+  albumHandlers.getAlbumPhotoHandler,
+);
+
 albumsRoutes.get('/:albumId/songs', albumHandlers.getAlbumByIdHandler);
 
 albumsRoutes.post(

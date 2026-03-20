@@ -1,10 +1,12 @@
-import { join } from 'node:path';
+import { join, extname, resolve, relative } from 'node:path';
 import {
   existsSync,
   mkdirSync,
   writeFileSync,
   unlinkSync,
   readFileSync,
+  readdirSync,
+  statSync,
 } from 'node:fs';
 import {
   findAlbumById,
@@ -84,8 +86,38 @@ export class AlbumService {
       jpeg: 'image/jpeg',
       png: 'image/png',
       webp: 'image/webp',
+      gif: 'image/gif',
     };
     return mimeTypes[extension.toLowerCase()] || 'image/jpeg';
+  }
+
+  private static readonly IMAGE_EXTENSIONS = new Set([
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.webp',
+    '.gif',
+  ]);
+
+  private isImageFile(filename: string): boolean {
+    return AlbumService.IMAGE_EXTENSIONS.has(
+      extname(filename).toLowerCase(),
+    );
+  }
+
+  private collectImagesFromDir(dirPath: string, prefix: string): string[] {
+    const result: string[] = [];
+    if (!existsSync(dirPath) || !statSync(dirPath).isDirectory()) {
+      return result;
+    }
+    const entries = readdirSync(dirPath);
+    for (const entry of entries) {
+      const fullPath = join(dirPath, entry);
+      if (statSync(fullPath).isFile() && this.isImageFile(entry)) {
+        result.push(prefix ? `${prefix}/${entry}` : entry);
+      }
+    }
+    return result;
   }
 
   async getPublicAlbums(limit: number, offset: number) {
@@ -330,6 +362,59 @@ export class AlbumService {
     }
 
     throw new Error('Cover art not found');
+  }
+
+  /**
+   * Lists all image files in the album folder (root and img/ subdirectory).
+   * Only works for albums with folderSlug (media folder albums).
+   */
+  async listAlbumPhotos(albumId: number): Promise<string[]> {
+    const album = await this.getAlbumById(albumId);
+    if (!album.folderSlug) {
+      return [];
+    }
+    const albumPath = join(env.mediaRootPath, album.folderSlug);
+    if (!existsSync(albumPath) || !statSync(albumPath).isDirectory()) {
+      return [];
+    }
+    const photos: string[] = [];
+    photos.push(...this.collectImagesFromDir(albumPath, ''));
+    photos.push(...this.collectImagesFromDir(join(albumPath, 'img'), 'img'));
+    return photos.sort();
+  }
+
+  /**
+   * Serves a specific photo from the album folder.
+   * Filename must be a simple filename or img/filename (no path traversal).
+   */
+  async getAlbumPhoto(
+    albumId: number,
+    filename: string,
+  ): Promise<{ buffer: Buffer; mimeType: string; size: number }> {
+    if (filename.includes('..') || /^[\\/]/.test(filename)) {
+      throw new Error('Invalid filename');
+    }
+    const album = await this.getAlbumById(albumId);
+    if (!album.folderSlug) {
+      throw new Error('Album has no media folder');
+    }
+    const albumDir = resolve(env.mediaRootPath, album.folderSlug);
+    const photoPath = resolve(albumDir, filename);
+    const rel = relative(albumDir, photoPath);
+    if (rel.startsWith('..') || rel.includes('..')) {
+      throw new Error('Invalid path');
+    }
+    if (!existsSync(photoPath) || !statSync(photoPath).isFile()) {
+      throw new Error('Photo not found');
+    }
+    const buffer = readFileSync(photoPath);
+    const extension = extname(filename).slice(1) || 'jpg';
+    const mimeType = this.getMimeType(extension);
+    return {
+      buffer,
+      mimeType,
+      size: buffer.length,
+    };
   }
 
   async checkAlbumAccess(

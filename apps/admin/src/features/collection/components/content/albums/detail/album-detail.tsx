@@ -7,6 +7,7 @@ import { AlbumCoverUpload } from './album-cover-upload';
 import { AlbumMetadata } from './album-metadata';
 import { AlbumActions } from './album-actions';
 import { AlbumSongsSection } from '../songs';
+import { AlbumPhotosSection } from './album-photos-section';
 import { AlbumEditForm } from './album-edit-form';
 import type { Album } from '@radio/types';
 
@@ -106,11 +107,17 @@ export const AlbumDetail = ({ album }: AlbumDetailProps) => {
       )}
 
       {!isEditing && (
-        <AlbumSongsSection
-          albumId={albumWithSongs.id}
-          songs={albumWithSongs.songs}
-          onAddSong={() => setShowAddSong(true)}
-        />
+        <>
+          <AlbumPhotosSection
+            albumId={albumWithSongs.id}
+            folderSlug={albumWithSongs.folderSlug}
+          />
+          <AlbumSongsSection
+            albumId={albumWithSongs.id}
+            songs={albumWithSongs.songs}
+            onAddSong={() => setShowAddSong(true)}
+          />
+        </>
       )}
 
       <AddSongModal

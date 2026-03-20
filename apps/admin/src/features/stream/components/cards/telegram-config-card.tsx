@@ -2,8 +2,8 @@ import type React from 'react';
 import { useState } from 'react';
 import clsx from 'clsx';
 import type { TelegramStreamConfig } from '@radio/types';
+import { Button } from '@radio/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
-import { ActionButton } from '@/components/shared';
 import {
   useTelegramConfig,
   useUpdateTelegramConfig,
@@ -191,20 +191,20 @@ export const TelegramConfigCard: React.FC = () => {
           {isEditing && (
             <div className="mt-4 pt-3 border-t border-white/10">
               <div className="flex gap-2 justify-center">
-                <ActionButton
-                  variant="primary"
+                <Button
+                  variant="green"
+                  size="small"
+                  title="Save"
                   onClick={handleSave}
                   disabled={updateConfigMutation.isPending}
-                >
-                  Save
-                </ActionButton>
-                <ActionButton
-                  variant="secondary"
+                />
+                <Button
+                  variant="yellow"
+                  size="small"
+                  title="Cancel"
                   onClick={handleCancel}
                   disabled={updateConfigMutation.isPending}
-                >
-                  Cancel
-                </ActionButton>
+                />
               </div>
             </div>
           )}

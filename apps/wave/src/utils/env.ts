@@ -19,4 +19,17 @@ export const env = {
   socketPort: Number.parseInt(process.env.SOCKET_PORT || '6871'),
   environment: isProduction ? 'production' : 'development',
   chatHistoryFile: getChatHistoryFile(),
+  dbFileName: process.env.DB_FILE_NAME || 'data/wave.sqlite',
+  mediaRootPath: getRequiredEnv('MEDIA_ROOT_PATH'),
+  mediaBaseUrl: getRequiredEnv('MEDIA_BASE_URL'),
 };
+
+function getRequiredEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `Missing required environment variable: ${name}. Please set it in your .env file or environment.`,
+    );
+  }
+  return value;
+}

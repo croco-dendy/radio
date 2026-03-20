@@ -19,7 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@radio/types": ["../../packages/types/src"]
+      "@radio/types": ["../../packages/types/src"],
+      "@radio/mojo-ui": ["../../packages/mojo-ui/src"]
     }
   },
   "include": ["src"],

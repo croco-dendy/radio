@@ -8,5 +8,5 @@
     "esModuleInterop": true,
     "strict": false
   },
-  "include": ["vite.config.ts", "tailwind.config.ts", "postcss.config.js"]
+  "include": ["vite.config.ts", "tailwind.config.js", "postcss.config.js"]
 }

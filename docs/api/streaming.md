@@ -4,7 +4,7 @@ Complete API reference for the Radio Streaming Platform backend services.
 
 ## 🌐 Base URL
 
-- **Development**: `http://localhost:6970`
+- **Development**: `http://localhost:6870`
 - **Production**: `https://wave.adoo.one`
 
 ## 🔐 Authentication
@@ -404,11 +404,11 @@ GET /api/monitoring/logs/{service}?lines=100
 
 ## 🔄 WebSocket Events
 
-The WebSocket server runs on port 6971 and provides real-time updates.
+The WebSocket server runs on port 6871 (dev) / 6971 (production).
 
 ### Connection
 ```javascript
-const ws = new WebSocket('ws://localhost:6971');
+const ws = new WebSocket('ws://localhost:6871');
 ```
 
 ### Event Types
@@ -458,27 +458,27 @@ ws.onmessage = (event) => {
 
 #### Start RTMP Server
 ```bash
-curl -X POST http://localhost:6970/api/stream/rtmp/start
+curl -X POST http://localhost:6870/api/stream/rtmp/start
 ```
 
 #### Start Telegram Stream
 ```bash
-curl -X POST http://localhost:6970/api/stream/telegram/start
+curl -X POST http://localhost:6870/api/stream/telegram/start
 ```
 
 #### Get Monitoring Data
 ```bash
-curl http://localhost:6970/api/monitoring/
+curl http://localhost:6870/api/monitoring/
 ```
 
 #### Get System Health
 ```bash
-curl http://localhost:6970/api/monitoring/health
+curl http://localhost:6870/api/monitoring/health
 ```
 
 #### Update Telegram Configuration
 ```bash
-curl -X PUT http://localhost:6970/api/stream/telegram/config \
+curl -X PUT http://localhost:6870/api/stream/telegram/config \
   -H "Content-Type: application/json" \
   -d '{
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
@@ -490,7 +490,7 @@ curl -X PUT http://localhost:6970/api/stream/telegram/config \
 ### JavaScript/TypeScript Example
 ```typescript
 class StreamingAPI {
-  constructor(baseURL = 'http://localhost:6970') {
+  constructor(baseURL = 'http://localhost:6870') {
     this.baseURL = baseURL;
   }
 

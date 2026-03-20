@@ -1,5 +1,5 @@
 import type { RtmpServiceStats } from '@radio/types';
-import { ServiceControlCard, ServiceStatsGrid } from '@/components/shared';
+import { Card, Button, StatusIndicator, StatsGrid } from '@radio/mojo-ui';
 import { InlineServiceAlert } from './inline-service-alert';
 
 interface StatItem {
@@ -196,39 +196,48 @@ export const RtmpServiceCard: React.FC<RtmpServiceCardProps> = ({ stats }) => {
 
   const serviceAlert = getServiceAlert();
 
-  const actions = [
-    {
-      label: isRunning ? 'Stop' : 'Start',
-      variant: isRunning ? ('secondary' as const) : ('primary' as const),
-      onClick: () => {
-        if (isRunning) {
-          stopMutation.mutate();
-        } else {
-          startMutation.mutate();
-        }
-      },
-      disabled: isLoading,
-      loading: isRunning ? stopMutation.isPending : startMutation.isPending,
-    },
-    {
-      label: 'Restart',
-      variant: 'accent' as const,
-      onClick: () => restartMutation.mutate(),
-      disabled: isLoading,
-      loading: restartMutation.isPending,
-    },
-  ];
+  const statusValue = stats?.isRunning
+    ? stats?.status === 'error'
+      ? 'error'
+      : stats?.status === 'restarting'
+        ? 'initializing'
+        : 'running'
+    : 'stopped';
 
   return (
-    <ServiceControlCard
+    <Card
       title="RTMP Server"
-      isRunning={stats?.isRunning || false}
-      status={
-        stats?.status ? getRtmpStatusDisplayValue(stats.status) : 'Unknown'
-      }
-      actions={actions}
+      footer={<StatusIndicator status={statusValue} />}
+      actions={[
+        {
+          label: isRunning ? 'Stop' : 'Start',
+          variant: isRunning ? ('yellow' as const) : ('green' as const),
+          onClick: () => {
+            if (isRunning) {
+              stopMutation.mutate();
+            } else {
+              startMutation.mutate();
+            }
+          },
+          disabled: isLoading,
+        },
+        {
+          label: 'Restart',
+          variant: 'gray' as const,
+          onClick: () => restartMutation.mutate(),
+          disabled: isLoading,
+        },
+      ].map((action) => (
+        <Button
+          key={action.label}
+          variant={action.variant}
+          title={action.label}
+          onClick={action.onClick}
+          disabled={action.disabled}
+        />
+      ))}
     >
-      <ServiceStatsGrid stats={getServiceStats()} />
+      <StatsGrid stats={getServiceStats()} columns={2} />
       {serviceAlert && (
         <div className="mt-3">
           <InlineServiceAlert
@@ -238,6 +247,6 @@ export const RtmpServiceCard: React.FC<RtmpServiceCardProps> = ({ stats }) => {
           />
         </div>
       )}
-    </ServiceControlCard>
+    </Card>
   );
 };

@@ -19,22 +19,173 @@ export interface StreamInfo {
   format: string;
 }
 
-export interface AudioFile {
-  id: string;
-  name: string;
-  path: string;
-  duration: number;
-  size: number;
-  format: string;
-  uploadedAt: Date;
-}
-
 export interface User {
   id: string;
   username: string;
   email: string;
   role: 'admin' | 'user';
   createdAt: Date;
+}
+
+// Database Types (following polissya pattern)
+export interface Account {
+  id: number;
+  username: string;
+  email: string;
+  passwordHash: string;
+  role: string;
+  isActive: number;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Collection {
+  id: number;
+  name: string;
+  description: string | null;
+  isPublic: number;
+  ownerId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CollectionItem {
+  id: number;
+  collectionId: number;
+  audioFileId: number;
+  order: number;
+  addedAt: string;
+}
+
+export interface AudioFile {
+  id: number;
+  name: string;
+  path: string;
+  duration: string;
+  size: number;
+  format: string;
+  uploadedBy: number;
+  uploadedAt: string;
+  metadata: string | null;
+}
+
+export interface Session {
+  id: number;
+  accountId: number;
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+  lastUsedAt: string;
+}
+
+export interface StreamConfig {
+  id: number;
+  name: string;
+  rtmpUrl: string;
+  streamKey: string;
+  inputUrl: string;
+  isActive: number;
+  createdBy: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Album metadata types (from data.json / album.example.json)
+export interface RecordingDetails {
+  period?: string;
+  location?: string;
+  exceptions?: string;
+}
+
+export interface ReleaseInfo {
+  label?: string;
+  distributor?: string;
+  issue_year?: number;
+  phonographic_copyright?: string;
+}
+
+export interface TracklistItem {
+  position: string;
+  title: string;
+}
+
+export interface PersonnelItem {
+  name: string;
+  roles: string[];
+}
+
+export interface Production {
+  engineer?: string;
+  producers?: string[];
+  coordination?: string;
+  thanks?: string;
+  mastering?: string;
+}
+
+export interface Visuals {
+  photography?: string[];
+  design?: string;
+  sleeve_printing?: string;
+}
+
+/** Shape of data.json in album folders */
+export interface AlbumDataJson {
+  album_title?: string;
+  artist?: string;
+  recording_year?: number;
+  recording_details?: RecordingDetails;
+  release_info?: ReleaseInfo;
+  tracklist?: TracklistItem[];
+  personnel?: PersonnelItem[];
+  production?: Production;
+  visuals?: Visuals;
+  additional_info?: string;
+}
+
+export interface Album {
+  id: number;
+  title: string;
+  artist: string;
+  year: number | null;
+  cover: string | null;
+  coverImageUrl?: string | null;
+  description: string | null;
+  tags: string | null;
+  isPublic: number;
+  ownerId: number;
+  folderSlug: string | null;
+  hasMedia: number;
+  isPublished: number;
+  releaseYear: number | null;
+  rpmSpeed: string | null;
+  vinylCondition: string | null;
+  digitizationDate: string | null;
+  equipmentUsed: string | null;
+  recordingDetails?: RecordingDetails | null;
+  releaseInfo?: ReleaseInfo | null;
+  personnel?: PersonnelItem[] | null;
+  production?: Production | null;
+  visuals?: Visuals | null;
+  additionalInfo?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  songCount?: number;
+}
+
+export interface Song {
+  id: number;
+  albumId: number;
+  audioFileId: number;
+  trackNumber: number;
+  position?: string | null;
+  title: string;
+  artist: string | null;
+  duration: string;
+  format: string;
+  fileSlug: string | null;
+  audioUrl: string | null;
+  createdAt: string;
 }
 
 export interface PaginatedResponse<T> {

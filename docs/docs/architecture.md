@@ -9,9 +9,9 @@ The Radio Streaming Platform is a distributed system designed for high-performan
 ### High-Level Architecture
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   Admin Panel   │    │   Wave Backend  │
+│   Player        │    │   Admin Panel   │    │   Wave Backend  │
 │   (React)       │    │   (React)       │    │   (Bun + Hono)  │
-│   Port: 3030    │    │   Port: 3001    │    │   Port: 6970    │
+│   Port: 3030    │    │   Port: 3001    │    │   Port: 6870    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          └───────────────────────┼───────────────────────┘
@@ -263,10 +263,10 @@ StreamingService
 
 | Service | Port | Protocol | Purpose |
 |---------|------|----------|---------|
-| Wave API | 6970 | HTTP | REST API server |
-| WebSocket | 6971 | WebSocket | Real-time updates |
+| Wave API | 6870 | HTTP | REST API server |
+| WebSocket | 6871 | WebSocket | Real-time updates |
 | Admin Panel | 3001 | HTTP | Admin interface |
-| Frontend | 5173 | HTTP | Public interface (dev) |
+| Player | 3030 | HTTP | Public player (dev) |
 | RTMP Server | 1935 | RTMP | Audio input from OBS |
 | HLS Output | 8069 | HTTP | HLS stream output |
 
@@ -282,7 +282,7 @@ Wave Backend (API + WebSocket)
 │  (Port 3001)    │  Daemon (PM2)   │
 └─────────────────┴─────────────────┘
     ↓                    ↓
-Frontend (Port 5173)  Telegram Stream
+Player (Port 3030)  Telegram Stream
 ```
 
 ### 3. Critical Dependencies
@@ -351,8 +351,8 @@ Production Server
 
 // Telegram Stream Process
 {
-  name: 'telegram-stream',
-  script: 'src/scripts/telegramStreamProcess.ts',
+  name: 'radio.telegram',
+  script: 'scripts/telegramStreamDaemon.ts',
   interpreter: 'bun',
   instances: 1,
   autorestart: false,

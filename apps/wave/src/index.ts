@@ -1,9 +1,16 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { env } from '@/utils/env';
+import {
+  accountsRoutes,
+  collectionsRoutes,
+  audioFilesRoutes,
+  albumsRoutes,
+  monitoringRoutes,
+  streamRoutes,
+  adminRoutes,
+} from '@/api';
 import { startWsServer } from './ws/server';
-import { streamRoutes } from './routes/stream';
-import { monitoringRoutes } from './routes/monitoring';
 
 const app = new Hono();
 
@@ -13,8 +20,11 @@ app.use(
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
+      'http://localhost:3030',
       'http://127.0.0.1:3001',
+      'http://127.0.0.1:3030',
       'http://deimos:3001',
+      'http://deimos:3030',
       'https://stream.adoo.one',
       'https://wave.adoo.one',
       'https://pan.adoo.one',
@@ -30,6 +40,11 @@ app.get('/health', (c) => {
 
 app.route('/api/stream', streamRoutes);
 app.route('/api/monitoring', monitoringRoutes);
+app.route('/api/accounts', accountsRoutes);
+app.route('/api/collections', collectionsRoutes);
+app.route('/api/audio-files', audioFilesRoutes);
+app.route('/api/albums', albumsRoutes);
+app.route('/api/admin', adminRoutes);
 
 Bun.serve({
   fetch: app.fetch,

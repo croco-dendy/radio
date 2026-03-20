@@ -37,8 +37,8 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
       }
     };
 
-    // Check connection state periodically
-    const interval = setInterval(checkConnectionState, 1000);
+    // Check connection state periodically (reduced frequency to lower CPU usage)
+    const interval = setInterval(checkConnectionState, 5000); // Changed from 1000ms to 5000ms
     checkConnectionState(); // Initial check
 
     return () => {

@@ -1,0 +1,65 @@
+{
+  "album_title": "Example Album",
+  "artist": "Example Artist",
+  "recording_year": 1970,
+  "recording_details": {
+    "period": "1969-1970",
+    "location": "Example Studios, Example City",
+    "exceptions": "Live tracks recorded at Example Hall"
+  },
+  "release_info": {
+    "label": "Example Label",
+    "distributor": "Example Distributor",
+    "issue_year": 2015,
+    "phonographic_copyright": "℗ 2015 Example Label"
+  },
+  "tracklist": [
+    {
+      "position": "A1",
+      "title": "Opening Track"
+    },
+    {
+      "position": "A2",
+      "title": "Second Song"
+    },
+    {
+      "position": "A3a",
+      "title": "Suite Title: Part 1"
+    },
+    {
+      "position": "A3b",
+      "title": "Suite Title: Part 2"
+    },
+    {
+      "position": "A3c",
+      "title": "Suite Title: Part 3"
+    },
+    {
+      "position": "B1",
+      "title": "Side B Opener"
+    }
+  ],
+  "personnel": [
+    {
+      "name": "Example Musician",
+      "roles": ["vocals", "guitar"]
+    },
+    {
+      "name": "Example Band",
+      "roles": ["Arrangements"]
+    }
+  ],
+  "production": {
+    "engineer": "Example Engineer",
+    "producers": ["Example Producer"],
+    "coordination": "Example Management",
+    "thanks": "Special thanks to Example Person",
+    "mastering": "Example Mastering Engineer"
+  },
+  "visuals": {
+    "photography": ["Example Photographer"],
+    "design": "Example Designer",
+    "sleeve_printing": "Printed by Example Press"
+  },
+  "additional_info": "Any additional notes about this release."
+}

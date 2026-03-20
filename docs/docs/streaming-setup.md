@@ -60,7 +60,7 @@ Download and install OBS Studio from [https://obsproject.com/](https://obsprojec
 Update the configuration via API:
 
 ```bash
-curl -X PUT http://localhost:6970/api/stream/telegram/config \
+curl -X PUT http://localhost:6870/api/stream/telegram/config \
   -H "Content-Type: application/json" \
   -d '{
     "rtmpUrl": "rtmps://dc4-1.rtmp.t.me/s/",
@@ -83,7 +83,7 @@ cd apps/wave
 ./scripts/start-rtmp.sh
 
 # Or via API
-curl -X POST http://localhost:6970/api/stream/rtmp/start
+curl -X POST http://localhost:6870/api/stream/rtmp/start
 ```
 
 #### Start Wave Backend
@@ -96,7 +96,7 @@ pnpm wave:start
 #### Start Telegram Stream
 ```bash
 # Via API (recommended)
-curl -X POST http://localhost:6970/api/stream/telegram/start
+curl -X POST http://localhost:6870/api/stream/telegram/start
 
 # Or via PM2 directly
 pm2 start radio.telegram
@@ -113,7 +113,7 @@ pm2 status
 docker ps --filter "name=rtmp-server"
 
 # Check API health
-curl http://localhost:6970/health
+curl http://localhost:6870/health
 ```
 
 #### Expected Output
@@ -136,13 +136,13 @@ rtmp-server   Up 3 hours (healthy)   0.0.0.0:1935->1935/tcp, 0.0.0.0:8069->8069/
 ### 1. Complete Streaming Setup
 ```bash
 # 1. Start RTMP server
-curl -X POST http://localhost:6970/api/stream/rtmp/start
+curl -X POST http://localhost:6870/api/stream/rtmp/start
 
 # 2. Wait for server to be ready (check Docker logs)
 docker logs rtmp-server
 
 # 3. Start Telegram stream
-curl -X POST http://localhost:6970/api/stream/telegram/start
+curl -X POST http://localhost:6870/api/stream/telegram/start
 
 # 4. Start OBS streaming
 # Click "Start Streaming" in OBS Studio
@@ -222,7 +222,7 @@ docker ps --filter "name=rtmp-server"
 docker logs rtmp-server
 
 # Restart RTMP server if needed
-curl -X POST http://localhost:6970/api/stream/rtmp/restart
+curl -X POST http://localhost:6870/api/stream/rtmp/restart
 ```
 
 #### Telegram Stream Not Working
@@ -262,10 +262,10 @@ sudo kill -9 <PID>
 # Check all services
 pm2 status
 docker ps
-netstat -tulpn | grep -E ':(1935|6970|6971|3001|8069)'
+netstat -tulpn | grep -E ':(1935|6870|6871|3001|8069)'
 
 # Test connectivity
-curl http://localhost:6970/health
+curl http://localhost:6870/health
 curl http://localhost:3001/health
 ```
 

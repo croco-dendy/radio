@@ -2,14 +2,14 @@ import { createRouter } from '@tanstack/react-router';
 import { Root } from './routes/root';
 import { indexRoute } from './routes/index';
 import { collectionRoute } from './routes/collection';
-import { usersRoute } from './routes/users';
+import { userManagementRoute } from './routes/user-management';
 import { streamControlRoute } from './routes/stream-control';
 
 const router = createRouter({
   routeTree: Root.addChildren([
     indexRoute,
     collectionRoute,
-    usersRoute,
+    userManagementRoute,
     streamControlRoute,
   ]),
 });

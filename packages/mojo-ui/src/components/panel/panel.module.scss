@@ -1,0 +1,305 @@
+@use '../../styles/variables' as *;
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: 12px;
+  background: #1e1e1e;
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.03),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.closeButton {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+
+.panel.panelPlain {
+  padding: 0;
+  border-radius: 24px;
+  background: rgba(28, 25, 23, 0.3);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.panelSingleSection {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.baseLayer {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: $soft-base-gradient;
+  box-shadow: $shadow-base;
+  z-index: 1;
+}
+
+.innerField {
+  position: absolute;
+  inset: 4.5px;
+  border-radius: 19.5px;
+  background: #1e1e1e;
+  border: $input-border;
+  z-index: 2;
+}
+
+.header {
+  padding: 16px;
+  z-index: 2;
+  background: rgba(20, 20, 20, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.closeButton {
+  flex-shrink: 0;
+}
+
+.headerContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #a0a0a0;
+  line-height: 1.4;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 8px;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.maxColumns1 {
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.maxColumns2 {
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.maxColumns3 {
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.contentSingleColumn {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.contentSingleSection {
+  width: 100% !important;
+  height: 100%;
+  padding: 0 !important;
+  gap: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+.sectionFullWidth {
+  width: 100% !important;
+  height: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.sectionBorder {
+  position: relative;
+  border: 1px solid #383838;
+  border-radius: 8px;
+  padding: 24px;
+  background: #1e1e1e;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionBorderPlain {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.sectionTitle {
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: #1e1e1e;
+  padding: 0 8px;
+  z-index: 1;
+}
+
+.sectionTitleText {
+  font-size: 12px;
+  font-weight: 600;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sectionTitlePlain {
+  padding: 24px 24px 16px 24px;
+  z-index: 1;
+  margin-bottom: 0;
+  background: rgba(20, 20, 20, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.sectionTitleTextPlain {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.sectionHeader {
+  padding: 16px;
+  z-index: 1;
+  width: 100%;
+  background: rgba(20, 20, 20, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.sectionContent {
+  padding-top: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.sectionContentPlain {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+  // Ensure content can scroll properly
+  max-height: 100%;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+}

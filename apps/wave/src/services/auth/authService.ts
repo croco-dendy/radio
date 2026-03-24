@@ -1,5 +1,6 @@
 import type { Context, Next } from 'hono';
 import { findSessionByToken } from '@/db/accounts/index';
+import { findAccountById } from '@/db/accounts/accounts';
 
 type Variables = {
   accountId: number;
@@ -42,6 +43,18 @@ export class AuthService {
       (error as Error & { statusCode: number }).statusCode = 403;
       throw error;
     }
+  }
+
+  async requireOwnershipOrAdmin(
+    accountId: number,
+    resourceOwnerId: number,
+  ): Promise<void> {
+    if (accountId === resourceOwnerId) return;
+    const account = await findAccountById(accountId);
+    if (account?.role === 'admin') return;
+    const error = new Error('Access denied: You do not own this resource');
+    (error as Error & { statusCode: number }).statusCode = 403;
+    throw error;
   }
 }
 

@@ -13,6 +13,7 @@
     "db:studio": "npx drizzle-kit studio",
     "db:test": "bun src/scripts/test-db.ts",
     "create-admin": "bun src/scripts/create-admin.ts",
+    "create-user": "bun src/scripts/create-user.ts",
     "check-users": "bun src/scripts/check-users.ts",
     "promote-admin": "bun src/scripts/promote-to-admin.ts",
     "admin": "bun src/scripts/interactive-admin.ts",

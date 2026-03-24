@@ -58,8 +58,24 @@ src/
 
 ## Environment Variables
 
+Same `VITE_*` convention as `@radio/player`. Only variables prefixed with `VITE_` are embedded in the client bundle. `VERCEL_*` system variables (for example `VERCEL_GIT_BRANCH`) are also exposed in this app via `envPrefix` in `vite.config.ts`.
+
+**Local** — copy `.env.example` to `.env` and adjust:
+
 ```env
-VITE_APP_ENV=development
 VITE_API_URL=http://localhost:6870
 VITE_SOCKET_URL=ws://localhost:6871
+VITE_APP_ENV=development
 ```
+
+**Production (Vercel)** — set these in the project’s Environment Variables (Production / Preview as needed). Do not rely on dev defaults: without `VITE_API_URL` / `VITE_SOCKET_URL`, the app falls back to `window.location` with ports `6870` / `6871`, which is wrong for a deployed host.
+
+| Variable | Purpose |
+|----------|---------|
+| `VITE_API_URL` | REST API base URL (e.g. `https://api.example.com`) |
+| `VITE_SOCKET_URL` | WebSocket URL (e.g. `wss://ws.example.com`) |
+| `VITE_APP_ENV` | `production` for production, `preview` for preview builds, `development` for local |
+
+## Deployment
+
+Deployed on Vercel like the player. Use `vercel.json` in this app for SPA routing (fallback to `index.html`). Point the Vercel project at `apps/admin` (or your monorepo root with the correct **Root Directory**), run `pnpm build` from that app, and output `dist`.

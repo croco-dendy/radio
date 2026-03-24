@@ -65,7 +65,7 @@ src/
 VITE_API_URL=http://localhost:6870
 VITE_SOCKET_URL=ws://localhost:6871
 VITE_STREAM_URL=https://stream.adoo.one/hls/test.m3u8
-VITE_APP_ENV=dev
+VITE_APP_ENV=development
 ```
 
 ## Deployment

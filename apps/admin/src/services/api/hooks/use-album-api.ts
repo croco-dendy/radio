@@ -44,6 +44,19 @@ export const useAlbum = (id: number) => {
   });
 };
 
+export const albumPhotosKeys = {
+  all: ['album-photos'] as const,
+  list: (albumId: number) => [...albumPhotosKeys.all, albumId] as const,
+};
+
+export const useAlbumPhotos = (albumId: number, options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: albumPhotosKeys.list(albumId),
+    queryFn: () => albumApi.getAlbumPhotos(albumId),
+    enabled: !!albumId && (options?.enabled ?? true),
+  });
+};
+
 export const useCreateAlbum = () => {
   const queryClient = useQueryClient();
 

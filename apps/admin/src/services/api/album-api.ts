@@ -126,6 +126,24 @@ export const albumApi = {
     return `${waveApiClient.defaults.baseURL}/api/albums/${id}/cover`;
   },
 
+  getAlbumPhotos: async (id: number): Promise<string[]> => {
+    const response = await waveApiClient.get<ApiResponse<{ photos: string[] }>>(
+      `/api/albums/${id}/photos`,
+    );
+    return response.data.data.photos;
+  },
+
+  getAlbumPhoto: async (
+    id: number,
+    filename: string,
+  ): Promise<Blob> => {
+    const response = await waveApiClient.get(
+      `/api/albums/${id}/photos/${encodeURIComponent(filename)}`,
+      { responseType: 'blob' },
+    );
+    return response.data as Blob;
+  },
+
   addSongToAlbum: async (
     albumId: number,
     data: CreateSongData,

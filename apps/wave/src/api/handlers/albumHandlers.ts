@@ -147,6 +147,42 @@ export const albumHandlers = {
     });
   },
 
+  get getAlbumPhotosHandler() {
+    return withErrorHandling(
+      async (c: Context<{ Variables: { accountId: number } }>) => {
+        const accountId = c.get('accountId');
+        const id = commonSchemas.id.parse(c.req.param('id'));
+        const album = await albumService.getAlbumById(id);
+        await authService.requireOwnershipOrAdmin(accountId, album.ownerId);
+        const photos = await albumService.listAlbumPhotos(id);
+        return ResponseHelper.success(c, { photos });
+      },
+    );
+  },
+
+  get getAlbumPhotoHandler() {
+    return withErrorHandling(
+      async (c: Context<{ Variables: { accountId: number } }>) => {
+        const accountId = c.get('accountId');
+        const id = commonSchemas.id.parse(c.req.param('id'));
+        const filename = c.req.param('filename');
+        if (!filename) {
+          return ResponseHelper.error(c, 'Filename required', 400);
+        }
+        const album = await albumService.getAlbumById(id);
+        await authService.requireOwnershipOrAdmin(accountId, album.ownerId);
+        const photo = await albumService.getAlbumPhoto(id, filename);
+        return new Response(photo.buffer, {
+          headers: {
+            'Content-Type': photo.mimeType,
+            'Content-Length': photo.size.toString(),
+            'Cache-Control': 'private, max-age=3600',
+          },
+        });
+      },
+    );
+  },
+
   get syncMediaHandler() {
     return withErrorHandling(
       async (c: Context<{ Variables: { accountId: number } }>) => {

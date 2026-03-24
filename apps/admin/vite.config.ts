@@ -6,6 +6,8 @@ import { resolve } from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Expose Vercel system env (git metadata) to the client alongside VITE_*.
+  envPrefix: ['VITE_', 'VERCEL_'],
   plugins: [
     react(),
     tsconfigPaths(),

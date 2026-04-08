@@ -10,10 +10,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./tailwind": {
+      "types": "./tailwind.ts",
+      "import": "./tailwind.ts",
+      "require": "./tailwind.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "tailwind.ts"
   ],
   "scripts": {
     "build": "vite build",

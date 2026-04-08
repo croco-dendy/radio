@@ -2,7 +2,7 @@ import {
   useUserColorsStore,
   NICKNAME_COLOR_OPTIONS,
   generateNicknameColor,
-} from '@/stores/userColorsStore';
+} from '@/stores/user-colors-store';
 
 export { NICKNAME_COLOR_OPTIONS, generateNicknameColor };
 

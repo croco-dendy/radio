@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { subscribe, getSocket } from '@/services/socket';
-import { useSound } from './useSound';
+import { useSound } from './use-sound';
 
 export interface ChatMessage {
   nickname: string;

@@ -1,5 +1,5 @@
-import { useUserList } from './useUserList';
-import type { UserWithStatus } from './useUserList';
+import { useUserList } from './use-user-list';
+import type { UserWithStatus } from './use-user-list';
 
 /**
  * Hook to get a specific user's data from the user list

@@ -1,6 +1,6 @@
+import { getSocket } from '@/services/socket';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { getSocket } from '@/services/socket';
 
 // Available color options from the design system
 export const NICKNAME_COLOR_OPTIONS = [
@@ -37,21 +37,21 @@ export const generateNicknameColor = (nickname: string): string => {
   return colors[colorIndex];
 };
 
-interface UserColor {
+type UserColor = {
   nickname: string;
   color: string | null; // null means auto mode
   updatedAt: number;
-}
+};
 
-interface UserColorsState {
+type UserColorsState = {
   // Current user's color preference (persisted)
   myColor: string | null; // null means auto mode
 
   // Other users' colors (ephemeral, from socket)
   otherUsersColors: Map<string, UserColor>;
-}
+};
 
-interface UserColorsStore extends UserColorsState {
+type UserColorsActions = {
   // Current user actions
   setMyColor: (color: string | null) => void;
   resetMyColorToAuto: () => void;
@@ -65,7 +65,7 @@ interface UserColorsStore extends UserColorsState {
   // Universal getters
   getEffectiveColor: (nickname: string, isCurrentUser?: boolean) => string;
   getUserColor: (nickname: string) => string | null;
-}
+};
 
 // Helper function to send color update via socket
 const sendColorUpdate = (color: string | null) => {
@@ -89,7 +89,7 @@ const sendColorUpdate = (color: string | null) => {
   }
 };
 
-export const useUserColorsStore = create<UserColorsStore>()(
+export const useUserColorsStore = create<UserColorsState & UserColorsActions>()(
   persist(
     (set, get) => ({
       // Initial state

@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { subscribe } from '@/services/socket';
-import { useUserColorsStore } from '@/stores/userColorsStore';
+import { useUserColorsStore } from '@/stores/user-colors-store';
 
 interface UserColorUpdatedMessage {
   type: 'user_color_updated';
@@ -19,7 +19,7 @@ interface ListenersMessage {
 }
 
 export const useUserColorsSync = () => {
-  const { setUserColor, removeUser } = useUserColorsStore();
+  const { setUserColor } = useUserColorsStore();
 
   const handleMessage = useCallback(
     (event: MessageEvent) => {

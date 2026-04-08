@@ -1,20 +1,42 @@
 import clsx from 'clsx';
+import type { FC } from 'react';
+import styles from './circular-progress.module.scss';
 
-type CircularProgressProps = {
+export interface CircularProgressProps {
+  /** Progress percentage (0-100) */
   percentage: number;
+  /** Size in pixels */
   size?: number;
+  /** Stroke width in pixels */
   strokeWidth?: number;
+  /** Color (hex or css color) */
   color?: string;
+  /** Additional class name */
   className?: string;
-};
+  /** Show percentage text */
+  showLabel?: boolean;
+  /** Label formatter */
+  labelFormatter?: (value: number) => string;
+}
 
-export const CircularProgress = ({
+/**
+ * CircularProgress - SVG-based circular progress indicator with gradient
+ *
+ * @example
+ * ```tsx
+ * <CircularProgress percentage={75} size={120} color="#47f57d" />
+ * <CircularProgress percentage={50} size={80} strokeWidth={6} showLabel={false} />
+ * ```
+ */
+export const CircularProgress: FC<CircularProgressProps> = ({
   percentage,
   size = 120,
   strokeWidth = 8,
-  color = '#ff9f1c',
+  color = '#47f57d',
   className,
-}: CircularProgressProps) => {
+  showLabel = true,
+  labelFormatter = (value) => `${value}%`,
+}) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percentage / 100) * circumference;
@@ -23,7 +45,7 @@ export const CircularProgress = ({
   const gradientId = `progressGradient-${color.replace('#', '')}`;
 
   // Convert hex color to rgba for drop shadow
-  const hexToRgba = (hex: string, alpha: number) => {
+  const hexToRgba = (hex: string, alpha: number): string => {
     const r = Number.parseInt(hex.slice(1, 3), 16);
     const g = Number.parseInt(hex.slice(3, 5), 16);
     const b = Number.parseInt(hex.slice(5, 7), 16);
@@ -32,13 +54,13 @@ export const CircularProgress = ({
 
   return (
     <div
-      className={clsx('relative', className)}
+      className={clsx(styles.container, className)}
       style={{ width: size, height: size }}
     >
       <svg
         width={size}
         height={size}
-        className="transform -rotate-90"
+        className={styles.svg}
         style={{ filter: `drop-shadow(0 0 8px ${hexToRgba(color, 0.3)})` }}
         aria-label={`Progress: ${percentage}%`}
       >
@@ -51,6 +73,7 @@ export const CircularProgress = ({
           fill="none"
           stroke="rgba(255,255,255,0.1)"
           strokeWidth={strokeWidth}
+          className={styles.backgroundCircle}
         />
         {/* Progress circle */}
         <circle
@@ -63,7 +86,7 @@ export const CircularProgress = ({
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          className="transition-all duration-500 ease-out"
+          className={styles.progressCircle}
         />
         <defs>
           <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
@@ -73,11 +96,13 @@ export const CircularProgress = ({
         </defs>
       </svg>
       {/* Percentage text */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-lg font-bold" style={{ color }}>
-          {percentage}%
-        </span>
-      </div>
+      {showLabel && (
+        <div className={styles.label} style={{ color }}>
+          <span className={styles.labelText}>{labelFormatter(percentage)}</span>
+        </div>
+      )}
     </div>
   );
 };
+
+CircularProgress.displayName = 'CircularProgress';

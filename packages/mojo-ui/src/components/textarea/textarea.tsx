@@ -1,35 +1,33 @@
 import clsx from 'clsx';
-import type { FC, InputHTMLAttributes, ReactNode } from 'react';
+import type { FC, TextareaHTMLAttributes } from 'react';
 import {
   type Size,
   capitalizeFirst,
   getSizeTextClass,
 } from '../../utils/style-helpers';
-import styles from './input.module.scss';
+import styles from './textarea.module.scss';
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface TextareaProps
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'> {
   size?: Size;
   label?: string;
   error?: string;
-  rightElement?: ReactNode;
 }
 
-export const Input: FC<InputProps> = ({
+export const Textarea: FC<TextareaProps> = ({
   size = 'medium',
   label,
   error,
-  rightElement,
   className,
   ...props
 }) => {
-  const inputId =
-    props.id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  const textareaId =
+    props.id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
     <div className={styles.container}>
       {label && (
-        <label htmlFor={inputId} className={styles.label}>
+        <label htmlFor={textareaId} className={styles.label}>
           {label}
         </label>
       )}
@@ -47,25 +45,19 @@ export const Input: FC<InputProps> = ({
           className={clsx(
             styles.field,
             styles[`field${capitalizeFirst(size)}`],
-            props.disabled && styles.fieldDisabled,
           )}
         />
 
-        <input
-          id={inputId}
+        <textarea
+          id={textareaId}
           className={clsx(
-            styles.input,
+            styles.textarea,
             styles[size],
-            rightElement && styles.inputWithRightElement,
             getSizeTextClass(size),
             className,
           )}
           {...props}
         />
-
-        {rightElement && (
-          <div className={styles.rightElement}>{rightElement}</div>
-        )}
       </div>
       {error && <p className={styles.errorText}>{error}</p>}
     </div>

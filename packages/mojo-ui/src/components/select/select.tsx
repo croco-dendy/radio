@@ -1,35 +1,40 @@
 import clsx from 'clsx';
-import type { FC, InputHTMLAttributes, ReactNode } from 'react';
+import type { FC, SelectHTMLAttributes } from 'react';
 import {
   type Size,
   capitalizeFirst,
   getSizeTextClass,
 } from '../../utils/style-helpers';
-import styles from './input.module.scss';
+import styles from './select.module.scss';
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface SelectProps
+  extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   size?: Size;
   label?: string;
   error?: string;
-  rightElement?: ReactNode;
+  options: SelectOption[];
 }
 
-export const Input: FC<InputProps> = ({
+export const Select: FC<SelectProps> = ({
   size = 'medium',
   label,
   error,
-  rightElement,
+  options,
   className,
   ...props
 }) => {
-  const inputId =
-    props.id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  const selectId =
+    props.id || `select-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
     <div className={styles.container}>
       {label && (
-        <label htmlFor={inputId} className={styles.label}>
+        <label htmlFor={selectId} className={styles.label}>
           {label}
         </label>
       )}
@@ -51,21 +56,22 @@ export const Input: FC<InputProps> = ({
           )}
         />
 
-        <input
-          id={inputId}
+        <select
+          id={selectId}
           className={clsx(
-            styles.input,
+            styles.select,
             styles[size],
-            rightElement && styles.inputWithRightElement,
             getSizeTextClass(size),
             className,
           )}
           {...props}
-        />
-
-        {rightElement && (
-          <div className={styles.rightElement}>{rightElement}</div>
-        )}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
       {error && <p className={styles.errorText}>{error}</p>}
     </div>

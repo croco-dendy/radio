@@ -50,5 +50,32 @@ export { StatusIndicator } from './components/status-indicator';
 // Icons
 export * from './icons';
 
+// Shared Styles
+export {
+  container,
+  content,
+  title,
+  statsCard,
+  statsTitle,
+  statsValue,
+  statsValueOnline,
+  serviceSection,
+  serviceSectionTitle,
+  actionsSection,
+  actionsTitle,
+  recentSection,
+  recentItem,
+  recentTitle,
+  recentMeta,
+  statsGrid,
+  serviceGrid,
+  actionsGrid,
+  recentList,
+  glassmorphism,
+  layout,
+  grids,
+  sharedStyles,
+} from './styles';
+
 // Showcase (for documentation)
 export { Showcase } from './showcase';

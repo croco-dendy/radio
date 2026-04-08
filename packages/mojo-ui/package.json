@@ -15,6 +15,11 @@
       "types": "./tailwind.ts",
       "import": "./tailwind.ts",
       "require": "./tailwind.ts"
+    },
+    "./styles": {
+      "types": "./src/styles/index.ts",
+      "import": "./src/styles/index.ts",
+      "require": "./src/styles/index.ts"
     }
   },
   "files": [

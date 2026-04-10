@@ -3,7 +3,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import type { TelegramStreamConfig } from '@radio/types';
 import { Button } from '@radio/mojo-ui';
-import { sharedStyles } from '@/styles/shared-styles';
+import { sharedStyles } from '@radio/mojo-ui/styles';
 import {
   useTelegramConfig,
   useUpdateTelegramConfig,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 import { PageLayout, StatsCard, Button } from '@radio/mojo-ui';
-import { sharedStyles } from '@/styles/shared-styles';
+import { sharedStyles } from '@radio/mojo-ui/styles';
 import { useUsers } from '@/services/api/hooks/use-user-management';
 import { UserList, CreateUserModal } from './components';
 

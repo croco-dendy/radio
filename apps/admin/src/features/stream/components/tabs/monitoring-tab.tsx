@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { StatsCard } from '@radio/mojo-ui';
-import { sharedStyles } from '@/styles/shared-styles';
+import { sharedStyles } from '@radio/mojo-ui/styles';
 import { TelegramServiceCard, RtmpServiceCard } from '../cards';
 import type { MonitoringData } from '@radio/types';
 

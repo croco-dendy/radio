@@ -221,75 +221,177 @@ Create `mojo-ui` as an independent NPM package with:
 
 ---
 
-## Phase 2: Showcase Enhancement ⏳ PENDING
+## Phase 2: Showcase Enhancement ✅ COMPLETE
 
 **Objective:** Update existing showcase to be minimal, clean, and comprehensive.
 
+**Status:** All tasks completed ✅
+
+### Completed Tasks
+
+#### 2.1 Restructure Showcase ✅
+Created showcase directory structure:
+```
+src/showcase/
+├── index.tsx              # Main entry
+├── components/
+│   ├── nav.tsx            # Showcase navigation
+│   ├── prop-table.tsx     # Props documentation
+│   ├── code-block.tsx     # Code examples
+│   └── component-section.tsx  # Component wrapper
+└── pages/
+    ├── components.tsx     # All components gallery
+    ├── layout.tsx         # Layout examples
+    ├── tokens.tsx         # Design tokens display
+    └── docs.tsx           # Component documentation
+```
+
+#### 2.2 Components Gallery Page ✅
+- ✅ Display all 21+ components
+- ✅ Group by category (Basic, Form, Layout, Navigation, Feedback, Overlay)
+- ✅ Interactive preview for each component
+- ✅ Copy code button
+- ✅ Props table for each component
+- ✅ Clean, minimal design
+
+#### 2.3 Layout Test Page ✅
+- ✅ Real-world layout examples:
+  - Dashboard with stats cards and progress bars
+  - User creation form with validation-ready inputs
+  - Settings panel with switches
+  - Project cards grid
+  - Tabbed navigation interface
+- ✅ Show how components work together
+- ✅ Responsive examples
+
+#### 2.4 Design Tokens Page ✅
+- ✅ Display all 8 nature colors with swatches (moss, bark, coal, clay, river, paper, sun, ember)
+- ✅ Show color usage (moss for success, ember for warning, etc.)
+- ✅ Typography scale (4 font families, 8 sizes)
+- ✅ Spacing scale (4px grid)
+- ✅ Border radius examples
+- ✅ Shadow elevations
+- ✅ Text shadow utilities
+- ✅ Quick reference guide
+
+#### 2.5 Documentation Page ✅
+- ✅ Installation instructions
+- ✅ Basic usage example
+- ✅ Component API reference for all 21 components
+- ✅ Icons usage guide
+- ✅ Shared styles documentation
+- ✅ Best practices (Do/Don't)
+- ✅ TypeScript support guide
+
+### Design Requirements ✅
+- ✅ **Minimal:** Clean layout with no unnecessary decorations
+- ✅ **Clean:** Clear typography, good whitespace
+- ✅ **Functional:** Easy to navigate with sticky navigation
+- ✅ **Dark theme:** Matches Mojo UI aesthetic
+
+### Definition of Done ✅
+- ✅ All 21 components showcased with live previews
+- ✅ Layout test page with 5 real-world examples
+- ✅ Design tokens visualized with color swatches
+- ✅ Documentation page complete with API reference
+- ✅ Clean, minimal design throughout
+- ✅ Navigation between pages
+- ✅ All TypeScript checks passing
+- ✅ Build successful
+
+### Files Created
+| File | Purpose |
+|------|---------|
+| `src/showcase/index.ts` | Showcase module exports |
+| `src/showcase/components/nav.tsx` | Page navigation |
+| `src/showcase/components/prop-table.tsx` | Props documentation table |
+| `src/showcase/components/code-block.tsx` | Code display with copy button |
+| `src/showcase/components/component-section.tsx` | Component showcase wrapper |
+| `src/showcase/pages/components.tsx` | Components gallery (21 components) |
+| `src/showcase/pages/layout.tsx` | Layout examples |
+| `src/showcase/pages/tokens.tsx` | Design tokens reference |
+| `src/showcase/pages/docs.tsx` | API documentation |
+| `src/showcase.tsx` | Updated main showcase with routing |
+
+### Notes
+- Used state-based routing (no external router) to keep showcase self-contained
+- All component examples are interactive where applicable
+- Code examples are copy-paste ready
+- Responsive design works on mobile and desktop
+
+---
+
+## Phase 2.5: Showcase Polish & Fixes ⏳ IN PROGRESS
+
+**Objective:** Address user feedback and polish the showcase before proceeding.
+
+### User Feedback (Saved from Review)
+
+#### Critical Issues
+1. **Header Navigation Bug** - Selected item becomes dark and invisible on dark background
+2. **Missing Welcome Page** - Need full-screen landing page with:
+   - Installation commands
+   - Quick description
+   - Visual/attractive hero section (similar to GitHub's planet visualization)
+   - Should showcase Mojo UI aesthetics
+
+3. **Components Page UX** - Need sidebar component list with:
+   - Scrollable component list on the side
+   - Grouped by category (Basic, Form, Layout, etc.)
+   - Click to jump to component
+   - Remove static NavigationIsland display (keep only in component list)
+
+#### Design Tokens Page Issues
+4. **Inconsistent Naming** - DEFAULT is UPPERCASE, others lowercase. Should be consistent
+5. **Missing Typography Examples** - No actual font family examples displayed
+6. **Border Radius Not Visible** - All cards look the same, need distinct visual examples
+7. **Missing Theme Toggle** - No dark/light mode switching
+
 ### Tasks
 
-#### 2.1 Restructure Showcase
-- [ ] Create showcase directory structure:
-  ```
-  src/showcase/
-  ├── index.tsx           # Main entry
-  ├── pages/
-  │   ├── components.tsx  # All components gallery
-  │   ├── layout.tsx      # Layout examples
-  │   ├── tokens.tsx      # Design tokens display
-  │   └── docs.tsx        # Component documentation
-  └── components/
-      ├── nav.tsx         # Showcase navigation
-      ├── prop-table.tsx  # Props documentation
-      └── code-block.tsx  # Code examples
-  ```
+#### 2.5.1 Fix Navigation Colors ✅
+- [x] Fix header nav selected state - ensure visible on dark background
+- [x] Use proper contrast colors (light text on dark when selected)
 
-#### 2.2 Components Gallery Page
-- [ ] Display all 21+ components
-- [ ] Group by category (Form, Layout, Navigation, Feedback)
-- [ ] Interactive props panel for each
-- [ ] Copy code button
-- [ ] Clean, minimal design
+#### 2.5.2 Create Welcome/Landing Page ✅
+- [x] Full viewport height hero section with decorative background elements
+- [x] Installation commands display
+- [x] Quick description/tagline
+- [x] Placeholder for future visual/attractive graphic (decorative blur circles)
+- [x] Call-to-action buttons linking to other pages
+- [x] Features section with component highlights
+- [x] Quick start code example
 
-#### 2.3 Layout Test Page
-- [ ] Real-world layout examples:
-  - Dashboard with stats
-  - Form with validation
-  - Navigation with content
-  - Card grid
-- [ ] Show how components work together
-- [ ] Responsive examples
+#### 2.5.3 Components Page Sidebar ✅
+- [x] Create sticky sidebar with component list (grouped by category)
+- [x] Group components by category (Basic, Form, Layout, Navigation, Feedback, Overlay)
+- [x] Click to scroll to component (smooth scroll)
+- [x] Remove static NavigationIsland from display (moved to sidebar only)
 
-#### 2.4 Design Tokens Page
-- [ ] Display all nature colors with swatches
-- [ ] Show color usage (moss for success, ember for warning, etc.)
-- [ ] Typography scale
-- [ ] Spacing scale
-- [ ] Border radius examples
-- [ ] Shadow elevations
+#### 2.5.4 Design Tokens Polish ✅
+- [x] Change DEFAULT to default (lowercase) for consistency
+- [x] Add actual typography examples showing each font family ("The quick brown fox" samples)
+- [x] Fix border radius visualization - larger boxes with gradient backgrounds
+- [x] Add theme toggle icons (Sun/Moon) in navigation (UI ready, full theme implementation in future)
 
-#### 2.5 Documentation Page
-- [ ] List all components
-- [ ] Brief description for each
-- [ ] Props table (name, type, default, description)
-- [ ] Link to usage examples
-- [ ] Minimal, clean presentation
-
-### Design Requirements
-- **Minimal:** No unnecessary decorations
-- **Clean:** Clear typography, good whitespace
-- **Functional:** Easy to navigate, find components
-- **Dark theme:** Match Mojo UI aesthetic
+#### 2.5.5 General Polish ✅
+- [x] Smooth scroll behavior
+- [x] Active section highlighting in sidebar (via IntersectionObserver)
+- [ ] Mobile responsive sidebar (drawer on small screens) - deferred to future
 
 ### Definition of Done
-- All 21 components showcased
-- Layout test page with real examples
-- Design tokens visualized
-- Documentation page complete
-- Clean, minimal design throughout
+- [x] Navigation is clearly visible in all states
+- [x] Welcome page exists and is the default landing page
+- [x] Components page has functional sidebar navigation
+- [x] Design tokens page shows all examples properly
+- [x] Theme toggle UI implemented
+- [x] All feedback items addressed
 
 ---
 
 ## Phase 3: Additional Components ⏳ PENDING
+
+**Prerequisites:** Phase 2.5 complete
 
 **Objective:** Add more components before NPM publish.
 
@@ -372,8 +474,19 @@ Record player aesthetic buttons stay app-specific
 
 ## Next Steps
 
-**Phase 1 is COMPLETE! 🎉**
+**Phase 2.5 is COMPLETE! 🎉**
 
-**Ready to start Phase 2:** Showcase Enhancement
+**Ready to start Phase 3:** Additional Components
 
-Execute one sub-phase at a time as requested.
+- Radio button group
+- Slider
+- Toast notifications
+- Alert banner
+- Badge
+- Tooltip
+- DataTable
+
+**Future Enhancements:**
+- Full light theme implementation
+- Mobile responsive sidebar drawer
+- Additional showcase visualizations

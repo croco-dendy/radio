@@ -78,4 +78,4 @@ export {
 } from './styles';
 
 // Showcase (for documentation)
-export { Showcase } from './showcase';
+export { default as Showcase } from './showcase';

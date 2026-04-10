@@ -49,14 +49,26 @@
 **Status:** ✅ Design system complete with 21 components, full documentation, and design tokens.
 
 ### Plan 003: Mojo Split (In Progress)
-**Phase 1-2:** Foundation ✅
-- ✅ Component inventory
-- ✅ Design system ready
+**Phase 1:** Tailwind Config Migration ✅
+- ✅ All 8 sub-phases complete
+
+**Phase 2:** Showcase Enhancement ✅
+- ✅ Components gallery with 21 components
+- ✅ Layout examples page
+- ✅ Design tokens visual reference
+- ✅ API documentation page
+- ✅ Navigation and routing
+
+**Phase 2.5:** Showcase Polish & Fixes ✅ COMPLETE
+- ✅ Fix navigation selected state visibility
+- ✅ Create welcome/landing page
+- ✅ Components page sidebar navigation (with smooth scroll and active highlighting)
+- ✅ Design tokens: lowercase "default", font examples, visible border radius
+- ✅ Theme toggle UI (icons added, full implementation in future)
 
 **Phase 3-7:** NPM Preparation ⏳
-- ⏳ Complete remaining components
-- ⏳ Create showcase website
-- ⏳ NPM package setup
+- ⏳ Additional components (Radio, Slider, Toast, Alert, Badge, Tooltip, DataTable)
+- ⏳ NPM package setup and naming
 - ⏳ Repository separation
 
 ## Upcoming Plans

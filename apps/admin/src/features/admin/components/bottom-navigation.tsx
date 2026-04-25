@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { NavigationIsland } from '@radio/mojo-ui';
+import { NavigationIsland } from '@dendelion/mojo-ui';
 import { RadioLogo, NowPlaying, UserMenu } from './';
 
 interface BottomNavigationProps {

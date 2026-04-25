@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
-import { sharedStyles } from '@radio/mojo-ui/styles';
+import { sharedStyles } from '@dendelion/mojo-ui/styles';
 import {
   useDeleteUser,
   useUpdateUser,

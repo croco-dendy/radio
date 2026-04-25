@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Input, Textarea, Checkbox, Select } from '@radio/mojo-ui';
+import { Modal, Input, Textarea, Checkbox, Select } from '@dendelion/mojo-ui';
 import { useUpdateAlbum } from '@/services/api';
 import { TagEditor } from '../../shared';
 import type { Album } from '@radio/types';

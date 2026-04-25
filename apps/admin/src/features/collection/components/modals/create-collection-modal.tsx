@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { Modal, Input, Textarea, Checkbox } from '@radio/mojo-ui';
+import { Modal, Input, Textarea, Checkbox } from '@dendelion/mojo-ui';
 import { useCreateCollection } from '@/services/api';
 import { sharedStyles } from '@/styles/shared-styles';
 

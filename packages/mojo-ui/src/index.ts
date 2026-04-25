@@ -19,6 +19,10 @@ export type { TextareaProps } from './components/textarea';
 export { Checkbox } from './components/checkbox';
 export type { CheckboxProps } from './components/checkbox';
 export { Switch } from './components/switch';
+export { Radio } from './components/radio';
+export type { RadioProps, RadioOption } from './components/radio';
+export { Slider } from './components/slider';
+export type { SliderProps } from './components/slider';
 
 // Layout Components
 export { Panel } from './components/panel';
@@ -30,6 +34,8 @@ export type { StatItem, StatsGridProps } from './components/layout';
 export { Modal } from './components/modal';
 export type { ModalProps } from './components/modal';
 export { Popup, PopupItem } from './components/popup';
+export { Tooltip } from './components/tooltip';
+export type { TooltipProps, TooltipPlacement } from './components/tooltip';
 
 // Navigation Components
 export { Tabs } from './components/tabs';
@@ -46,6 +52,17 @@ export type {
 export { ProgressBar } from './components/progress-bar';
 export { StatsCard } from './components/stats-card';
 export { StatusIndicator } from './components/status-indicator';
+export { Badge } from './components/badge';
+export type { BadgeProps, BadgeVariant, BadgeSize } from './components/badge';
+export { Alert } from './components/alert';
+export type { AlertProps, AlertVariant } from './components/alert';
+export { Toast, ToastContainer, generateToastId } from './components/toast';
+export type {
+  ToastProps,
+  ToastContainerProps,
+  ToastVariant,
+  ToastPosition,
+} from './components/toast';
 
 // Icons
 export * from './icons';
@@ -76,6 +93,10 @@ export {
   grids,
   sharedStyles,
 } from './styles';
+
+// Data Display Components
+export { DataTable } from './components/data-table';
+export type { DataTableProps, DataTableColumn } from './components/data-table';
 
 // Showcase (for documentation)
 export { default as Showcase } from './showcase';

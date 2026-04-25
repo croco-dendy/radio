@@ -1,11 +1,11 @@
 /** @type {import('tailwindcss').Config} */
-import { mojoPreset } from '@radio/mojo-ui/tailwind';
+import { mojoPreset } from '@dendelion/mojo-ui/tailwind';
 
 export default {
   presets: [mojoPreset],
   content: [
     './index.html', 
     './src/**/*.{css,ts,tsx}',
-    '../../packages/mojo-ui/src/**/*.{ts,tsx}'
+    './node_modules/@dendelion/mojo-ui/src/**/*.{ts,tsx}'
   ],
 };

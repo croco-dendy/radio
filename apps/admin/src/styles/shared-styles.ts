@@ -2,7 +2,7 @@
  * Admin App-Specific Styles
  * 
  * Vinyl-style buttons and other app-specific styling.
- * Glassmorphism patterns have been moved to @radio/mojo-ui.
+ * Glassmorphism patterns have been moved to @dendelion/mojo-ui.
  */
 
 // Vinyl record style button - fully rounded with double border effect

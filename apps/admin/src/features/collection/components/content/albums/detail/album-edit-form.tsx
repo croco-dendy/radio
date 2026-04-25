@@ -6,7 +6,7 @@ import {
   Checkbox,
   Select,
   Button,
-} from '@radio/mojo-ui';
+} from '@dendelion/mojo-ui';
 import { TagEditor } from '@/features/collection/components/shared';
 import type { Album } from '@radio/types';
 

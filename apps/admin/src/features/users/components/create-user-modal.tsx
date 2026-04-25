@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
-import { Input, Select } from '@radio/mojo-ui';
+import { Input, Select } from '@dendelion/mojo-ui';
 import { sharedStyles } from '@/styles/shared-styles';
 import { useCreateUser } from '@/services/api/hooks/use-user-management';
 

@@ -6,7 +6,14 @@ interface ComponentSectionProps {
   id: string;
   title: string;
   description: string;
-  category: 'basic' | 'form' | 'layout' | 'navigation' | 'feedback' | 'overlay';
+  category:
+    | 'basic'
+    | 'form'
+    | 'layout'
+    | 'navigation'
+    | 'feedback'
+    | 'overlay'
+    | 'data-display';
   children: ReactNode;
   codeExample: string;
   props?: PropDef[];
@@ -19,6 +26,7 @@ const categoryColors: Record<string, string> = {
   navigation: 'bg-sun-DEFAULT/20 text-sun-calm',
   feedback: 'bg-ember-DEFAULT/20 text-ember-calm',
   overlay: 'bg-clay-DEFAULT/20 text-clay-DEFAULT',
+  'data-display': 'bg-paper-DEFAULT/20 text-paper-DEFAULT',
 };
 
 const categoryLabels: Record<string, string> = {
@@ -28,6 +36,7 @@ const categoryLabels: Record<string, string> = {
   navigation: 'Navigation',
   feedback: 'Feedback',
   overlay: 'Overlay',
+  'data-display': 'Data Display',
 };
 
 export const ComponentSection: FC<ComponentSectionProps> = ({

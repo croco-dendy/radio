@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
-import { Input } from '@radio/mojo-ui';
+import { Input } from '@dendelion/mojo-ui';
 import { useLogin } from '@/services/api/hooks/use-auth';
 import { useAuthStore } from '@/stores/auth-store';
 import { sharedStyles } from '@/styles/shared-styles';

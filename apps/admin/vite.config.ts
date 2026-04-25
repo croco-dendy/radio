@@ -62,7 +62,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@radio/mojo-ui': resolve(__dirname, '../../packages/mojo-ui/src'),
+      '@dendelion/mojo-ui': resolve(__dirname, 'node_modules/@dendelion/mojo-ui/src'),
     },
   },
   preview: {

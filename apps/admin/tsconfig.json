@@ -20,7 +20,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@radio/types": ["../../packages/types/src"],
-      "@radio/mojo-ui": ["../../packages/mojo-ui/src"]
+      "@dendelion/mojo-ui": ["./node_modules/@dendelion/mojo-ui/src"]
     }
   },
   "include": ["src"],

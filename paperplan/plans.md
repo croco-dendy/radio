@@ -83,9 +83,10 @@
 - ✅ TypeScript declarations
 - ✅ Documentation complete
 
-**Phase 6-7:** NPM Publication & Monorepo Migration ⏳
-- ⏳ Publish to NPM registry
-- ⏳ Update radio to use published package
+**Phase 6-7:** NPM Publication & Monorepo Migration ✅
+- ✅ Published to NPM: @dendelion/mojo-ui@0.1.1
+- ✅ Admin app migrated to use published package
+- ⏳ Remove local packages/mojo-ui (deferred)
 
 ## Upcoming Plans
 

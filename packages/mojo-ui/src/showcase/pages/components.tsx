@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { FC } from 'react';
+import { Alert } from '../../components/alert';
+import { Badge } from '../../components/badge';
 import { Button } from '../../components/button';
 import { Card } from '../../components/card';
 import { Checkbox } from '../../components/checkbox';
 import { CircularProgress } from '../../components/circular-progress';
+import { DataTable } from '../../components/data-table';
+import type { DataTableColumn } from '../../components/data-table';
 import { IconButton } from '../../components/icon-button';
 import { Input } from '../../components/input';
 import { StatsGrid } from '../../components/layout';
@@ -11,13 +15,18 @@ import { Modal } from '../../components/modal';
 import { Panel } from '../../components/panel';
 import { Popup, PopupItem } from '../../components/popup';
 import { ProgressBar } from '../../components/progress-bar';
+import { Radio } from '../../components/radio';
 import { Select } from '../../components/select';
 import { Skeleton } from '../../components/skeleton';
+import { Slider } from '../../components/slider';
 import { StatsCard } from '../../components/stats-card';
 import { StatusIndicator } from '../../components/status-indicator';
 import { Switch } from '../../components/switch';
 import { Tabs } from '../../components/tabs';
 import { Textarea } from '../../components/textarea';
+import { ToastContainer, generateToastId } from '../../components/toast';
+import type { ToastProps } from '../../components/toast';
+import { Tooltip } from '../../components/tooltip';
 import { CheckIcon, PlusIcon } from '../../icons';
 import { ComponentSection } from '../components/component-section';
 import {
@@ -56,12 +65,105 @@ export const ComponentsPage: FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [selectValue, setSelectValue] = useState('option1');
   const [activeSection, setActiveSection] = useState('button');
+  const [radioValue, setRadioValue] = useState('option1');
+  const [sliderValue, setSliderValue] = useState(50);
+  const [toasts, setToasts] = useState<ToastProps[]>([]);
 
   const selectOptions = [
     { value: 'option1', label: 'Option 1' },
     { value: 'option2', label: 'Option 2' },
     { value: 'option3', label: 'Option 3' },
   ];
+
+  const radioOptions = [
+    { value: 'option1', label: 'Standard' },
+    { value: 'option2', label: 'Premium' },
+    { value: 'option3', label: 'Enterprise' },
+  ];
+
+  // Sample data for DataTable
+  interface User {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    status: 'active' | 'inactive';
+  }
+
+  const tableData: User[] = useMemo(
+    () => [
+      {
+        id: '1',
+        name: 'John Doe',
+        email: 'john@example.com',
+        role: 'Admin',
+        status: 'active',
+      },
+      {
+        id: '2',
+        name: 'Jane Smith',
+        email: 'jane@example.com',
+        role: 'User',
+        status: 'active',
+      },
+      {
+        id: '3',
+        name: 'Bob Wilson',
+        email: 'bob@example.com',
+        role: 'Editor',
+        status: 'inactive',
+      },
+      {
+        id: '4',
+        name: 'Alice Brown',
+        email: 'alice@example.com',
+        role: 'User',
+        status: 'active',
+      },
+    ],
+    [],
+  );
+
+  const tableColumns: DataTableColumn<User>[] = useMemo(
+    () => [
+      { key: 'name', header: 'Name', cell: (row) => row.name },
+      { key: 'email', header: 'Email', cell: (row) => row.email },
+      {
+        key: 'role',
+        header: 'Role',
+        cell: (row) => <Badge variant="default">{row.role}</Badge>,
+      },
+      {
+        key: 'status',
+        header: 'Status',
+        cell: (row) => (
+          <Badge variant={row.status === 'active' ? 'success' : 'default'}>
+            {row.status}
+          </Badge>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const addToast = (
+    variant: 'info' | 'success' | 'warning' | 'error',
+    title: string,
+    message: string,
+  ) => {
+    const newToast: ToastProps = {
+      id: generateToastId(),
+      variant,
+      title,
+      message,
+      duration: 5000,
+    };
+    setToasts((prev) => [...prev, newToast]);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
 
   // Intersection Observer for active section detection
   useEffect(() => {
@@ -1033,9 +1135,488 @@ import { PlusIcon } from '@radio/mojo-ui/icons';
               </Popup>
             </div>
           </ComponentSection>
+
+          <ComponentSection
+            id="tooltip"
+            title="Tooltip"
+            description="Hover information tooltip with multiple placement options."
+            category="overlay"
+            codeExample={`import { Tooltip } from '@radio/mojo-ui';
+
+<Tooltip content="This is helpful information" placement="top">
+  <Button title="Hover me" />
+</Tooltip>`}
+            props={[
+              {
+                name: 'content',
+                type: 'ReactNode',
+                required: true,
+                description: 'Tooltip content',
+              },
+              {
+                name: 'children',
+                type: 'ReactNode',
+                required: true,
+                description: 'Trigger element',
+              },
+              {
+                name: 'placement',
+                type: "'top' | 'bottom' | 'left' | 'right'",
+                default: "'top'",
+                description: 'Tooltip position',
+              },
+              {
+                name: 'delay',
+                type: 'number',
+                default: '200',
+                description: 'Show delay in ms',
+              },
+            ]}
+          >
+            <div className="flex items-center gap-4 flex-wrap">
+              <Tooltip content="Top tooltip">
+                <Button variant="green" size="small" title="Top" />
+              </Tooltip>
+              <Tooltip content="Bottom tooltip" placement="bottom">
+                <Button variant="yellow" size="small" title="Bottom" />
+              </Tooltip>
+              <Tooltip content="Left tooltip" placement="left">
+                <Button variant="red" size="small" title="Left" />
+              </Tooltip>
+              <Tooltip content="Right tooltip" placement="right">
+                <Button variant="gray" size="small" title="Right" />
+              </Tooltip>
+            </div>
+          </ComponentSection>
+
+          {/* Phase 3 Components */}
+          <ComponentSection
+            id="radio"
+            title="Radio"
+            description="Radio button group with horizontal and vertical layouts."
+            category="form"
+            codeExample={`import { Radio } from '@radio/mojo-ui';
+
+<Radio
+  name="plan"
+  label="Select Plan"
+  value={selectedValue}
+  onChange={setSelectedValue}
+  options={[
+    { value: 'basic', label: 'Basic' },
+    { value: 'pro', label: 'Pro' },
+  ]}
+/>`}
+            props={[
+              {
+                name: 'options',
+                type: 'RadioOption[]',
+                required: true,
+                description: 'Radio options',
+              },
+              {
+                name: 'name',
+                type: 'string',
+                required: true,
+                description: 'Radio group name',
+              },
+              {
+                name: 'value',
+                type: 'string',
+                description: 'Selected value',
+              },
+              {
+                name: 'onChange',
+                type: '(value: string) => void',
+                description: 'Change handler',
+              },
+              {
+                name: 'layout',
+                type: "'horizontal' | 'vertical'",
+                default: "'vertical'",
+                description: 'Layout direction',
+              },
+              sizeProp,
+            ]}
+          >
+            <div className="space-y-6">
+              <div className="w-full max-w-sm">
+                <Radio
+                  name="plan-vertical"
+                  label="Vertical Layout"
+                  value={radioValue}
+                  onChange={setRadioValue}
+                  options={radioOptions}
+                />
+              </div>
+              <div className="w-full max-w-sm">
+                <Radio
+                  name="plan-horizontal"
+                  label="Horizontal Layout"
+                  value={radioValue}
+                  onChange={setRadioValue}
+                  options={radioOptions}
+                  layout="horizontal"
+                />
+              </div>
+            </div>
+          </ComponentSection>
+
+          <ComponentSection
+            id="slider"
+            title="Slider"
+            description="Range slider with analog retro feel and real-time value display."
+            category="form"
+            codeExample={`import { Slider } from '@radio/mojo-ui';
+
+<Slider
+  value={volume}
+  onChange={setVolume}
+  min={0}
+  max={100}
+  step={1}
+  label="Volume"
+  showValue
+/>`}
+            props={[
+              {
+                name: 'value',
+                type: 'number',
+                description: 'Current value',
+              },
+              {
+                name: 'min',
+                type: 'number',
+                default: '0',
+                description: 'Minimum value',
+              },
+              {
+                name: 'max',
+                type: 'number',
+                default: '100',
+                description: 'Maximum value',
+              },
+              {
+                name: 'step',
+                type: 'number',
+                default: '1',
+                description: 'Step increment',
+              },
+              {
+                name: 'label',
+                type: 'string',
+                description: 'Slider label',
+              },
+              {
+                name: 'showValue',
+                type: 'boolean',
+                default: 'true',
+                description: 'Show value display',
+              },
+              sizeProp,
+              disabledProp,
+            ]}
+          >
+            <div className="w-full max-w-md space-y-6">
+              <Slider
+                value={sliderValue}
+                onChange={setSliderValue}
+                label="Volume Control"
+                min={0}
+                max={100}
+              />
+              <Slider
+                value={30}
+                onChange={() => {}}
+                label="Small Size"
+                size="small"
+              />
+              <Slider
+                value={70}
+                onChange={() => {}}
+                label="Large Size"
+                size="large"
+              />
+            </div>
+          </ComponentSection>
+
+          <ComponentSection
+            id="badge"
+            title="Badge"
+            description="Status and label badges with dot indicators and pulse animation."
+            category="feedback"
+            codeExample={`import { Badge } from '@radio/mojo-ui';
+
+<Badge variant="success" dot>Online</Badge>
+<Badge variant="warning">Pending</Badge>
+<Badge variant="error" pulse>Alert</Badge>`}
+            props={[
+              {
+                name: 'variant',
+                type: "'default' | 'success' | 'warning' | 'error' | 'info' | 'moss' | 'ember' | 'sun' | 'river'",
+                default: "'default'",
+                description: 'Badge style variant',
+              },
+              sizeProp,
+              {
+                name: 'dot',
+                type: 'boolean',
+                default: 'false',
+                description: 'Show dot indicator',
+              },
+              {
+                name: 'pulse',
+                type: 'boolean',
+                default: 'false',
+                description: 'Pulse animation',
+              },
+            ]}
+          >
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 flex-wrap">
+                <Badge variant="default">Default</Badge>
+                <Badge variant="success" dot>
+                  Success
+                </Badge>
+                <Badge variant="warning" dot>
+                  Warning
+                </Badge>
+                <Badge variant="error" dot>
+                  Error
+                </Badge>
+                <Badge variant="info" dot>
+                  Info
+                </Badge>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <Badge variant="moss">Moss</Badge>
+                <Badge variant="ember">Ember</Badge>
+                <Badge variant="sun">Sun</Badge>
+                <Badge variant="river">River</Badge>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <Badge variant="success" pulse dot>
+                  Pulsing
+                </Badge>
+                <Badge variant="warning" size="small">
+                  Small
+                </Badge>
+                <Badge variant="error" size="large">
+                  Large
+                </Badge>
+              </div>
+            </div>
+          </ComponentSection>
+
+          <ComponentSection
+            id="alert"
+            title="Alert"
+            description="Alert banners for important messages with icons and dismiss actions."
+            category="feedback"
+            codeExample={`import { Alert } from '@radio/mojo-ui';
+
+<Alert
+  variant="success"
+  title="Success"
+  onClose={handleClose}
+>
+  Your changes have been saved.
+</Alert>`}
+            props={[
+              {
+                name: 'variant',
+                type: "'info' | 'success' | 'warning' | 'error'",
+                default: "'info'",
+                description: 'Alert style variant',
+              },
+              {
+                name: 'title',
+                type: 'string',
+                description: 'Alert title',
+              },
+              {
+                name: 'children',
+                type: 'ReactNode',
+                required: true,
+                description: 'Alert message',
+              },
+              {
+                name: 'onClose',
+                type: '() => void',
+                description: 'Close handler',
+              },
+            ]}
+          >
+            <div className="space-y-4 w-full max-w-xl">
+              <Alert variant="info" title="Information">
+                This is an informational message for the user.
+              </Alert>
+              <Alert variant="success" title="Success">
+                Your changes have been saved successfully.
+              </Alert>
+              <Alert variant="warning" title="Warning">
+                Please review your settings before continuing.
+              </Alert>
+              <Alert variant="error" title="Error" onClose={() => {}}>
+                Something went wrong. Please try again.
+              </Alert>
+            </div>
+          </ComponentSection>
+
+          <ComponentSection
+            id="toast"
+            title="Toast"
+            description="Notification toasts with auto-dismiss and progress indicator."
+            category="feedback"
+            codeExample={`import { Toast, ToastContainer, generateToastId } from '@radio/mojo-ui';
+
+const addToast = () => {
+  const toast = {
+    id: generateToastId(),
+    variant: 'success',
+    title: 'Success',
+    message: 'Operation completed',
+  };
+  setToasts(prev => [...prev, toast]);
+};`}
+            props={[
+              {
+                name: 'variant',
+                type: "'info' | 'success' | 'warning' | 'error'",
+                default: "'info'",
+                description: 'Toast style variant',
+              },
+              {
+                name: 'title',
+                type: 'string',
+                description: 'Toast title',
+              },
+              {
+                name: 'message',
+                type: 'ReactNode',
+                required: true,
+                description: 'Toast message',
+              },
+              {
+                name: 'duration',
+                type: 'number',
+                default: '5000',
+                description: 'Auto-dismiss duration (ms)',
+              },
+              {
+                name: 'onClose',
+                type: '(id: string) => void',
+                description: 'Close handler',
+              },
+            ]}
+          >
+            <div className="space-y-3">
+              <div className="flex gap-3 flex-wrap">
+                <Button
+                  variant="green"
+                  size="small"
+                  title="Success Toast"
+                  onClick={() =>
+                    addToast(
+                      'success',
+                      'Success!',
+                      'Your action was completed.',
+                    )
+                  }
+                />
+                <Button
+                  variant="yellow"
+                  size="small"
+                  title="Warning Toast"
+                  onClick={() =>
+                    addToast('warning', 'Warning', 'Please check your input.')
+                  }
+                />
+                <Button
+                  variant="red"
+                  size="small"
+                  title="Error Toast"
+                  onClick={() =>
+                    addToast('error', 'Error', 'Something went wrong.')
+                  }
+                />
+                <Button
+                  variant="gray"
+                  size="small"
+                  title="Info Toast"
+                  onClick={() =>
+                    addToast('info', 'Info', 'Here is some information.')
+                  }
+                />
+              </div>
+            </div>
+          </ComponentSection>
+
+          <ComponentSection
+            id="data-table"
+            title="DataTable"
+            description="Table component with retro styling, sorting, and row selection."
+            category="data-display"
+            codeExample={`import { DataTable } from '@radio/mojo-ui';
+
+<DataTable
+  data={users}
+  columns={columns}
+  keyExtractor={(row) => row.id}
+  striped
+  hoverable
+/>`}
+            props={[
+              {
+                name: 'data',
+                type: 'T[]',
+                required: true,
+                description: 'Table data',
+              },
+              {
+                name: 'columns',
+                type: 'DataTableColumn<T>[]',
+                required: true,
+                description: 'Column definitions',
+              },
+              {
+                name: 'keyExtractor',
+                type: '(row: T) => string',
+                required: true,
+                description: 'Unique key extractor',
+              },
+              {
+                name: 'striped',
+                type: 'boolean',
+                default: 'true',
+                description: 'Striped rows',
+              },
+              {
+                name: 'hoverable',
+                type: 'boolean',
+                default: 'true',
+                description: 'Hover effects',
+              },
+            ]}
+          >
+            <div className="w-full">
+              <DataTable
+                data={tableData}
+                columns={tableColumns}
+                keyExtractor={(row) => row.id}
+                striped
+                hoverable
+              />
+            </div>
+          </ComponentSection>
         </div>
       </div>
 
+      <ToastContainer
+        toasts={toasts}
+        position="bottom-right"
+        onClose={removeToast}
+      />
       <Footer />
     </div>
   );

@@ -6,7 +6,7 @@
 |------|--------|-------------|
 | [001-CODE_STYLE_AUDIT_PLAN.md](./001-CODE_STYLE_AUDIT_PLAN.md) | ✅ Complete | Code style audit and standardization across all apps |
 | [002-MOJO_DESIGN_PLAN.md](./002-MOJO_DESIGN_PLAN.md) | ✅ Complete | Design system standardization (tokens, patterns, docs) |
-| [003-MOJO_SPLIT_PLAN.md](./003-MOJO_SPLIT_PLAN.md) | 🚧 In Progress | Prepare Mojo UI for independent NPM package |
+| [003-MOJO_SPLIT_PLAN.md](./003-MOJO_SPLIT_PLAN.md) | 🚧 In Progress (Phases 1-5 Complete) | Prepare Mojo UI for independent NPM package |
 
 ## Completed
 
@@ -66,10 +66,26 @@
 - ✅ Design tokens: lowercase "default", font examples, visible border radius
 - ✅ Theme toggle UI (icons added, full implementation in future)
 
-**Phase 3-7:** NPM Preparation ⏳
-- ⏳ Additional components (Radio, Slider, Toast, Alert, Badge, Tooltip, DataTable)
-- ⏳ NPM package setup and naming
-- ⏳ Repository separation
+**Phase 3:** Additional Components ✅ COMPLETE
+- ✅ Radio - Radio button group with horizontal/vertical layouts
+- ✅ Slider - Range slider with analog retro feel
+- ✅ Toast - Notification toast with auto-dismiss and progress bar
+- ✅ Alert - Alert banner with variants and dismiss action
+- ✅ Badge - Status/label badge with dot indicators and pulse animation
+- ✅ Tooltip - Hover information tooltip with 4 placements
+- ✅ DataTable - Table with retro styling, striped rows, and hover effects
+- ✅ **28 total components** (21 existing + 7 new)
+
+**Phase 4-5:** NPM Preparation & Repository Separation ✅
+- ✅ Scoped package: `@croco-dendy/mojo-ui`
+- ✅ Standalone repo: https://github.com/croco-dendy/mojo-ui
+- ✅ Build outputs (ESM + CJS + CSS)
+- ✅ TypeScript declarations
+- ✅ Documentation complete
+
+**Phase 6-7:** NPM Publication & Monorepo Migration ⏳
+- ⏳ Publish to NPM registry
+- ⏳ Update radio to use published package
 
 ## Upcoming Plans
 

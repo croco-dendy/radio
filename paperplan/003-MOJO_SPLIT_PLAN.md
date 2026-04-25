@@ -389,63 +389,110 @@ src/showcase/
 
 ---
 
-## Phase 3: Additional Components ⏳ PENDING
+## Phase 3: Additional Components ✅ COMPLETE
 
-**Prerequisites:** Phase 2.5 complete
+**Prerequisites:** Phase 2.5 complete ✅
 
 **Objective:** Add more components before NPM publish.
 
+### Status
+All 7 new components have been created and integrated into the showcase.
+
 ### Form
-- [ ] Radio - Radio button group
-- [ ] Slider - Range slider with analog feel
+- [x] **Radio** - Radio button group with horizontal/vertical layouts
+- [x] **Slider** - Range slider with analog retro feel
 
 ### Feedback
-- [ ] Toast - Notification toast
-- [ ] Alert - Alert banner
-- [ ] Badge - Status/label badge
+- [x] **Toast** - Notification toast with auto-dismiss and progress bar
+- [x] **Alert** - Alert banner with variants and dismiss action
+- [x] **Badge** - Status/label badge with dot indicators and pulse animation
 
 ### Data Display
-- [ ] Tooltip - Hover information
-- [ ] DataTable - Table with retro styling
+- [x] **Tooltip** - Hover information tooltip with 4 placements
+- [x] **DataTable** - Table with retro styling, striped rows, and hover effects
+
+### Component Summary
+
+| Component | Category | Key Features |
+|-----------|----------|--------------|
+| Radio | Form | Group selection, horizontal/vertical layouts, 3 sizes |
+| Slider | Form | Analog feel, real-time value display, keyboard navigation |
+| Toast | Feedback | Auto-dismiss, progress bar, 4 positions, 4 variants |
+| Alert | Feedback | Icon variants, dismissible, glassmorphism styling |
+| Badge | Feedback | Dot indicator, pulse animation, 9 color variants |
+| Tooltip | Overlay | 4 placements, hover delay, smooth animations |
+| DataTable | Data Display | Striped/hoverable rows, loading state, customizable columns |
+
+### Total Component Count
+**28 components** (21 existing + 7 new)
+
+### Next Phase
+Ready to proceed to **Phase 4: NPM Package Preparation**
 
 ---
 
-## Phase 4: NPM Package Preparation ⏳ PENDING
+## Phase 4: NPM Package Preparation ✅ COMPLETE
 
 **Objective:** Prepare for NPM publication.
 
 ### Tasks
-- [ ] Rename to `mojo-ui`
-- [ ] Export Tailwind config in package
-- [ ] Configure build outputs (CJS, ESM)
-- [ ] TypeScript declarations
-- [ ] README with install + Tailwind setup guide
-- [ ] CHANGELOG.md
-- [ ] LICENSE
+- [x] Rename to `@croco-dendy/mojo-ui` (scoped package)
+- [x] Export Tailwind config in package
+- [x] Configure build outputs (CJS, ESM)
+- [x] TypeScript declarations
+- [x] README with install + Tailwind setup guide
+- [x] CHANGELOG.md
+- [x] LICENSE
+
+### Decisions
+- **Scoped Package:** Using `@croco-dendy/mojo-ui` for better organization
+- **JSR Explored:** JSR doesn't support SCSS modules, sticking with NPM
+- **Build:** ESM + CJS + CSS output working correctly
 
 ---
 
-## Phase 5: Repository Separation ⏳ PENDING
+## Phase 5: Repository Separation ✅ COMPLETE
 
 **Objective:** Create standalone repository.
 
 ### Tasks
-- [ ] Create `mojo-ui` GitHub repo
-- [ ] Move package to new repo
-- [ ] Set up CI/CD
-- [ ] Set up showcase deployment
+- [x] Create `mojo-ui` GitHub repo
+- [x] Move package to new repo
+- [x] Update all import references in showcase/docs
+- [x] Create standalone tsconfig.json
+- [x] Create paperplan with migration plan
+- [ ] Set up CI/CD (deferred to Phase 7)
+- [ ] Set up showcase deployment (deferred to Phase 7)
+
+### Repository
+- **GitHub:** https://github.com/croco-dendy/mojo-ui
+- **Status:** Ready to publish to NPM
 
 ---
 
-## Phase 6: Monorepo Migration ⏳ PENDING
+## Phase 6: NPM Publication ⏳ PENDING
+
+**Objective:** Publish package to NPM registry.
+
+### Tasks
+- [ ] Login to npm
+- [ ] Run `npm run build`
+- [ ] Run `npm publish --access public`
+- [ ] Verify package is available on npmjs.com
+- [ ] Test installation in fresh project
+
+---
+
+## Phase 7: Monorepo Migration ⏳ PENDING
 
 **Objective:** Update radio monorepo to use published package.
 
 ### Tasks
-- [ ] Install `mojo-ui` from NPM in admin
+- [ ] Install `@croco-dendy/mojo-ui` from NPM in admin
+- [ ] Update imports from `@radio/mojo-ui` to `@croco-dendy/mojo-ui`
 - [ ] Extend Mojo Tailwind config
 - [ ] Remove local `packages/mojo-ui`
-- [ ] Update imports
+- [ ] Update workspace configuration
 - [ ] Verify everything works
 
 ---

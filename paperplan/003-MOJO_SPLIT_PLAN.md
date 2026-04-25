@@ -436,7 +436,7 @@ Ready to proceed to **Phase 4: NPM Package Preparation**
 **Objective:** Prepare for NPM publication.
 
 ### Tasks
-- [x] Rename to `@croco-dendy/mojo-ui` (scoped package)
+- [x] Rename to `@dendelion/mojo-ui` (scoped package)
 - [x] Export Tailwind config in package
 - [x] Configure build outputs (CJS, ESM)
 - [x] TypeScript declarations
@@ -488,8 +488,8 @@ Ready to proceed to **Phase 4: NPM Package Preparation**
 **Objective:** Update radio monorepo to use published package.
 
 ### Tasks
-- [ ] Install `@croco-dendy/mojo-ui` from NPM in admin
-- [ ] Update imports from `@radio/mojo-ui` to `@croco-dendy/mojo-ui`
+- [ ] Install `@dendelion/mojo-ui` from NPM in admin
+- [ ] Update imports from `@radio/mojo-ui` to `@dendelion/mojo-ui`
 - [ ] Extend Mojo Tailwind config
 - [ ] Remove local `packages/mojo-ui`
 - [ ] Update workspace configuration
